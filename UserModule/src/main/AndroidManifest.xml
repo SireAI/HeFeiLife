@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sire.usermodule"> <!-- To auto-complete the email text field in alreadyLoginogin form with the user's emails -->
+    <application>
+
+        <activity
+            android:name=".Controller.LoginController"
+            android:exported="true"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme"></activity>
+    </application>
+
+</manifest>

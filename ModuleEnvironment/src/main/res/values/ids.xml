@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="net_error_btn" />
+    <item name="onRefreshListener" type="id">onRefreshListener</item>
+</resources>
