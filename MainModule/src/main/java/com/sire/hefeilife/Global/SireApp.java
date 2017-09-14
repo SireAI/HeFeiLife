@@ -12,6 +12,7 @@ import com.sire.corelibrary.Networking.NetConnection.NetStateReceiver;
 import com.sire.corelibrary.UICheck.UIBlockTrack;
 import com.sire.hefeilife.BuildConfig;
 import com.sire.hefeilife.ModuleInit.DI.Base.AppInjector;
+import com.sire.mediators.MessagePushModuleInterface.MessagePushMediator;
 
 
 import javax.inject.Inject;
@@ -37,7 +38,7 @@ public class SireApp extends Application implements HasActivityInjector {
         //依赖注入
         AppInjector.init(this);
         //bug手机
-        BugReport.configuration(this);
+//        BugReport.configuration(this);
         //连网通知
         NetStateReceiver.registerSelf(this);
     }

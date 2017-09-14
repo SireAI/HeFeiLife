@@ -10,10 +10,12 @@ import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Utils.AutoClearedValue;
 import com.sire.hefeilife.R;
 import com.sire.hefeilife.databinding.ControllerMainBinding;
+import com.sire.mediators.MessagePushModuleInterface.MessagePushMediator;
 import com.sire.mediators.ShareModuleInterface.ShareMediator;
 import com.sire.mediators.UpgradeModuleInterface.UpgradeMediator;
 import com.sire.mediators.core.ActiveState;
 import com.sire.mediators.core.CallBack;
+import com.sire.messagepushmodule.ViewModel.MessagePushViewModel;
 
 import javax.inject.Inject;
 
@@ -24,6 +26,8 @@ public class MainController extends SireController {
     ShareMediator shareMediator;
     @Inject
     UpgradeMediator upgradeMediator;
+    @Inject
+    MessagePushMediator messagePushMediator;
     private AutoClearedValue<ControllerMainBinding> binding;
 
 
@@ -34,9 +38,10 @@ public class MainController extends SireController {
         binding = new AutoClearedValue<>(this, controllerLoginBinding);
         binding.get().setContext(this);
 //        shareMediator.smsVerify(data -> System.out.println("========" + data));
-        upgradeMediator.checkVersion(data -> {
-            System.out.println("======="+data.toString());
-        });
+//        upgradeMediator.checkVersion(data -> {
+//            System.out.println("======="+data.toString());
+//        });
+        messagePushMediator.initPushSDK();
     }
 
 

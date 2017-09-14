@@ -3,13 +3,21 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+    signingConfigs {
+        config {
+            keyAlias 'hefeilife'
+            keyPassword 'hefeilife'
+            storeFile file('/Users/Sire/sourctree/HeFeiLife/hefeilife.keystore')
+            storePassword 'hefeilife'
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
-        applicationId "com.sire.hefeilife"
+        applicationId rootProject.ext.mainapplicationId
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -26,8 +34,10 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 
@@ -57,6 +67,7 @@ dependencies {
     implementation project(':UserModule')
     implementation project(':ShareModule')
     implementation project(':UpgradeModule')
+    implementation project(':MessagePushModule')
 }
 
 

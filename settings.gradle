@@ -1,1 +1,1 @@
-include ':MainModule', ':ModuleEnvironment', ':UserModule', ':UpgradeModule' ,  ':Mediators', ':ShareModule'
+include ':MainModule', ':ModuleEnvironment', ':UserModule', ':UpgradeModule', ':MessagePushModule' ,  ':Mediators', ':ShareModule'
