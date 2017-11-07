@@ -33,7 +33,7 @@ public class PermissionHandler {
     static {
         instructions.put(Manifest.permission.WRITE_EXTERNAL_STORAGE,"存储读写权限");
         instructions.put(Manifest.permission.READ_EXTERNAL_STORAGE,"存储读写权限");
-        instructions.put(Manifest.permission.CAMERA,"开启照相");
+        instructions.put(Manifest.permission.CAMERA,"开启照相权限");
     }
 
     /**

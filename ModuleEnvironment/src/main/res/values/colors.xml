@@ -1,4 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="sire_text_color_white_normal">#DDffffff</color>
+    <!--白色背景主文字87%-->
+    <color name="white_bg_1_text">#212121</color>
+    <!--白色背景次文字54%-->
+    <color name="white_bg_2_text">
+        #767676
+    </color>
+    <!--白色背景提示性文字26%-->
+    <color name="white_bg_3_text">
+        #BCBCBC
+    </color>
+    <!--主题色背景白色文字-->
+    <color name="main_bg_1_text">
+        #FFFFFF
+    </color>
+    <!--主题色背景灰色文字-->
+    <color name="main_bg_2_text">
+        #757575
+    </color>
+    <color name="main_bg">
+        #FAFAFA
+    </color>
+    <!--应用主题色-->
+    <color name="color_ripple">#f3f3f3</color>
+
+    <color name="line">
+        #E6E6E6
+    </color>
+    <color name="loading_bg_color">
+        #111111
+    </color>
+    <color name="color_warn">
+        #FCAC48
+    </color>
+    <color name="colorPrimaryDark">@color/material_cyan_700</color>
+    <color name="colorPrimary">@color/material_cyan_500</color>
+    <color name="colorAccent">@color/material_deep_yelow_500</color>
+    <color name="colortextColorPrimary">#FFFFFF</color>
+    <color name="colortextnavigationBarColor">#000000</color>
+
+    <color name="material_cyan_100">#b2ebf2</color>
+    <color name="material_cyan_200">#80deea</color>
+    <color name="material_cyan_300">#4dd0e1</color>
+    <color name="material_cyan_500">#00bcd4</color>
+    <color name="material_cyan_700">#0097a7</color>
+    <color name="material_deep_yelow_500">#FFEB3B</color>
+
+    <!--文字主题色-->
+
+
+
 </resources>

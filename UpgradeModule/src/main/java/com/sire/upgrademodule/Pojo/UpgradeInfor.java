@@ -1,6 +1,8 @@
 package com.sire.upgrademodule.Pojo;
 
 
+import java.io.Serializable;
+
 /**
  * ==================================================
  * All Right Reserved
@@ -9,7 +11,7 @@ package com.sire.upgrademodule.Pojo;
  * Description:
  * ==================================================
  */
-public class UpgradeInfor {
+public class UpgradeInfor implements Serializable{
     private boolean needUpgrade;
     private String  versionName;
     private String upgradeMessage;

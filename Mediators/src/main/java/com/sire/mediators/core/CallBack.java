@@ -11,4 +11,5 @@ package com.sire.mediators.core;
 
 public interface CallBack<T> {
     void apply(T data);
+
 }

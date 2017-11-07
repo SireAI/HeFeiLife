@@ -33,6 +33,9 @@ public class FileBuilder {
      * 可以任意访问，但是应用程序目录下的文件只有应用程序自身能访问。
      */
     private FileType fileType = FileType.DATA;
+    /**
+     * this final file name
+     */
     private String fileName;
 
     private FileBuilder() {

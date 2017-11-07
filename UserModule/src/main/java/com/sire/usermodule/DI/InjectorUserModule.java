@@ -20,11 +20,9 @@ import dagger.android.DaggerFragment_MembersInjector;
  */
 @Module(includes = {CommonModule.class,ControllerModule.class,ViewModelModule.class})
 public  class InjectorUserModule {
-    @Inject
-    UserMediatorImpl userMediator;
 
     @Singleton @Provides
-    UserMediator provideUserMediator(){
+    UserMediator provideUserMediator(UserMediatorImpl userMediator){
         return userMediator;
     }
 

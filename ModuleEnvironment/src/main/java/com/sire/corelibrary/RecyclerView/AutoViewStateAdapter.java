@@ -68,7 +68,7 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
     @MainThread
     public void refreshDataSource(List<T> dataSource) {
         dataVersion ++;
-        if (mDataSource == null) {
+        if (mDataSource == null || mDataSource.size()==0) {
             if (dataSource == null) {
                 return;
             }
@@ -89,12 +89,12 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
                     return DiffUtil.calculateDiff(new DiffUtil.Callback() {
                         @Override
                         public int getOldListSize() {
-                            return oldItems.size();
+                            return oldItems != null ? oldItems.size() : 0;
                         }
 
                         @Override
                         public int getNewListSize() {
-                            return dataSource.size();
+                            return dataSource != null ? dataSource.size() : 0;
                         }
 
                         @Override
@@ -110,7 +110,7 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
                             T newItem = dataSource.get(newItemPosition);
                             return AutoViewStateAdapter.this.areContentsTheSame(oldItem, newItem);
                         }
-                    });
+                    },true);
                 }
 
                 @Override
@@ -119,8 +119,8 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
                         // ignore update
                         return;
                     }
-                    mDataSource = dataSource;
                     AutoViewStateAdapter.this.autoViewState.setLoadingState(false);
+                    mDataSource = dataSource;
                     diffResult.dispatchUpdatesTo(AutoViewStateAdapter.this);
 
                 }
@@ -178,7 +178,9 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
      * @param viewType
      */
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
-        if (!isEnabled(viewType)) return;
+        if (!isEnabled(viewType)) {
+            return;
+        }
         viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,5 +265,10 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
         boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position);
 
         void onNetErrorBtnClick();
+    }
+
+    @Nullable
+    public List<T> getDataSource() {
+        return mDataSource;
     }
 }

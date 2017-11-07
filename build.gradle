@@ -2,8 +2,8 @@
 
 buildscript {
     repositories {
-//        google()
-//        jcenter()
+        google()
+        jcenter()
         //个推依赖包地址
         maven { url 'https://maven.google.com' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -12,7 +12,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta2'
+        classpath 'com.android.tools.build:gradle:3.0.0'
 
 //        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
@@ -26,6 +26,7 @@ ext {
 
     kotlin_version = '1.1.2-4'
     arch_version = "1.0.0-alpha3"
+    arch_runtime_version = "1.0.0-alpha3"
     support_version = "26.0.2"
     dagger_version = "2.11-rc2"
     junit_version = "4.12"
@@ -43,12 +44,15 @@ ext {
     adapter_version = "2.3.0"
     constraintlayout_version = "1.0.2"
     roomrxjava2_version = "1.0.0-alpha1"
-    crashreport_version = "2.6.5"
-    nativecrashreport_version = "3.3.1"
+    crashreport_version = "latest.release"
+    nativecrashreport_version = "latest.release"
     mpermission_version = "1.0.0"
     eventbus_version = "3.0.0"
+    glide_version = "4.1.1"
+    circularimageview_version = "1.1"
+    page_bottom_strip_version = "2.2.5"
     compileSdkVersion = 26
-    buildToolsVersion = "25.0.3"
+    buildToolsVersion = "26.0.2"
     minSdkVersion = 18
     targetSdkVersion = 26
     versionCode = 1
@@ -64,6 +68,7 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+        maven { url 'https://maven.google.com' }
         maven { url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/" }
 
     }

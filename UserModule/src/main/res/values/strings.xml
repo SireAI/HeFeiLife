@@ -3,15 +3,40 @@
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings relatedalreadyLoginogin -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="phonenumber">手机号</string>
+    <string name="password">密码</string>
+    <string name="action_sign_in">登 陆</string>
+    <string name="forgot_pwd">忘记密码</string>
+    <string name="next_step">下一步</string>
+    <string name="already_send_verifycode">已发送短信验证码至此号码</string>
+    <string name="verifycode">验证码</string>
+    <string name="register">注 册</string>
+    <string name="retray_send">重新发送</string>
+    <string name="password_hint">请输入6~20位密码</string>
+    <string name="phonenumber_hint">输入你的手机号</string>
+    <string name="complete_personal_infor">完善个人资料</string>
+    <string name="pass">跳过</string>
+    <string name="nickname_hint">请输入2~11位昵称</string>
+    <string name="nickname">昵称</string>
+    <string name="permission_attention">该设备需要授予应用权限,请在应用信息权限管理中授予所需权限</string>
+    <string name="cancel">取消</string>
+    <string name="file_not_exist">文件不存在</string>
+    <string name="take_photo">拍摄</string>
+    <string name="photo_pick">相册获取</string>
+    <string name="relogin">请重新登陆</string>
+    <string name="upload_success">上传成功</string>
+    <string name="reset_success">更改成功</string>
+    <string name="name_already_exist">用户名已经存在</string>
+    <string name="select_sex">选择性别</string>
+    <string name="third_party_login">社交账号登陆</string>
+    <string name="select_birthday">选择生日</string>
+    <string name="back">返回</string>
+    <string name="findback_password">找回密码</string>
+    <string name="send_verifycode">发送验证码</string>
+    <string name="sms_tip">请输入注册或者绑定的手机号，我们会发送验证码到您的手机上</string>
+    <string name="verify">验证</string>
+    <string name="new_password">新密码</string>
+    <string name="reset_login">重置并登陆</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="not_same_password">两次密码输入不一致</string>
 </resources>

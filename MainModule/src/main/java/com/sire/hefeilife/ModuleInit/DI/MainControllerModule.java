@@ -2,6 +2,7 @@ package com.sire.hefeilife.ModuleInit.DI;
 
 
 import com.sire.hefeilife.Controller.MainController;
+import com.sire.hefeilife.Controller.SplashController;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -18,4 +19,6 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class MainControllerModule {
     @ContributesAndroidInjector
     abstract MainController contributeMainController();
+    @ContributesAndroidInjector
+    abstract SplashController contributeSplashController();
 }

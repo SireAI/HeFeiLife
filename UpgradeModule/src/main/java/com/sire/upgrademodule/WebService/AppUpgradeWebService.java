@@ -6,7 +6,7 @@ package com.sire.upgrademodule.WebService;
 
 import android.arch.lifecycle.LiveData;
 
-import com.sire.corelibrary.Pojo.JsonResponse;
+import com.sire.corelibrary.Networking.Response.JsonResponse;
 import com.sire.upgrademodule.Pojo.UpgradeInfor;
 import com.sire.upgrademodule.Pojo.VersionInfo;
 

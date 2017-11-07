@@ -45,8 +45,13 @@ public class ShareMediatorImpl implements ShareMediator {
     }
 
     @Override
-    public void smsVerify(CallBack<String> callBack) {
-        smsModel.phoneCodeVerify(callBack);
+    public void sendSMS(String phoneNumber, CallBack<String> callBack) {
+        smsModel.phoneCodeVerify(phoneNumber,callBack);
+    }
+
+    @Override
+    public void submitVerifyCode(String phoneNumber, String code) {
+        smsModel.sendVerifyCode(phoneNumber,code);
     }
 
     @Override

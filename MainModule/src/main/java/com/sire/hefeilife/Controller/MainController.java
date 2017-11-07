@@ -1,58 +1,149 @@
 package com.sire.hefeilife.Controller;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.sire.corelibrary.Controller.MainContainerComponnent;
 import com.sire.corelibrary.Controller.SireController;
-import com.sire.corelibrary.Utils.AutoClearedValue;
+import com.sire.corelibrary.RecyclerView.OnScrollDelegate;
+import com.sire.hefeilife.Controller.fragment.DiscoveryController;
+import com.sire.hefeilife.Controller.fragment.MessageController;
+import com.sire.hefeilife.Controller.fragment.MineController;
 import com.sire.hefeilife.R;
-import com.sire.hefeilife.databinding.ControllerMainBinding;
-import com.sire.mediators.MessagePushModuleInterface.MessagePushMediator;
+import com.sire.hefeilife.Views.NavigateTabItem;
+import com.sire.hefeilife.Views.NoScrollViewPager;
+import com.sire.mediators.FeedmoduleInterface.FeedMediator;
 import com.sire.mediators.ShareModuleInterface.ShareMediator;
 import com.sire.mediators.UpgradeModuleInterface.UpgradeMediator;
-import com.sire.mediators.core.ActiveState;
-import com.sire.mediators.core.CallBack;
-import com.sire.messagepushmodule.ViewModel.MessagePushViewModel;
+import com.sire.upgrademodule.ViewMoudle.AppUpgradeViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainController extends SireController {
-    @Inject
-    ViewModelProvider.Factory factory;
+import me.majiajie.pagerbottomtabstrip.NavigationController;
+import me.majiajie.pagerbottomtabstrip.PageNavigationView;
+
+public class MainController extends SireController implements MainContainerComponnent,OnScrollDelegate{
+
     @Inject
     ShareMediator shareMediator;
     @Inject
     UpgradeMediator upgradeMediator;
     @Inject
-    MessagePushMediator messagePushMediator;
-    private AutoClearedValue<ControllerMainBinding> binding;
+    FeedMediator feedMediator;
+
+    @Inject
+    AppUpgradeViewModel appUpgradeViewModel;
+    private PageNavigationView tab;
+    private NavigationController navigationController;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ControllerMainBinding controllerLoginBinding = DataBindingUtil.setContentView(this, R.layout.controller_main);
-        binding = new AutoClearedValue<>(this, controllerLoginBinding);
-        binding.get().setContext(this);
-//        shareMediator.smsVerify(data -> System.out.println("========" + data));
-//        upgradeMediator.checkVersion(data -> {
-//            System.out.println("======="+data.toString());
-//        });
-        messagePushMediator.initPushSDK();
+        setContentView(R.layout.controller_main);
+        tab = findViewById(R.id.tab);
+        NoScrollViewPager viewPagerContainer = findViewById(R.id.vp_page_container);
+        navigationController = tab.custom()
+                .addItem(NavigateTabItem.newItem(R.mipmap.home_unchecked, R.mipmap.home_checked, R.mipmap.home_pressed, "微讯", this))
+                .addItem(NavigateTabItem.newItem(R.mipmap.search_unchecked, R.mipmap.search_checked, R.mipmap.search_pressed, "发现", this))
+                .addItem(NavigateTabItem.newItem(R.mipmap.message_unchecked, R.mipmap.message_checked, R.mipmap.message_pressed, "消息", this))
+                .addItem(NavigateTabItem.newItem(R.mipmap.mine_unchecked, R.mipmap.mine_checked, R.mipmap.mine_pressed, "我的", this))
+                .build();
+
+        viewPagerContainer.setNoScroll(true);
+        viewPagerContainer.setOffscreenPageLimit(4);
+        viewPagerContainer.setAdapter(new PagerAdapter(getSupportFragmentManager(), initPages()));
+
+        navigationController.setupWithViewPager(viewPagerContainer);
+
+    }
+
+    private List<Fragment> initPages() {
+        List<Fragment> pages = new ArrayList<>();
+        pages.add((Fragment) feedMediator.getViewController());
+        pages.add(new DiscoveryController());
+        pages.add(new MessageController());
+        pages.add(new MineController());
+        return pages;
+    }
+
+    /**
+     * show or hide the actionbar
+     *
+     * @param show
+     */
+    public void toggleActionBar(boolean show) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+        if (show) {
+            if (actionBar.isShowing()) {
+                return;
+            }
+            actionBar.show();
+        } else {
+            if (actionBar.isShowing()) {
+                actionBar.hide();
+            }
+        }
     }
 
 
     public void onClick(View view) {
 
 
-//        String downloadUrl = "http://localhost:8080/upgrade/downloadapp/com.cutt.zhiyue.android.app965004_1533.apk";
-//        UpgradeInfor upgradeInfor = new UpgradeInfor();
-//        upgradeInfor.setDownloadUrl(downloadUrl);
-//        upgradeInfor.setVersionName("test-3-5");
-//        appUpgradeViewModel.upgradeAppVersion(this,upgradeInfor);
+    }
 
+    @Override
+    public PageNavigationView getPageNavigationView() {
+        return tab;
+    }
+
+    @Override
+    public void onScroll(RecyclerView recyclerView, int dx, int dy) {
+        if(navigationController!=null){
+            if(dy > 8){//列表向上滑动
+                navigationController.hideBottomLayout();
+            } else if(dy < -8){//列表向下滑动
+                navigationController.showBottomLayout();
+            }
+        }
+    }
+
+    private static class PagerAdapter extends FragmentPagerAdapter {
+
+        private List<Fragment> fragments;
+
+        public PagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+            super(fm);
+            this.fragments = fragments;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (fragments != null && fragments.size() > 0) {
+                return fragments.get(position);
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            if (fragments != null) {
+                return fragments.size();
+            }
+            return 0;
+        }
     }
 }

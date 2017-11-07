@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="feedItem"
+            type="com.sire.feedmodule.DB.Entry.FeedInfor" />
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="?android:attr/selectableItemBackground">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/subhead"
+            android:text="@{feedItem.title}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_weight="1"
+                android:id="@+id/tv_first"
+                android:background="@color/cardview_dark_background"
+                />
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_weight="1"
+                android:background="@color/cardview_dark_background"
+
+                android:id="@+id/tv_second" />
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_weight="1"
+                android:background="@color/cardview_dark_background"
+
+                android:id="@+id/tv_third" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/body1"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:text="睡得好香，小公主点击查看如果你是女生，在圈里遇
+到大贵人怎么办，但是如果你真的知道的话也许但是如果你真的知道的话也许但是如果你真的知道的话也许"
+            android:maxLines="2" />
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <com.pkmmte.view.CircularImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:onClick="onPicture"
+                android:id="@+id/iv_user_picture"
+                android:src="@mipmap/wifi_icon" />
+
+            <TextView
+                android:layout_marginLeft="11dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/caption"
+                android:text="Sire  发布于  本地娱乐" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

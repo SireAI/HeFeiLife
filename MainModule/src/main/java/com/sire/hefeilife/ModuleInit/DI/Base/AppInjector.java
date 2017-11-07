@@ -18,6 +18,7 @@ package com.sire.hefeilife.ModuleInit.DI.Base;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -27,6 +28,7 @@ import com.sire.corelibrary.DI.Injectable;
 import com.sire.hefeilife.Global.SireApp;
 
 import dagger.android.AndroidInjection;
+import dagger.android.HasActivityInjector;
 import dagger.android.support.AndroidSupportInjection;
 import dagger.android.support.HasSupportFragmentInjector;
 
@@ -90,11 +92,16 @@ public class AppInjector {
                     .registerFragmentLifecycleCallbacks(
                             new FragmentManager.FragmentLifecycleCallbacks() {
                                 @Override
-                                public void onFragmentCreated(FragmentManager fm, Fragment f,
-                                                              Bundle savedInstanceState) {
+                                public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
+                                    super.onFragmentCreated(fm, f, savedInstanceState);
+                                }
+
+                                @Override
+                                public void onFragmentPreAttached(FragmentManager fm, Fragment f, Context context) {
                                     if (f instanceof Injectable) {
                                         AndroidSupportInjection.inject(f);
                                     }
+                                    super.onFragmentPreAttached(fm, f, context);
                                 }
                             }, true);
         }

@@ -1,13 +1,18 @@
 package com.sire.corelibrary.Utils;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
@@ -66,12 +71,12 @@ public class APPUtils {
         return sb.toString();
     }
 
-//    public static float getActionbarSize(Context context) {
-//        TypedValue tv = new TypedValue();
-//        context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-//        int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, App.sharedInstance.getResources().getDisplayMetrics());
-//        return actionBarHeight;
-//    }
+    public static float getActionbarSize(Context context) {
+        TypedValue tv = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+        int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+        return actionBarHeight;
+    }
 
     public static int getPrimayColor(Context context) {
         TypedValue typedValue = new TypedValue();
@@ -196,5 +201,49 @@ public class APPUtils {
         }
 
         return false;
+    }
+    public static Intent getAppDetailSettingIntent(Context context) {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", context.getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName());
+        }
+        return localIntent;
+    }
+
+    public static int getScreenWidth(Context context) {
+        DisplayMetrics metric = new DisplayMetrics();
+        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(metric);
+        return metric.widthPixels;
+    }
+
+    public static int getScreenHeight(Context context) {
+        DisplayMetrics metric = new DisplayMetrics();
+        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(metric);
+        return metric.heightPixels;
+    }
+
+    public static String getVersionName(Context context) {
+        try {
+            String versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
+            return versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    public static int getVersionCode(Context context) {
+        try {
+            int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
+            return versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

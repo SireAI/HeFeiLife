@@ -43,7 +43,17 @@ public class APPUpgradeUtils {
         }
         return result;
     }
-
+    public static int getUninstallPackageVersionCode(Context context, String filePath) {
+        int result = 0;
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo info = pm.getPackageArchiveInfo(filePath,PackageManager.GET_ACTIVITIES);
+            result = info.versionCode;
+            return result ;
+        } catch (Exception e) {
+        }
+        return result;
+    }
 
     /**
      * 应用信息页面意图

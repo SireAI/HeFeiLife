@@ -26,7 +26,7 @@ public class NetStateReceiver extends BroadcastReceiver {
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        context.registerReceiver(netHandler, filter);
+        context.getApplicationContext().registerReceiver(netHandler, filter);
     }
 
     @Override

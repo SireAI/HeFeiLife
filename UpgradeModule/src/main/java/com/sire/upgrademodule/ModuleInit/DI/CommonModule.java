@@ -10,7 +10,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * ==================================================
@@ -29,7 +29,7 @@ public class CommonModule {
     AppUpgradeWebService provideUserWebService() {
         return new Retrofit.Builder()
                 .baseUrl(WebUrl.getHostUrl())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(AppUpgradeWebService.class);

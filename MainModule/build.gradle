@@ -3,6 +3,12 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
     signingConfigs {
         config {
             keyAlias 'hefeilife'
@@ -35,7 +41,8 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
+            zipAlignEnabled true
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
@@ -63,11 +70,13 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
-    //    compile 'com.android.support:multidex:1.0.1'
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+    //    implementation  'com.android.support:multidex:1.0.1'
     implementation project(':UserModule')
     implementation project(':ShareModule')
     implementation project(':UpgradeModule')
     implementation project(':MessagePushModule')
+    implementation project(':FeedModule')
 }
 
 

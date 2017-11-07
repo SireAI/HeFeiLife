@@ -1,5 +1,8 @@
 package com.sire.upgrademodule.Mediator;
 
+import android.support.v4.app.FragmentActivity;
+
+import com.sire.mediators.UpgradeModuleInterface.UpgradeCallback;
 import com.sire.mediators.UpgradeModuleInterface.UpgradeMediator;
 import com.sire.mediators.core.ActiveState;
 import com.sire.mediators.core.CallBack;
@@ -25,12 +28,12 @@ public class UpgradeMediatorImpl implements UpgradeMediator {
     }
 
 
-    /**
-     * 成功表示需要升级，失败表示不需要升级或者错误
-     * @param callBack
-     */
     @Override
-    public void checkVersion(CallBack<ActiveState> callBack) {
-        appUpgradeViewModel.checkVersion(callBack);
+    public void checkVersion(Object context) {
+        if(context instanceof FragmentActivity){
+            this.appUpgradeViewModel.checkVersion((FragmentActivity)context);
+        }else {
+            throw new RuntimeException("context 必须是FragmentActivity对象");
+        }
     }
 }

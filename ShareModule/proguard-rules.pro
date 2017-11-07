@@ -23,8 +23,4 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class cn.smssdk.**{*;}
--keep class com.mob.**{*;}
 
--dontwarn com.mob.**
--dontwarn cn.smssdk.**

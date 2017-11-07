@@ -10,7 +10,8 @@ package com.sire.corelibrary.Networking;
  */
 public class WebUrl {
     public interface UrlConstant{
-        String TEST_URL = "http://localhost:8080";
+        String TEST_URL = "http://10.0.2.2:8080";
+//        String TEST_URL = "http://localhost:8080";
         String PRODUCT_URL = "http://gank.io/api";
     }
 

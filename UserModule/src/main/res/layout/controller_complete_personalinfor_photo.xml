@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_photo">
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:navigationIcon="@mipmap/back_arrow"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title=" ">
+
+        <TextView
+            style="@style/text_title_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            android:text="@string/complete_personal_infor" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:alpha="0.7"
+            android:text="@string/pass"
+            android:layout_marginRight="17dp"
+            android:layout_gravity="center_vertical|right"
+            android:onClick="onSkip"
+            />
+    </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="44dp"
+        android:layout_marginRight="44dp"
+        android:gravity="center_horizontal"
+        >
+        <com.pkmmte.view.CircularImageView
+            android:layout_marginTop="45dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            app:border="true"
+            app:border_color="@color/main_bg_2_text"
+            app:border_width="1dp"
+            android:onClick="onPicture"
+            android:id="@+id/iv_user_picture"
+            android:src="@mipmap/camera"/>
+
+
+            <LinearLayout
+                android:layout_marginTop="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginLeft="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:hintAnimationEnabled="false"
+                android:id="@+id/til_nickname"
+                >
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/tie_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/nickname_hint"
+                    android:imeActionId="6"
+                    android:imeActionLabel="@string/next_step"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:maxLength="11"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/normal_button_style"
+            android:layout_marginTop="80dp"
+            android:onClick="onNext"
+            android:text="@string/next_step" />
+    </LinearLayout>
+</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

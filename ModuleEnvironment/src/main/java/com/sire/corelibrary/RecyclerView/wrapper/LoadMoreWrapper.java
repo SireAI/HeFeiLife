@@ -22,7 +22,7 @@ import com.sire.corelibrary.RecyclerView.utils.WrapperUtils;
  * Description:
  * ==================================================
  */
-public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DataNotify {
+public class LoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DataNotify {
     public static final int ITEM_TYPE_LOAD_MORE = Integer.MAX_VALUE - 2;
 
     private RecyclerView.Adapter mInnerAdapter;

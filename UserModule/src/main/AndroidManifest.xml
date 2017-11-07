@@ -1,13 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sire.usermodule"> <!-- To auto-complete the email text field in alreadyLoginogin form with the user's emails -->
-    <application>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
+    <application >
         <activity
             android:name=".Controller.LoginController"
             android:exported="true"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/ActivityTheme"
+            >
+        </activity>
+        <activity android:name=".Controller.EntranceController"
+
+            android:theme="@style/ActivityFullScreenTheme.StatusOverlay"/>
+        <activity android:name=".Controller.RegisterPhoneNumberController"
+            android:theme="@style/ActivityTheme"
+
+            />
+        <activity android:name=".Controller.RegisterVerifyCodeController"
+            android:theme="@style/ActivityTheme"
+            />
+        <activity android:name=".Controller.CompletePersonalInforController"
+            android:theme="@style/ActivityTheme"
+            />
+        <activity android:name=".Controller.CompletePersonalInforPhotoController"
+            android:theme="@style/ActivityTheme"
+
+            />
+        <activity android:name=".Controller.CompletePersonalInforSexController"
+            android:theme="@style/ActivityTheme"
+            />
+        <activity android:name=".Controller.CompletePersonalInforBirthdayController"
+            android:theme="@style/ActivityTheme"
+            />
+        <activity android:name=".Controller.CompletePersonalInforHobbyController"
+            android:theme="@style/ActivityTheme"
+            />
+        <activity android:name=".Controller.PasswordPhonenumberController"
+            android:theme="@style/ActivityTheme"
+            />
+        <activity android:name=".Controller.PasswordVerifyCodeController"
+            android:theme="@style/ActivityTheme"
+
+            />
+        <activity android:name=".Controller.PasswordResetController"
+            android:theme="@style/ActivityTheme"
+            />
     </application>
 
 </manifest>

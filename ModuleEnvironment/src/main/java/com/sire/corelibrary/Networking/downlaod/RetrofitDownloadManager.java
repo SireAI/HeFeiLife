@@ -112,6 +112,7 @@ public class RetrofitDownloadManager {
                     DownloadFileInfor unfinishedDownloading = cacheService.findUnfinishedDownloadingBy(downloadFileInfor.getId());
                     if (unfinishedDownloading != null) {
                         downloadFileInfor.copy(unfinishedDownloading);
+                        downloadFileInfor.setTempBrokenPosition(downloadFileInfor.getReadStartPonint());
                         Timber.i("文件下载断点信息："+info.toString());
                     }
 

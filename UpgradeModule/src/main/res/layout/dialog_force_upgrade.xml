@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+        <variable
+            name="callback"
+            type="com.sire.upgrademodule.Views.dialogs.ForceUpgradeDialog.Callback"/>
+
+        <variable
+            name="isForce"
+            type="Boolean" />
+
+        <variable
+            name="dialog"
+            type="android.support.v4.app.DialogFragment" />
+
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout style="@style/dialog_layout">
+
+        <TextView
+            android:id="@+id/tv_upgrade_title"
+            style="@style/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="合肥生活圈 v1.0.3" />
+
+        <TextView
+            android:id="@+id/tv_dialog_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="left"
+            android:text="1.fsadfsafasfas\n2.fdasfsafsafsa"
+            app:layout_constraintTop_toBottomOf="@id/tv_upgrade_title" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_dialog_content">
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                style="@style/dialog_button"
+                android:text="@string/btn_next_time"
+                android:textStyle="normal"
+                android:visibility="@{isForce? View.GONE : View.VISIBLE}"
+                android:onClick="@{()->callback.onUpgrade(dialog,false)}"
+                />
+
+            <TextView
+                android:id="@+id/tv_sure"
+                style="@style/dialog_button"
+                android:text="@string/btn_upgrade"
+                android:textColor="?attr/colorPrimaryDark"
+                android:onClick="@{()->callback.onUpgrade(dialog,true)}"/>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -8,6 +8,8 @@ import android.arch.persistence.room.Query;
 
 import com.sire.usermodule.DB.Entry.User;
 
+import java.util.List;
+
 @Dao
 public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -15,4 +17,7 @@ public interface UserDao {
 
     @Query("SELECT * FROM User WHERE name = :name")
     LiveData<User> queryUserById(String name);
+
+    @Query("SELECT * FROM User ORDER BY loginTime DESC")
+    LiveData<List<User>> queryAllUsers();
 }
