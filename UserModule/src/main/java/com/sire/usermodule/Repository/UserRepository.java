@@ -18,6 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Flowable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -45,7 +46,7 @@ public class UserRepository {
     public LiveData userLogin(final UserLoginInfo userInfor) {
         return new DataSourceStrategy.Builder()
                 .appDataFromStrategy(DataSourceStrategy.DataFromStrategy.NET)
-                .cacheData(true)
+                .cacheData()
                 .build()
                 .apply(new DataSourceStrategy.DataDecision<JsonResponse<User>, User>() {
 
@@ -62,13 +63,13 @@ public class UserRepository {
 
     }
 
-    public LiveData<List<User>> fetchUsers() {
+    public Flowable<List<User>> fetchUsers() {
         return userDao.queryAllUsers();
     }
 
     public LiveData userRegister(UserRegisterInfo userRegisterInfo) {
         return new DataSourceStrategy.Builder()
-                .cacheData(true)
+                .cacheData()
                 .appDataFromStrategy(DataSourceStrategy.DataFromStrategy.NET)
                 .build()
                 .apply(new DataSourceStrategy.DataDecision<JsonResponse<User>, User>() {
@@ -92,7 +93,7 @@ public class UserRepository {
                 .addFormDataPart("file", "file", RequestBody.create(MediaType.parse("image/*"), file))
                 .build();
         return new DataSourceStrategy.Builder()
-                .cacheData(true)
+                .cacheData()
                 .appDataFromStrategy(DataSourceStrategy.DataFromStrategy.NET)
                 .build()
                 .apply(new DataSourceStrategy.DataDecision<JsonResponse<User>, User>() {

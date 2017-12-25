@@ -13,20 +13,20 @@ import android.widget.TextView;
 
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
+import com.sire.corelibrary.Executors.AppExecutors;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Utils.AutoClearedValue;
-import com.sire.corelibrary.Utils.SPUtils;
 import com.sire.corelibrary.Utils.SnackbarUtils;
 import com.sire.corelibrary.Utils.ToastUtils;
+import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.usermodule.DB.Entry.User;
 import com.sire.usermodule.R;
-import com.sire.usermodule.View.ProgressHUD;
 import com.sire.usermodule.ViewModel.UserViewModel;
 import com.sire.usermodule.databinding.ControllerLoginBinding;
 
 import javax.inject.Inject;
 
-import static com.sire.corelibrary.Networking.Network.LOGIN_TOKEN;
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.PHONE_REG;
 
 /**
@@ -41,7 +41,8 @@ public class LoginController extends SireController {
 
     @Inject
     ViewModelProvider.Factory factory;
-
+    @Inject
+    AppExecutors appExecutors;
     private AutoClearedValue<ControllerLoginBinding> binding;
     private UserViewModel userViewModel;
     private boolean phoneNumberReady = false;
@@ -56,26 +57,27 @@ public class LoginController extends SireController {
         binding.get().setContext(this);
         setActionBarEnabled(controllerLoginBinding.toolbar);
         userViewModel = ViewModelProviders.of(this, factory).get(UserViewModel.class);
-
-
-        userViewModel.getUsers().observe(this, users -> {
-            User user = new User();
-            if (users != null && users.size() > 0) {
-                user = users.get(0);
-            }
-            binding.get().setUser(user);
-        });
+        User currentUser = userViewModel.getCurrentUser();
+        if (currentUser == null) {
+            currentUser = new User();
+        }
+        binding.get().setUser(currentUser);
         userViewModel.getLoginResult().observe(this, (DataResource<User> userDataResource) -> {
             switch (userDataResource.status) {
                 case SUCCESS:
                     ProgressHUD.close();
-                    userViewModel.saveUserState(LoginController.this,userDataResource.data);
-                    SPUtils.saveKeyValueString(LoginController.this,LOGIN_TOKEN,userDataResource.data.getToken());
-                    ToastUtils.showToast(this,"登陆成功");
+                    userViewModel.saveUserState(LoginController.this, userDataResource.data);
+                    ToastUtils.showToast(this, "登陆成功");
+                    appExecutors.mainHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            segueToPreviousController();
+                        }
+                    }, 100);
                     break;
                 case ERROR:
                     ProgressHUD.close();
-                    SnackbarUtils.basicSnackBar(binding.get().clLogin,userDataResource.message,LoginController.this);
+                    SnackbarUtils.basicSnackBar(binding.get().clLogin, userDataResource.message, LoginController.this);
                     break;
                 case LOADING:
                     ProgressHUD.showDialog(LoginController.this);
@@ -87,16 +89,16 @@ public class LoginController extends SireController {
         });
     }
 
+    private void segueToPreviousController() {
+        setResult(LOGIN_REQUEST_CODE);
+        finishActivity(LOGIN_REQUEST_CODE);
+        finish();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         binding.get().btnLogin.setEnabled(phoneNumberReady && passwordReady);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        userViewModel.getLoginResult();
     }
 
     /**
@@ -133,9 +135,9 @@ public class LoginController extends SireController {
         binding.get().btnLogin.setEnabled(phoneNumberReady && passwordReady);
     }
 
-    public void onResetPassword(View view){
+    public void onResetPassword(View view) {
         Intent intent = new Intent(this, PasswordPhonenumberController.class);
-        segue(Segue.SegueType.PUSH,intent);
+        segue(Segue.SegueType.PUSH, intent);
     }
 
 }

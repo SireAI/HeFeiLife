@@ -1,7 +1,6 @@
 package com.sire.feedmodule.Pojo;
 
-import android.arch.persistence.room.Ignore;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sire.corelibrary.Networking.dataBound.DataSourceStrategy;
 
@@ -9,10 +8,11 @@ import java.util.Date;
 
 public class FeedRequestInfor {
     public String userId;
-    public int pageSize ;
-    public int pageIndex ;
+    public int pageSize;
+    public int pageIndex;
     public int pageOffset;
     public String feedType;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss SSS")
     public Date timeLine;
     public boolean getNewFeeds;
 

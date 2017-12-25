@@ -1,10 +1,17 @@
 package com.sire.messagepushmodule.Mediator;
 
+import com.sire.corelibrary.DI.Environment.ModuleInit;
+import com.sire.corelibrary.DI.Environment.ModuleInitInfor;
 import com.sire.mediators.MessagePushModuleInterface.MessagePushMediator;
 import com.sire.messagepushmodule.ViewModel.MessagePushViewModel;
 
+import org.reactivestreams.Publisher;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 
 /**
  * ==================================================
@@ -15,15 +22,22 @@ import javax.inject.Singleton;
  * ==================================================
  */
 @Singleton
-public class MessagePushMediatorImpl implements MessagePushMediator{
+public class MessagePushMediatorImpl implements MessagePushMediator,ModuleInit{
     private MessagePushViewModel messagePushViewModel;
     @Inject
     public MessagePushMediatorImpl(MessagePushViewModel messagePushViewModel) {
         this.messagePushViewModel = messagePushViewModel;
     }
 
+
     @Override
-    public void initPushSDK() {
-        messagePushViewModel.initPushSDK();
+    public Flowable<ModuleInitInfor> init() {
+        return Flowable.just("messagePush").flatMap(new Function<String, Publisher<ModuleInitInfor>>() {
+            @Override
+            public Publisher<ModuleInitInfor> apply(String s) throws Exception {
+                messagePushViewModel.initPushSDK();
+                return Flowable.just(new ModuleInitInfor("MessagePushModule","推送服务初始化"));
+            }
+        });
     }
 }

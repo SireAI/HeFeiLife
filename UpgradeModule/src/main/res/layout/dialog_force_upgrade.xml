@@ -14,7 +14,7 @@
 
         <variable
             name="isForce"
-            type="Boolean" />
+            type="java.lang.Boolean" />
 
         <variable
             name="dialog"

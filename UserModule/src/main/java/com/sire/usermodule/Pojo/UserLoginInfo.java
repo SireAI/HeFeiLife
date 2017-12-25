@@ -1,5 +1,9 @@
 package com.sire.usermodule.Pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class UserLoginInfo {
 
     private String identityType;

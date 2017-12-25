@@ -22,4 +22,13 @@ public interface Constant {
      * 最新的热点feed信息
      */
     String FEED_INFOR = "feedInfor";
+    /**
+     * 参数key
+     */
+    String FEED_TYPE = "feedType";
+
+    /**
+     *
+     */
+    String FEED_DETAIL = "feedType";
 }

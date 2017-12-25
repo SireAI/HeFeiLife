@@ -1,5 +1,6 @@
 package com.sire.hefeilife.Controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -31,8 +32,9 @@ import javax.inject.Inject;
 
 import me.majiajie.pagerbottomtabstrip.NavigationController;
 import me.majiajie.pagerbottomtabstrip.PageNavigationView;
+import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectedListener;
 
-public class MainController extends SireController implements MainContainerComponnent,OnScrollDelegate{
+public class MainController extends SireController implements MainContainerComponnent,OnScrollDelegate, OnTabItemSelectedListener {
 
     @Inject
     ShareMediator shareMediator;
@@ -45,6 +47,7 @@ public class MainController extends SireController implements MainContainerCompo
     AppUpgradeViewModel appUpgradeViewModel;
     private PageNavigationView tab;
     private NavigationController navigationController;
+    private List<Fragment> pages;
 
 
     @Override
@@ -59,10 +62,10 @@ public class MainController extends SireController implements MainContainerCompo
                 .addItem(NavigateTabItem.newItem(R.mipmap.message_unchecked, R.mipmap.message_checked, R.mipmap.message_pressed, "消息", this))
                 .addItem(NavigateTabItem.newItem(R.mipmap.mine_unchecked, R.mipmap.mine_checked, R.mipmap.mine_pressed, "我的", this))
                 .build();
-
+        navigationController.addTabItemSelectedListener(this);
         viewPagerContainer.setNoScroll(true);
         viewPagerContainer.setOffscreenPageLimit(4);
-        viewPagerContainer.setAdapter(new PagerAdapter(getSupportFragmentManager(), initPages()));
+        viewPagerContainer.setAdapter(new PagerAdapter(getSupportFragmentManager(), pages = initPages()));
 
         navigationController.setupWithViewPager(viewPagerContainer);
 
@@ -100,9 +103,20 @@ public class MainController extends SireController implements MainContainerCompo
     }
 
 
-    public void onClick(View view) {
-
-
+    /**
+     * 回调传递
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(pages!=null){
+            for (int i = 0; i < pages.size(); i++) {
+                pages.get(i).onActivityResult(requestCode,resultCode,data);
+            }
+        }
     }
 
     @Override
@@ -121,6 +135,16 @@ public class MainController extends SireController implements MainContainerCompo
         }
     }
 
+    @Override
+    public void onSelected(int index, int old) {
+
+    }
+
+    @Override
+    public void onRepeat(int index) {
+        System.out.println("====="+index);
+    }
+
     private static class PagerAdapter extends FragmentPagerAdapter {
 
         private List<Fragment> fragments;
@@ -129,6 +153,8 @@ public class MainController extends SireController implements MainContainerCompo
             super(fm);
             this.fragments = fragments;
         }
+
+
 
         @Override
         public Fragment getItem(int position) {

@@ -49,9 +49,10 @@ public class CommonModule {
 
     @Singleton
     @Provides
-    FeedDao provideUserDao(FeedDb db) {
+    FeedDao provideFeedDao(FeedDb db) {
         return db.feedDao();
     }
+
 
 
 }

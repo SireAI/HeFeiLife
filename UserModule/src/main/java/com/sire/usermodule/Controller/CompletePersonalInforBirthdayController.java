@@ -15,9 +15,9 @@ import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Utils.CommonUtils;
 import com.sire.corelibrary.Utils.SnackbarUtils;
+import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.usermodule.R;
 import com.sire.usermodule.View.DatePickerSet;
-import com.sire.usermodule.View.ProgressHUD;
 import com.sire.usermodule.ViewModel.UserViewModel;
 
 import java.util.Calendar;
@@ -77,7 +77,7 @@ public class CompletePersonalInforBirthdayController extends SireController{
 
     }
     public void onNext(View view){
-        userViewModel.updateBirthday(((String)tvBirthday.getTag()),userViewModel.getUserId(this)).observe(this, dataResource -> {
+        userViewModel.updateBirthday(((String)tvBirthday.getTag()),userViewModel.getUserId()).observe(this, dataResource -> {
             switch (dataResource.status) {
                 case LOADING:
                     ProgressHUD.showDialog(CompletePersonalInforBirthdayController.this);

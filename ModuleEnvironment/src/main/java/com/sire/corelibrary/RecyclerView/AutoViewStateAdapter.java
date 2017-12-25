@@ -15,6 +15,13 @@ import com.sire.corelibrary.RecyclerView.base.ViewHolder;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * ==================================================
@@ -38,6 +45,12 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
         this.autoViewState = new AutoViewState();
         setErrorClick(recyclerView);
         mItemViewDelegateManager = new ItemViewDelegateManager();
+    }
+
+    public void setEmptyView(View view){
+        if(autoViewState!=null){
+            autoViewState.setEmptyView(view);
+        }
     }
 
     /**
@@ -65,6 +78,10 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
     }
 
 
+    /**
+     * UI刷新方法
+     * @param dataSource
+     */
     @MainThread
     public void refreshDataSource(List<T> dataSource) {
         dataVersion ++;
@@ -74,15 +91,19 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
             }
             mDataSource = dataSource;
             this.autoViewState.setLoadingState(false);
+
             notifyDataSetChanged();
+
         } else if (dataSource == null) {
             int oldSize = mDataSource.size();
             mDataSource = null;
             this.autoViewState.setLoadingState(false);
             notifyItemRangeRemoved(0, oldSize);
+
         } else {
             final int startVersion = dataVersion;
             final List<T> oldItems = mDataSource;
+            //出现运行时间特别长的情况
             new AsyncTask<Void, Void, DiffUtil.DiffResult>() {
                 @Override
                 protected DiffUtil.DiffResult  doInBackground(Void... voids) {
@@ -110,7 +131,7 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
                             T newItem = dataSource.get(newItemPosition);
                             return AutoViewStateAdapter.this.areContentsTheSame(oldItem, newItem);
                         }
-                    },true);
+                    },false);
                 }
 
                 @Override
@@ -122,7 +143,6 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
                     AutoViewStateAdapter.this.autoViewState.setLoadingState(false);
                     mDataSource = dataSource;
                     diffResult.dispatchUpdatesTo(AutoViewStateAdapter.this);
-
                 }
             }.execute();
         }
@@ -181,25 +201,19 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
         if (!isEnabled(viewType)) {
             return;
         }
-        viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnItemClickListener != null) {
-                    int position = viewHolder.getAdapterPosition();
-                    mOnItemClickListener.onItemClick(v, viewHolder, position);
-                }
+        viewHolder.getConvertView().setOnClickListener(v -> {
+            if (mOnItemClickListener != null) {
+                int position = viewHolder.getAdapterPosition();
+                mOnItemClickListener.onItemClick(v, viewHolder, position);
             }
         });
 
-        viewHolder.getConvertView().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOnItemClickListener != null) {
-                    int position = viewHolder.getAdapterPosition();
-                    return mOnItemClickListener.onItemLongClick(v, viewHolder, position);
-                }
-                return false;
+        viewHolder.getConvertView().setOnLongClickListener(v -> {
+            if (mOnItemClickListener != null) {
+                int position = viewHolder.getAdapterPosition();
+                return mOnItemClickListener.onItemLongClick(v, viewHolder, position);
             }
+            return false;
         });
     }
     protected boolean isEnabled(int viewType) {
@@ -227,6 +241,7 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
     public int getItemCount() {
         return autoViewState.getItemCount(mDataSource);
     }
+
 
     /**
      * 添加view代理
@@ -260,11 +275,15 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, RecyclerView.ViewHolder holder, int position);
+        void onItemClick(View view, ViewHolder holder, int position);
 
-        boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position);
+        default boolean onItemLongClick(View view, ViewHolder holder, int position) {
+            return false;
+        }
 
-        void onNetErrorBtnClick();
+        default void onNetErrorBtnClick() {
+
+        }
     }
 
     @Nullable

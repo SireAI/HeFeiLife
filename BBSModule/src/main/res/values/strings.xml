@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BBSModule</string>
+    <string name="all_comments">全部评论</string>
+    <string name="follow">+ 关注</string>
+    <string name="in_follow">已关注</string>
+    <string name="let_me_say">我也说一句吧~</string>
+    <string name="send">发 送</string>
+    <string name="comment_failed">评论发表失败</string>
+    <string name="reply">回复评论</string>
+    <string name="copy">复制评论</string>
+    <string name="report">举报帖子</string>
+    <string name="delete_post">删除帖子</string>
+    <string name="copy_to_clipboard">已经复制到粘贴板</string>
+    <string name="delete_comment">删除评论</string>
+    <string name="delete_comment_success">评论删除成功</string>
+    <string name="delete_failed">评论删除失败</string>
+    <string name="publish">发表</string>
+</resources>

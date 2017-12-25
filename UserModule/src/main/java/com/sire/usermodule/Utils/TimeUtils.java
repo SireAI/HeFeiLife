@@ -6,6 +6,7 @@ import android.text.format.DateUtils;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * Created by SireGod on 2015/6/11.
@@ -21,6 +22,7 @@ public class TimeUtils {
         mTotalTime = totalTime;
         countDownDelegate = delegate;
         timer = new Timer();
+
         timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -32,6 +34,7 @@ public class TimeUtils {
         };
         timer.schedule(timerTask, 0, 1000);
     }
+
 
 
     private static int mTotalTime;

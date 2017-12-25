@@ -35,7 +35,7 @@ public class ViewHolder extends RecyclerView.ViewHolder
         this(dataBinding.getRoot());
         this.dataBinding = dataBinding;
     }
-     ViewDataBinding getDataBinding() {
+    public ViewDataBinding getDataBinding() {
         return dataBinding;
     }
     /**

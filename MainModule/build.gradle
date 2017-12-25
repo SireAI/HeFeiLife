@@ -55,6 +55,7 @@ android {
 configurations.all {
     resolutionStrategy {
         force "com.android.support:support-v4:$support_version"
+
     }
 
 
@@ -72,11 +73,14 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
     //    implementation  'com.android.support:multidex:1.0.1'
-    implementation project(':UserModule')
+    implementation project(':FeedModule')
     implementation project(':ShareModule')
     implementation project(':UpgradeModule')
+    implementation project(':UserModule')
     implementation project(':MessagePushModule')
-    implementation project(':FeedModule')
+    implementation project(':BBSModule')
+//    api 'com.android.support:multidex:1.0.0'
+
 }
 
 

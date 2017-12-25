@@ -1,16 +1,13 @@
 package com.sire.feedmodule.DI;
 
 import android.arch.lifecycle.ViewModel;
-import android.support.v4.app.Fragment;
 
 import com.sire.corelibrary.DI.ViewModelKey;
-import com.sire.feedmodule.Controller.LatestInformationController;
+import com.sire.feedmodule.ViewModel.CacheClearViewModel;
 import com.sire.feedmodule.ViewModel.FeedViewModel;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.android.AndroidInjector;
-import dagger.android.support.FragmentKey;
 import dagger.multibindings.IntoMap;
 
 /**
@@ -29,5 +26,8 @@ public abstract class ViewModelModule {
     @ViewModelKey(FeedViewModel.class)
     abstract ViewModel bindUserViewModel(FeedViewModel feedViewModel);
 
-
+    @Binds
+    @IntoMap
+    @ViewModelKey(CacheClearViewModel.class)
+    abstract ViewModel bindCacheClearViewModel(CacheClearViewModel cacheClearViewModel);
 }

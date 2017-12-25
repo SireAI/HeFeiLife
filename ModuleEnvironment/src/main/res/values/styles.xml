@@ -133,6 +133,8 @@ android:textStyle="normal|bold|italic"
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/white_bg_1_text</item>
         <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">12dp</item>
+
     </style>
     <style name="button_text">
         <item name="android:textSize">14sp</item>
@@ -196,4 +198,28 @@ android:textStyle="normal|bold|italic"
         <item name="cancelButtonMarginTop">3dp</item>
         <item name="actionSheetTextSize">14sp</item>
     </style>
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textSize">18sp</item> <!--  搞掂字体大小-->
+        <item name="overlapAnchor">false</item>
+        <item name="colorControlNormal">@color/main_bg</item>
+        <item name="android:actionMenuTextColor">@color/main_bg</item>
+
+        <item name="android:dropDownVerticalOffset">6dp</item>
+        <item name="android:layout_marginRight">6dp</item>
+    </style>
+    <style name="base_tab_bottom_style">
+        <item name="android:textSize">@dimen/notification_subtext_size</item>
+        <item name="android:gravity">center</item>
+
+        <item name="android:background">@android:color/white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">0dp</item>
+        <item name="android:layout_weight">1.0</item>
+
+    </style>
+<style name="dialog_marterial" parent="@style/Base.V7.Theme.AppCompat.Light.Dialog">
+    <item name="windowMinWidthMajor">@dimen/dialog_min_width_major</item>
+    <item name="windowMinWidthMinor">@dimen/dialog_min_width_minor</item></style>
 </resources>

@@ -19,7 +19,7 @@ import com.sire.corelibrary.RecyclerView.utils.WrapperUtils;
  * Description:
  * ==================================================
  */
-public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DataNotify
+public class HeaderAndFooterWrapper extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DataNotify
 {
     private static final int BASE_ITEM_TYPE_HEADER = 100000;
     private static final int BASE_ITEM_TYPE_FOOTER = 200000;
@@ -118,8 +118,9 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
                 {
                     return layoutManager.getSpanCount();
                 }
-                if (oldLookup != null)
+                if (oldLookup != null) {
                     return oldLookup.getSpanSize(position);
+                }
                 return 1;
             }
         });
@@ -185,5 +186,16 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
     @Override
     public void notifyViewState() {
         ((DataNotify)mInnerAdapter).notifyViewState();
+    }
+    public void onDestroy(){
+        if(mHeaderViews!=null){
+            mHeaderViews.clear();
+        }
+        if(mFootViews!=null){
+            mFootViews.clear();
+        }
+        if(mInnerAdapter!=null){
+            mInnerAdapter = null;
+        }
     }
 }

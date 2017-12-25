@@ -11,8 +11,8 @@ import android.view.View;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Utils.SnackbarUtils;
+import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.usermodule.R;
-import com.sire.usermodule.View.ProgressHUD;
 import com.sire.usermodule.ViewModel.UserViewModel;
 
 import javax.inject.Inject;
@@ -55,7 +55,7 @@ public class CompletePersonalInforSexController extends SireController{
             sex = "男";
         }
         view.setTag(sex);
-        userViewModel.updateSex(sex,userViewModel.getUserId(this)).observe(this, dataResource -> {
+        userViewModel.updateSex(sex,userViewModel.getUserId()).observe(this, dataResource -> {
             switch (dataResource.status) {
                 case LOADING:
                     ProgressHUD.showDialog(CompletePersonalInforSexController.this);

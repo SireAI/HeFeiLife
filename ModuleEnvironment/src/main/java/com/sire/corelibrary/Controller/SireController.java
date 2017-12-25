@@ -89,9 +89,6 @@ public abstract class SireController extends AppCompatActivity implements Lifecy
      * when you want to get the back result
      */
     protected void finishForResult(Intent data) {
-        if (data == null) {
-            throw new RuntimeException("data can't be null !");
-        }
         setResult(FOR_CONTROLLER_BACK, data);
         onBackPressed();
     }
@@ -106,7 +103,19 @@ public abstract class SireController extends AppCompatActivity implements Lifecy
         if (intent == null) {
             return;
         }
-        mSegue.segueForward(segueType, intent, this);
+        mSegue.segueForward(segueType, intent, this,false,null);
+    }
+    public void segueForResult(Segue.SegueType segueType, Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        mSegue.segueForward(segueType, intent, this,true,null);
+    }
+    public void segueWithScaleForResult(Segue.SegueType segueType, Intent intent, Segue.PagePositionData pagePositionData) {
+        if (intent == null) {
+            return;
+        }
+        mSegue.segueForward(segueType, intent, this,true,pagePositionData);
     }
 
     /**

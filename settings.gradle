@@ -1,1 +1,9 @@
-include ':MainModule', ':ModuleEnvironment', ':UserModule', ':UpgradeModule', ':MessagePushModule', ':FeedModule' ,  ':Mediators', ':ShareModule'
+include ':MainModule', ':BBSModule',
+        ':ModuleEnvironment',
+        ':UserModule',
+        ':UpgradeModule',
+        ':MessagePushModule',
+        ':FeedModule' ,
+        ':ShareModule',
+        ':Mediators'
+

@@ -64,4 +64,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v4.view.ViewPager>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/svg_publish"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        app:backgroundTint="?attr/colorPrimaryDark"
+        app:backgroundTintMode="src_in"
+
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true"
+        app:layout_anchor="@+id/viewpager"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="com.sire.hefeilife.Views.ScrollAwareFABBehavior"
+        app:rippleColor="@color/main_bg"
+        />
 </android.support.design.widget.CoordinatorLayout>

@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Utils.APPUtils;
+import com.sire.corelibrary.Utils.DialogUtils;
 import com.sire.usermodule.R;
-import com.sire.usermodule.Utils.DialogUtils;
 import com.zhy.m.permission.PermissionDenied;
 import com.zhy.m.permission.PermissionGrant;
 
@@ -103,6 +103,7 @@ public class PasswordPhonenumberController extends SireController implements Vie
     @PermissionDenied(REQUECT_CODE_BASIC_PERMISSIONS)
     public void requestPermisssionFailed() {
         DialogUtils.showDialog(this, getResources().getString(R.string.permission_attention), (dialogInterface, i) -> {
+            dialogInterface.dismiss();
             Intent appDetailSettingIntent = APPUtils.getAppDetailSettingIntent(PasswordPhonenumberController.this);
             startActivity(appDetailSettingIntent);
         });

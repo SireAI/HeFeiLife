@@ -36,7 +36,7 @@ public class ProgressNotifycation  {
         PendingIntent contentIntent = PendingIntent.getActivity(context, 1,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setSmallIcon(R.mipmap.ic_launcher_foreground)
+        builder.setSmallIcon(R.drawable.logo)
                 .setContentTitle("下载" + appName)
                 .setContentText("正在下载")
                 .setTicker("应用正在下载")
@@ -46,7 +46,7 @@ public class ProgressNotifycation  {
                 .setFullScreenIntent(contentIntent,true)
                 .setContentIntent(contentIntent)
                 .setWhen(SystemClock.currentThreadTimeMillis())
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.logo));
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.logo));
     }
 
     public void update( DownloadMessage downloadMessage) {

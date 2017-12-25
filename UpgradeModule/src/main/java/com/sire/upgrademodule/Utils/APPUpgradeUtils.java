@@ -22,8 +22,6 @@ import java.io.File;
  */
 
 public class APPUpgradeUtils {
-    private static final String COM_AB_NEWCLAIMS_FILEPROVIDER = "com.ab.newclaims.fileprovider";
-    private static final String APPLICATION_VND_ANDROID_PACKAGE_ARCHIVE = "application/vnd.android.package-archive";
     /**
      * 判断包是否完成
      * @param context

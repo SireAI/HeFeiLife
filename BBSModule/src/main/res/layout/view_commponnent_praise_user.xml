@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="java.lang.Boolean" />
+
+        <variable
+            name="praiseUser"
+            type="com.sire.bbsmodule.Pojo.PraiseInfor" />
+    </data>
+
+    <ImageView
+        android:layout_marginLeft="15dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:cirlce="@{true}"
+        android:imageUrl="@{praiseUser.userImage}"></ImageView>
+</layout>

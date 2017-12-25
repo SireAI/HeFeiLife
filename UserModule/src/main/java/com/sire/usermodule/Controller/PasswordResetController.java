@@ -18,10 +18,10 @@ import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Utils.AutoClearedValue;
 import com.sire.corelibrary.Utils.SnackbarUtils;
 import com.sire.corelibrary.Utils.ToastUtils;
+import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.corelibrary.View.ToastSuccess;
 import com.sire.usermodule.DB.Entry.User;
 import com.sire.usermodule.R;
-import com.sire.usermodule.View.ProgressHUD;
 import com.sire.usermodule.ViewModel.UserViewModel;
 import com.sire.usermodule.databinding.ControllerPasswordResetBinding;
 

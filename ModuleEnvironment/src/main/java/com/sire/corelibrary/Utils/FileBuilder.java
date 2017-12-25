@@ -22,6 +22,7 @@ import timber.log.Timber;
 public class FileBuilder {
 
 
+
     /**
      * 文件分类目录
      */
@@ -72,7 +73,21 @@ public class FileBuilder {
             }
         return checkFile(sb);
     }
+    public File buildDir(Context context) {
+        StringBuilder sb = new StringBuilder();
+        if (isSDCardAvailable()) {
+            sdcardFile(context, sb);
+        } else {
+            appFile(context, sb);
+        }
+        boolean makeDirSuccess = createDirs(sb.toString());
+        if (!makeDirSuccess) {
+            Timber.e(sb.toString() + "文件目录创建失败");
+            return null;
+        }
 
+        return new File(sb.toString());
+    }
     @Nullable
     private File checkFile(StringBuilder sb) {
         if (TextUtils.isEmpty(fileName)) {

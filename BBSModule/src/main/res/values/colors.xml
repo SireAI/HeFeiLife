@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="emoji_background">#eceff1</color>
+    <color name="emoji_icons">#61000000</color>
+    <color name="emoji_divider">#1f000000</color>
+    <color name="line_divider">#EEEEEE</color>
+    <color name="color_title_black">#202020</color>
+    <color name="color_title_caption">#717171</color>
+
+</resources>

@@ -1,6 +1,5 @@
 package com.sire.hefeilife;
 
-import com.google.gson.Gson;
 import com.sire.corelibrary.Utils.JSONUtils;
 import com.sire.corelibrary.Utils.ObjectMapConversionUtils;
 import com.sire.usermodule.DB.Entry.User;

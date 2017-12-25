@@ -3,9 +3,15 @@ package com.sire.feedmodule.DB.Entry;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +24,9 @@ import java.util.List;
  * ==================================================
  */
 @Entity(primaryKeys = "feedId")
-public class FeedInfor {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class FeedInfor implements Serializable{
 
     /**
      * 作者id
@@ -56,20 +64,94 @@ public class FeedInfor {
      */
     private String videoUrl;
     /**
+     * 用户头像地址
+     */
+    private String authorIcon;
+    /**
+     * 分类
+     */
+    private String categary;
+    /**
      * 赞的数目
      */
     private int praiseCount;
 
+    @Ignore
+    private String[] splitPictures;
     /**
-     * feed时间，这个时间更新创建和更新时间
-     */
-    /**
-     * 精确到毫秒级
+     * 精确到毫秒级，feed时间，这个时间更新创建和更新时间
      */
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss SSS")
     private Date timeLine;
+    /**
+     * 用户等级
+     */
+    private String authorLevel;
+    /**
+     * 发表地点
+     */
+    private String publishAddress;
+    @Ignore
+    private boolean isFollow;
 
 
+    public boolean isFollow() {
+        return isFollow;
+    }
+
+    public void setFollow(boolean follow) {
+        isFollow = follow;
+    }
+
+    public String getAuthorLevel() {
+        return authorLevel;
+    }
+
+    public void setAuthorLevel(String authorLevel) {
+        this.authorLevel = authorLevel;
+    }
+
+    public String getPublishAddress() {
+        return publishAddress;
+    }
+
+    public void setPublishAddress(String publishAddress) {
+        this.publishAddress = publishAddress;
+    }
+
+    /**
+     * 将图片Url分割到数据集合中
+     *
+     * @param pictureUrls
+     */
+    private void splitUrls(String pictureUrls) {
+        this.splitPictures = new String[]{};
+        if (!TextUtils.isEmpty(pictureUrls)) {
+            splitPictures = pictureUrls.split(",");
+        }
+    }
+
+    public String getAuthorIcon() {
+        return authorIcon;
+    }
+
+    public void setAuthorIcon(String authorIcon) {
+        this.authorIcon = authorIcon;
+    }
+
+    public String[] getSplitPictures() {
+        return splitPictures;
+    }
+
+
+
+    public String getCategary() {
+        return categary;
+    }
+
+    public void setCategary(String categary) {
+        this.categary = categary;
+    }
 
     public String getAuthorId() {
         return authorId;
@@ -125,6 +207,7 @@ public class FeedInfor {
 
     public void setPictureUrls(String pictureUrls) {
         this.pictureUrls = pictureUrls;
+        splitUrls(pictureUrls);
     }
 
     public String getVideoUrl() {
@@ -151,7 +234,6 @@ public class FeedInfor {
         this.authorName = authorName;
     }
 
-
     @Override
     public String toString() {
         return "FeedInfor{" +
@@ -163,8 +245,13 @@ public class FeedInfor {
                 ", content='" + content + '\'' +
                 ", pictureUrls='" + pictureUrls + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
+                ", authorIcon='" + authorIcon + '\'' +
+                ", categary='" + categary + '\'' +
                 ", praiseCount=" + praiseCount +
+                ", splitPictures=" + Arrays.toString(splitPictures) +
                 ", timeLine=" + timeLine +
+                ", authorLevel='" + authorLevel + '\'' +
+                ", publishAddress='" + publishAddress + '\'' +
                 '}';
     }
 
@@ -173,7 +260,7 @@ public class FeedInfor {
 
         FeedInfor feedInfor = (FeedInfor) o;
 
-        return feedId.equals(feedInfor.feedId)&&authorId.equals(feedInfor.authorId);
+        return feedId.equals(feedInfor.feedId) && authorId.equals(feedInfor.authorId);
     }
 
 

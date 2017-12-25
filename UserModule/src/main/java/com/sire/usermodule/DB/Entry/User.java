@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 
 /**
@@ -15,6 +17,7 @@ import java.util.Date;
  * ==================================================
  */
 @Entity(primaryKeys = "userId")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     @NonNull
     private String userId;
@@ -24,6 +27,7 @@ public class User {
     private String sex;
     private String birthday;
     private String phonenumber;
+    private int level;
     private boolean alreadyLogin;
     private Date loginTime;
     @Ignore
@@ -120,6 +124,14 @@ public class User {
         this.loginTime = loginTime;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -130,6 +142,7 @@ public class User {
                 ", sex='" + sex + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", phonenumber='" + phonenumber + '\'' +
+                ", level=" + level +
                 ", alreadyLogin=" + alreadyLogin +
                 ", loginTime=" + loginTime +
                 ", token='" + token + '\'' +

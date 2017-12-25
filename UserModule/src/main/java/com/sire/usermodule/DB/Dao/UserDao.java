@@ -10,6 +10,8 @@ import com.sire.usermodule.DB.Entry.User;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -19,5 +21,7 @@ public interface UserDao {
     LiveData<User> queryUserById(String name);
 
     @Query("SELECT * FROM User ORDER BY loginTime DESC")
-    LiveData<List<User>> queryAllUsers();
+    Flowable<List<User>> queryAllUsers();
+
+
 }

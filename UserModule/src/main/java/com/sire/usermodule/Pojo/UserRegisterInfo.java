@@ -1,5 +1,7 @@
 package com.sire.usermodule.Pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * ==================================================
  * All Right Reserved
@@ -8,6 +10,8 @@ package com.sire.usermodule.Pojo;
  * Description:
  * ==================================================
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class UserRegisterInfo  {
 
     private static final long serialVersionUID = 2981570808964843655L;

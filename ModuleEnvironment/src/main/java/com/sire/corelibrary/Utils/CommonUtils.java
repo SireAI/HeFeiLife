@@ -1,11 +1,15 @@
 package com.sire.corelibrary.Utils;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.SpannableString;
 import android.util.TypedValue;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ==================================================
@@ -53,5 +57,27 @@ public class CommonUtils {
     public static int sp2px(Context context,float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    public static String text2Html(String text){
+        SpannableString spanString= new SpannableString(text);
+        String html= Html.toHtml(spanString);
+        String html_string= parseUnicodeToStr(html);
+        return html_string;
+    }
+
+    //unicode转String
+    private static String parseUnicodeToStr(String unicodeStr) {
+        String regExp = "&#\\d*;";
+        Matcher m = Pattern.compile(regExp).matcher(unicodeStr);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            String s = m.group(0);
+            s = s.replaceAll("(&#)|;", "");
+            char c = (char) Integer.parseInt(s);
+            m.appendReplacement(sb, Character.toString(c));
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
 }

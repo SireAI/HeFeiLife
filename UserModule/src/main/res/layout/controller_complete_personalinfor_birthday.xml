@@ -17,7 +17,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:fitsSystemWindows="true"
-        app:navigationIcon="@mipmap/back_arrow"
+        app:navigationIcon="@drawable/svg_back_arrow"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"

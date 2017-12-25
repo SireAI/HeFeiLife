@@ -25,14 +25,14 @@ import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Executors.AppExecutors;
 import com.sire.corelibrary.Utils.APPUtils;
+import com.sire.corelibrary.Utils.DialogUtils;
 import com.sire.corelibrary.Utils.FileBuilder;
+import com.sire.corelibrary.Utils.PhotoPickUtils;
 import com.sire.corelibrary.Utils.SnackbarUtils;
+import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.corelibrary.View.ToastSuccess;
 import com.sire.usermodule.R;
-import com.sire.usermodule.Utils.DialogUtils;
-import com.sire.usermodule.Utils.PhotoPickUtils;
 import com.sire.usermodule.View.ActionSheet;
-import com.sire.usermodule.View.ProgressHUD;
 import com.sire.usermodule.ViewModel.UserViewModel;
 import com.zhy.m.permission.PermissionDenied;
 import com.zhy.m.permission.PermissionGrant;
@@ -45,9 +45,10 @@ import timber.log.Timber;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static com.sire.corelibrary.Permission.PermissionHandler.REQUECT_CODE_BASIC_PERMISSIONS;
-import static com.sire.usermodule.Utils.PhotoPickUtils.CODE_CAMERA;
-import static com.sire.usermodule.Utils.PhotoPickUtils.CODE_PHOTO;
-import static com.sire.usermodule.Utils.PhotoPickUtils.getPath;
+import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_CAMERA;
+import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_PHOTO;
+import static com.sire.corelibrary.Utils.PhotoPickUtils.getPath;
+
 
 /**
  * ==================================================
@@ -105,6 +106,7 @@ public class CompletePersonalInforPhotoController extends SireController impleme
     @PermissionDenied(REQUECT_CODE_BASIC_PERMISSIONS)
     public void requestPermisssionFailed() {
         DialogUtils.showDialog(this, getResources().getString(R.string.permission_attention), (dialogInterface, i) -> {
+            dialogInterface.dismiss();
             Intent appDetailSettingIntent = APPUtils.getAppDetailSettingIntent(CompletePersonalInforPhotoController.this);
             startActivity(appDetailSettingIntent);
         });
@@ -113,7 +115,7 @@ public class CompletePersonalInforPhotoController extends SireController impleme
     public void onNext(View view) {
         String nickName = tieNickName.getText().toString();
 
-        userViewModel.updateNickname(nickName,userViewModel.getUserId(this)).observe(this, dataResource -> {
+        userViewModel.updateNickname(nickName,userViewModel.getUserId()).observe(this, dataResource -> {
             switch (dataResource.status) {
                 case LOADING:
                     ProgressHUD.showDialog(CompletePersonalInforPhotoController.this);
@@ -200,7 +202,7 @@ public class CompletePersonalInforPhotoController extends SireController impleme
 
 
     private void upoadHeadImage(File file) {
-        String userId = userViewModel.getUserId(this);
+        String userId = userViewModel.getUserId();
         if(TextUtils.isEmpty(userId)){
             SnackbarUtils.basicSnackBar(coordinatorLayout, getResources().getString(R.string.relogin), this);
             return;

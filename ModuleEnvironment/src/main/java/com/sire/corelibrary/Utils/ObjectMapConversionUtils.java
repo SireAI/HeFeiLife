@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.sire.corelibrary.Constant.Constant.GLOBAL_DATA_PATTEN;
@@ -60,7 +61,7 @@ public class ObjectMapConversionUtils {
 //                        stringValue = value.toString();
 //                    }
                     if(value instanceof Date){
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GLOBAL_DATA_PATTEN);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(GLOBAL_DATA_PATTEN, Locale.CHINA);
                         map.put(stringName,simpleDateFormat.format(value));
                     }else {
                         map.put(stringName,value==null?"":value);

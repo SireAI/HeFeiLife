@@ -16,10 +16,10 @@ import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Executors.AppExecutors;
 import com.sire.corelibrary.Utils.AutoClearedValue;
 import com.sire.corelibrary.Utils.SnackbarUtils;
+import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.mediators.ShareModuleInterface.ShareMediator;
 import com.sire.usermodule.R;
 import com.sire.usermodule.Utils.TimeUtils;
-import com.sire.usermodule.View.ProgressHUD;
 import com.sire.usermodule.ViewModel.UserViewModel;
 import com.sire.usermodule.databinding.ControllerPasswordVerifycodeBinding;
 

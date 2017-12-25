@@ -22,8 +22,17 @@ public class SPUtils {
     public static void saveKeyValueBlooen(Context context,String key,boolean value){
         SharedPreferences sharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         sharedPreferences.edit().putBoolean(key,value).apply();
-    }
 
+    }
+    public static void saveKeyValueInteger(Context context,String key,int value){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt(key,value).apply();
+    }
+    public static int getValueInteger(Context context,String key,int defaultValue){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        int value = sharedPreferences.getInt(key, defaultValue);
+        return value;
+    }
     public static String getValueString(Context context,String key){
         SharedPreferences sharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         String value = sharedPreferences.getString(key, "");

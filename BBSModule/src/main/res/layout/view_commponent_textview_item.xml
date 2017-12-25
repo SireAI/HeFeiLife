@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sire.bbsmodule.Views.EmojiView.EmojiTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/main_bg"
+    style="@style/body1"
+    android:padding="6dp"
+    android:lineSpacingExtra="6dp"
+    >
+
+</com.sire.bbsmodule.Views.EmojiView.EmojiTextView>

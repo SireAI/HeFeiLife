@@ -1,10 +1,14 @@
 package com.sire.corelibrary.Controller;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.view.View;
 
 import com.sire.corelibrary.R;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +25,8 @@ import javax.inject.Inject;
  */
 public class Segue {
     public static final int NET_ITEM_MARGIN = 4;
+    public static final int REQUEST_CODE_UNDEFINED = 100;
+    public static final String FOR_RESULT_REQUEST_CODE = "requestCode";
     private static final String SEGUE_TYPE = "segueType";
     private static final int NO_ANIM = 10000;
     private static Map<SegueType, SegueAnimation> mAnimResource = new HashMap<>();
@@ -35,23 +41,60 @@ public class Segue {
         new SegueAnimation(SegueType.SACLE_UP, NO_ANIM, NO_ANIM, NO_ANIM, NO_ANIM);
         new SegueAnimation(SegueType.TRADITIONAL, NO_ANIM, NO_ANIM, NO_ANIM, NO_ANIM);
     }
+
     @Inject
     public Segue() {
     }
 
+    @SuppressLint("RestrictedApi")
+    public void segueForward(SegueType segueType, Intent intent, SireController controller, boolean forResult,PagePositionData pagePositionData) {
 
-    public void segueForward(SegueType segueType, Intent intent, SireController controller) {
-        intent.putExtra(SEGUE_TYPE, segueType.name());
-        SegueAnimation segueAnimation = mAnimResource.get(segueType);
-        if (segueType != SegueType.TRADITIONAL) {
-            ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeCustomAnimation(controller, segueAnimation.forwordAnimIn, segueAnimation.forwordAnimOut);
-            controller.startActivity(intent, activityOptionsCompat.toBundle());
+        switch (segueType) {
+            case PUSH:
+            case CROSS:
+            case MODAL:
+                intent.putExtra(SEGUE_TYPE, segueType.name());
+                SegueAnimation segueAnimation = mAnimResource.get(segueType);
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeCustomAnimation(controller, segueAnimation.forwordAnimIn, segueAnimation.forwordAnimOut);
+                animateTransition(intent, controller, forResult, activityOptionsCompat);
+                break;
+            case TRADITIONAL:
+                if (forResult) {
+                    controller.startActivityForResult(intent, intent.getIntExtra(SEGUE_TYPE, 100));
+                } else {
+                    controller.startActivity(intent);
+                }
+                break;
+            case CLIP_REVEAL:
+                ActivityOptionsCompat activityOptionsCompatReveal;
+                if (Build.VERSION.SDK_INT >= 23) {
+                    activityOptionsCompatReveal = ActivityOptionsCompat.makeClipRevealAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
+                }else {
+                     activityOptionsCompatReveal = ActivityOptionsCompat.makeScaleUpAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
+                }
+                animateTransition(intent, controller, forResult, activityOptionsCompatReveal);
+                break;
+            case SACLE_UP:
+                ActivityOptionsCompat  activityOptionsCompatScaleUp = ActivityOptionsCompat.makeScaleUpAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
+                animateTransition(intent, controller, forResult, activityOptionsCompatScaleUp);
+
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void animateTransition(Intent intent, SireController controller, boolean forResult, ActivityOptionsCompat activityOptionsCompat) {
+        if (forResult) {
+            controller.startActivityForResult(intent, intent.getIntExtra(FOR_RESULT_REQUEST_CODE, REQUEST_CODE_UNDEFINED), activityOptionsCompat.toBundle());
         } else {
-            controller.startActivity(intent);
+            controller.startActivity(intent, activityOptionsCompat.toBundle());
         }
     }
 
-    ;
 
     /**
      * back forward
@@ -60,10 +103,24 @@ public class Segue {
      */
     public void segueBack(SireController controller) {
         SegueType segueType = getSegueType(controller);
-        if (segueType != null && segueType != SegueType.TRADITIONAL) {
-            SegueAnimation segueAnimation = mAnimResource.get(segueType);
-            controller.overridePendingTransition(segueAnimation.backAnimIn, segueAnimation.backAnimOut);
+        if(segueType!=null){
+            switch (segueType){
+                case TRADITIONAL:
+                    break;
+                case MODAL:
+                case PUSH:
+                case CROSS:
+                    SegueAnimation segueAnimation = mAnimResource.get(segueType);
+                    controller.overridePendingTransition(segueAnimation.backAnimIn, segueAnimation.backAnimOut);
+                    break;
+                case SACLE_UP:
+                case CLIP_REVEAL:
+                    break;
+                    default:
+                        break;
+            }
         }
+
     }
 
     private SegueType getSegueType(SireController controller) {
@@ -79,7 +136,7 @@ public class Segue {
      * transition animation type
      */
     public enum SegueType {
-        PUSH, MODAL, CROSS, TRADITIONAL, SACLE_UP;
+        PUSH, MODAL, CROSS, TRADITIONAL, SACLE_UP,CLIP_REVEAL;
     }
 
 
@@ -100,6 +157,62 @@ public class Segue {
             this.backAnimIn = backAnimIn;
             this.backAnimOut = backAnimOut;
             mAnimResource.put(segueType, this);
+        }
+    }
+
+    public static class PagePositionData implements Serializable{
+        View source;
+        int startX;
+        int startY;
+        int width;
+        int height;
+
+        public PagePositionData(View source, int startX, int startY, int width, int height) {
+            this.source = source;
+            this.startX = startX;
+            this.startY = startY;
+            this.width = width;
+            this.height = height;
+        }
+
+        public View getSource() {
+            return source;
+        }
+
+        public void setSource(View source) {
+            this.source = source;
+        }
+
+        public int getStartX() {
+            return startX;
+        }
+
+        public void setStartX(int startX) {
+            this.startX = startX;
+        }
+
+        public int getStartY() {
+            return startY;
+        }
+
+        public void setStartY(int startY) {
+            this.startY = startY;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
         }
     }
 }

@@ -31,10 +31,12 @@ public class DataSourceStrategy<ResponseData,Data> {
     private final boolean cacheData;
     private final DataFromStrategy dataFromStrategy;
     private final MediatorLiveData<DataResource<Data>> result = new MediatorLiveData<>();
+    private final boolean listenDB;
     private DataDecision<ResponseData, Data> dataDecision;
 
-    public DataSourceStrategy(boolean cacheData, DataFromStrategy dataFromStrategy) {
+    public DataSourceStrategy(boolean cacheData,boolean listenDB,  DataFromStrategy dataFromStrategy) {
         this.cacheData = cacheData;
+        this.listenDB = listenDB;
         this.dataFromStrategy = dataFromStrategy;
     }
 
@@ -42,7 +44,7 @@ public class DataSourceStrategy<ResponseData,Data> {
 
         //init state
         this.dataDecision = dataDecision;
-        Timber.w("---------------- current data source strategy "+ dataFromStrategy.name()+" ----------------");
+        Timber.d("---------------- current data source strategy "+ dataFromStrategy.name()+" ----------------");
         result.setValue(DataResource.loading(null));
         switch (dataFromStrategy) {
             case NET:
@@ -83,11 +85,15 @@ public class DataSourceStrategy<ResponseData,Data> {
 
     private void justFromCache() {
         LiveData<Data> dataFromDb = dataDecision.loadFromDb();
-        result.addSource(dataFromDb, data -> {
-            result.removeSource(dataFromDb);
+        result.addSource(dataFromDb, (Data data) -> {
+            if (!listenDB) {
+                result.removeSource(dataFromDb);
+            }
             String cacheMessage = data == null ? "no cached data in DB" : data.getClass().getSimpleName() + " data from DB :" + data.toString();
             Timber.d(cacheMessage);
+
             result.setValue(success(data));
+
         });
     }
 
@@ -101,13 +107,8 @@ public class DataSourceStrategy<ResponseData,Data> {
             if (response != null && response.isSuccessful()) {
                 DataResource<Data> dataDataResource = dataDecision.logicResponseHandler(response.body());
 
-                if(cacheData && dataDataResource.status == DataStatus.SUCCESS){
-                    Flowable.just(dataDataResource.data).observeOn(Schedulers.io()).subscribe(new Consumer<Data>() {
-                        @Override
-                        public void accept(Data data) throws Exception {
-                            dataDecision.saveData2DB(data);
-                        }
-                    });
+                if(cacheData && dataDataResource.status == DataStatus.SUCCESS &&dataDataResource.data!=null){
+                    Flowable.just(dataDataResource.data).observeOn(Schedulers.io()).subscribe(data -> dataDecision.saveData2DB(data));
                 }
                 result.setValue(dataDataResource);
             } else {
@@ -221,14 +222,18 @@ public class DataSourceStrategy<ResponseData,Data> {
      */
     public static final class Builder {
         private boolean cacheData = false;
+        private boolean listenDB = false;
         private DataFromStrategy dataFromStrategy = DataFromStrategy.NET;
 
 
-        public Builder cacheData(boolean cacheData) {
-            this.cacheData = cacheData;
+        public Builder cacheData() {
+            this.cacheData = true;
             return this;
         }
-
+        public Builder listenDB() {
+            this.listenDB = true;
+            return this;
+        }
 
         public Builder appDataFromStrategy(DataFromStrategy dataFromStrategy) {
             this.dataFromStrategy = dataFromStrategy;
@@ -236,7 +241,7 @@ public class DataSourceStrategy<ResponseData,Data> {
         }
 
         public DataSourceStrategy build() {
-            return new DataSourceStrategy(this.cacheData, this.dataFromStrategy);
+            return new DataSourceStrategy(this.cacheData,this.listenDB, this.dataFromStrategy);
         }
     }
 }

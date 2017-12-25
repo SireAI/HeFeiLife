@@ -22,7 +22,7 @@ public class AutoViewState  {
     private ViewState viewState = ViewState.LOADING;
     private boolean isShowLoadingState = false;
     private View.OnClickListener errorClickListener;
-
+    private View emptyView ;
     <T> int getItemCount(List<T> mDataSource) {
         int itemCount ;
         if(isShowLoadingState){
@@ -72,10 +72,18 @@ public class AutoViewState  {
                 view = UIUtils.inflate(R.layout.view_componnent_loading, parent);
                 break;
             case 103://EMPTY
-                view = UIUtils.inflate(R.layout.view_componnent_empty, parent);
+                if(emptyView==null){
+                    view = UIUtils.inflate(R.layout.view_componnent_empty, parent);
+                }else {
+                    view = emptyView;
+                }
                 break;
         }
         return view;
+    }
+
+    public void setEmptyView(View emptyView) {
+        this.emptyView = emptyView;
     }
 
     private void setErrorClick(View view) {

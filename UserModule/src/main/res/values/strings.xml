@@ -18,7 +18,6 @@
     <string name="pass">跳过</string>
     <string name="nickname_hint">请输入2~11位昵称</string>
     <string name="nickname">昵称</string>
-    <string name="permission_attention">该设备需要授予应用权限,请在应用信息权限管理中授予所需权限</string>
     <string name="cancel">取消</string>
     <string name="file_not_exist">文件不存在</string>
     <string name="take_photo">拍摄</string>

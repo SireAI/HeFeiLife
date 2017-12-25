@@ -2,12 +2,10 @@ package com.sire.feedmodule.DI;
 
 import android.support.v4.app.Fragment;
 
-import com.sire.feedmodule.Controller.InformationFlowController;
-import com.sire.feedmodule.Controller.LatestInformationController;
+import com.sire.feedmodule.Controller.fragment.FeedInformationController;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.Subcomponent;
 import dagger.android.AndroidInjector;
 import dagger.android.ContributesAndroidInjector;
 import dagger.android.support.FragmentKey;
@@ -23,14 +21,11 @@ import dagger.multibindings.IntoMap;
  */
 @Module(subcomponents = {LatestInformationControllerSubcomponent.class})
 public abstract class ControllerModule {
-//    @ContributesAndroidInjector
-//    abstract InformationFlowController contributeInformationFlowController();
-
 
 
     @Binds
     @IntoMap
-    @FragmentKey(LatestInformationController.class)
+    @FragmentKey(FeedInformationController.class)
     abstract AndroidInjector.Factory<? extends Fragment>
     bindLatestInformationControllerInjectorFactory(LatestInformationControllerSubcomponent.Builder builder);
 }
