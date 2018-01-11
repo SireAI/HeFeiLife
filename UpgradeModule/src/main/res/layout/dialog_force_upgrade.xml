@@ -52,7 +52,7 @@
                 style="@style/dialog_button"
                 android:text="@string/btn_next_time"
                 android:textStyle="normal"
-                android:visibility="@{isForce? View.GONE : View.VISIBLE}"
+                android:visibility="@{safeUnbox(isForce)? View.GONE : View.VISIBLE}"
                 android:onClick="@{()->callback.onUpgrade(dialog,false)}"
                 />
 

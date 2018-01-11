@@ -121,7 +121,7 @@ public class DataSourceStrategy<ResponseData,Data> {
         //fetch data from net ,it may take time
         LiveData<Response<ResponseData>> responseLiveData = dataDecision.makeNetCall();
         result.addSource(responseLiveData, response -> {
-            String message = response == null ? "无响应,连接失败" : "响应成功:" + response.body().toString();
+            String message = response == null || response.body() == null ? "无响应,连接失败" : "响应成功:" + response.body().toString();
             Timber.d(message);
             result.removeSource(responseLiveData);
             if (response != null && response.isSuccessful()) {
@@ -192,7 +192,7 @@ public class DataSourceStrategy<ResponseData,Data> {
             if(responseData instanceof JsonResponse){
                 JsonResponse<Data> jsonResponse = (JsonResponse)responseData;
                 if(jsonResponse.isOK()){
-                    return DataResource.success(jsonResponse.getData());
+                    return DataResource.success(jsonResponse.getData()==null? (Data) jsonResponse :jsonResponse.getData());
                 }else {
                     String message =jsonResponse.getMessage();
                     return DataResource.error(message,null);

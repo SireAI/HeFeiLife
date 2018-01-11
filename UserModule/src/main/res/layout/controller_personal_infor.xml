@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="user"
+            type="com.sire.usermodule.DB.Entry.User" />
+
+    </data>
+
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/tv_personal_infor_title"
+                    style="@style/body1_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:text="个人信息" />
+
+                <TextView
+                    android:id="@+id/tv_level"
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_personal_infor_title"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="等级 :" />
+
+                <TextView
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_personal_infor_title"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_level"
+                    android:text='@{"Lv."+user.level}'
+                    tool:text="lv.1" />
+
+                <TextView
+                    android:id="@+id/tv_sex"
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_level"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="性别 :"
+                    android:visibility="@{TextUtils.isEmpty(user.sex)?View.GONE:View.VISIBLE}"
+
+                    />
+
+                <TextView
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_level"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_sex"
+                    android:text="@{user.sex}"
+                    android:visibility="@{TextUtils.isEmpty(user.sex)?View.GONE:View.VISIBLE}"
+                    tool:text="男" />
+
+                <TextView
+                    android:id="@+id/tv_birthday"
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_sex"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="生日 :"
+                    android:visibility="@{TextUtils.isEmpty(user.birthday)?View.GONE:View.VISIBLE}"
+
+                    />
+
+                <TextView
+                    style="@style/caption"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_sex"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_birthday"
+                    android:text="@{user.birthday}"
+                    android:visibility="@{TextUtils.isEmpty(user.birthday)?View.GONE:View.VISIBLE}"
+                    tool:text="十月二十号" />
+
+                <TextView
+                    android:id="@+id/tv_hobby"
+
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_birthday"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="爱好 :"
+                    android:visibility="@{TextUtils.isEmpty(user.hobby)?View.GONE:View.VISIBLE}" />
+
+                <TextView
+                    style="@style/caption"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_birthday"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_hobby"
+                    android:text="@{user.hobby}"
+                    android:visibility="@{TextUtils.isEmpty(user.hobby)?View.GONE:View.VISIBLE}"
+                    tool:text="电影、读书、乒乓球" />
+
+                <TextView
+                    android:id="@+id/tv_university"
+
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_hobby"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="大学 :"
+                    android:visibility="@{TextUtils.isEmpty(user.college)?View.GONE:View.VISIBLE}" />
+
+                <TextView
+                    style="@style/caption"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_hobby"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_university"
+                    android:text="@{user.college}"
+                    android:visibility="@{TextUtils.isEmpty(user.college)?View.GONE:View.VISIBLE}"
+                    tool:text="人民大学" />
+
+                <TextView
+                    android:id="@+id/tv_personal_instruction"
+
+                    style="@style/body1_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_university"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="40dp"
+                    android:text="个人介绍"
+                    android:visibility="@{TextUtils.isEmpty(user.instruction)?View.GONE:View.VISIBLE}" />
+
+                <TextView
+                    android:id="@+id/tv_instruction"
+                    style="@style/caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_personal_instruction"
+                    android:layout_marginLeft="10dp"
+                    android:text="@{user.instruction}"
+                    android:visibility="@{TextUtils.isEmpty(user.instruction)?View.GONE:View.VISIBLE}"
+                    tool:text="你好老时光" />
+            </RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
+</layout>

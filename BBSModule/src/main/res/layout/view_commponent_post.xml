@@ -45,6 +45,7 @@
             android:layout_marginStart="30dp"
             android:cirlce="@{true}"
             android:imageUrl="@{postInfor.authorIcon}"
+            android:onClick="@{(v)->postHolder.onPerson(v,postInfor)}"
             app:layout_constraintLeft_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

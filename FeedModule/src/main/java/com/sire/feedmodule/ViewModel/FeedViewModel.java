@@ -37,6 +37,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static com.sire.feedmodule.Constant.Constant.USER_DYNAMICS;
 import static com.sire.feedmodule.Constant.Constant.USER_FEED;
 
 /**
@@ -84,14 +85,16 @@ public class FeedViewModel extends ViewModel {
     }
 
     public void getNewFeedInfor(Date timeLine, String feedType) {
-        getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.NET, true, feedType);
+        getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.NET, true, feedType, "");
     }
 
-    private void getFeedInfor(Date timeLine, DataSourceStrategy.DataFromStrategy dataSourceStrategy, boolean getNewFeeds, String feedType) {
+    private void getFeedInfor(Date timeLine, DataSourceStrategy.DataFromStrategy dataSourceStrategy, boolean getNewFeeds, String feedType, String userDynamicId) {
         FeedRequestInfor feedRequestInfor = new FeedRequestInfor();
         feedRequestInfor.setFeedType(feedType);
         if (feedType.equals(USER_FEED)) {
             feedRequestInfor.setUserId(userMediator.getUserId());
+        }else if(feedType.equals(USER_DYNAMICS)){
+            feedRequestInfor.setUserId(userDynamicId);
         }
         feedRequestInfor.setPageIndex(newFeedInforStartIndex);
         feedRequestInfor.setPageSize(pageSize);
@@ -114,7 +117,10 @@ public class FeedViewModel extends ViewModel {
      * 以当前时间的0点为基线从优先从缓存中获取历史数据，没有就从服务器获取数据
      */
     public void getHistoryFeedInfor(Date timeLine, String feedType) {
-        getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.CACHE_NET, false, feedType);
+        getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.CACHE_NET, false, feedType, "");
+    }
+    public void getHistoryFeedInfor(Date timeLine, String feedType,String userDynamicId) {
+        getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.CACHE_NET, false, feedType,userDynamicId);
     }
 
     public LiveData<DataResource<List<FeedInfor>>> getFeedInfors() {
@@ -212,6 +218,7 @@ public class FeedViewModel extends ViewModel {
         feedPraise.setFeedId(feedId);
         feedPraise.setUserId(userMediator.getUserId());
         feedPraise.setUserImage(userMediator.getUserImage());
+        feedPraise.setUserName(userMediator.getUserName());
         LiveData<DataResource<FeedPraiseInfor>> tickPraise = feedRepository.tickPraise(praised, feedPraise);
         tickPraise.observeForever(new Observer<DataResource<FeedPraiseInfor>>() {
             @Override
@@ -219,7 +226,6 @@ public class FeedViewModel extends ViewModel {
                 switch (feedPraiseInforDataResource.status) {
                     case SUCCESS:
                         tickPraise.removeObserver(this);
-
                         callBack.apply(true);
                         break;
                     case ERROR:

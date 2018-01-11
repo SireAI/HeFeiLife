@@ -22,6 +22,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sire.corelibrary.DI.Injectable;
+import com.sire.corelibrary.Delegate.HomeTabDelegate;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.RecyclerView.AutoViewStateAdapter;
 import com.sire.corelibrary.RecyclerView.OnScrollDelegate;
@@ -62,7 +63,7 @@ import static com.sire.feedmodule.Constant.Constant.USER_FEED;
  * ==================================================
  */
 
-public class FeedInformationController extends LifecycleFragment implements OnRefreshListener, OnLoadmoreListener, Injectable, AutoViewStateAdapter.OnItemClickListener {
+public class FeedInformationController extends LifecycleFragment implements OnRefreshListener, OnLoadmoreListener, Injectable, AutoViewStateAdapter.OnItemClickListener,HomeTabDelegate {
 
 
     /**
@@ -82,25 +83,24 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
      * 首次初始化
      */
     private boolean init = true;
+    private RecyclerView recyclerView;
 
     private void initModel() {
         feedViewModel = ViewModelProviders.of(this, factory).get(FeedViewModel.class);
-        fetchFeeds();
+        feedsCallBack();
         checkFollowingStateAndRefresh();
     }
 
     /**
      * 获取feed流信息
      */
-    private void fetchFeeds() {
+    private void feedsCallBack() {
         feedViewModel.getFeedInfors().observe(this, (DataResource<List<FeedInfor>> listDataResource) -> {
             switch (listDataResource.status) {
                 case SUCCESS:
-                    closeDataLoading();
-                    refreshFeeds(listDataResource.data);
-                    break;
                 case ERROR:
                     closeDataLoading();
+                    refreshFeeds(listDataResource.data);
                     break;
                 case LOADING:
 
@@ -122,8 +122,8 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
                 @Override
                 public void onNoMore() {
                     if (swipeRefreshView != null) {
-                        // TODO: 2017/11/6 加载更多优化查看新库
-                        swipeRefreshView.setEnableAutoLoadmore(false);
+                        swipeRefreshView.setLoadmoreFinished(true);
+
                     }
                 }
             });
@@ -138,6 +138,7 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
         feedViewModel.getFollowings().observe(this, dataResource -> {
             switch (dataResource.status) {
                 case SUCCESS:
+                case ERROR://未获取following也刷新
                     //监听关注数据变动，刷新UI
                     feedViewModel.observeDBDataChange().observe(FeedInformationController.this, feedDataResource -> {
                         switch (feedDataResource.status) {
@@ -146,15 +147,7 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
                                 for (int i = 0; i < feedDataResource.data.size(); i++) {
                                     followIds.add(feedDataResource.data.get(i).getFollowingId());
                                 }
-
-                                if (init) {
-                                    //获取以前时间为时间线的历史数据
-                                    feedViewModel.getHistoryFeedInfor(feedViewModel.getMinTimeLineBy(informationAdapter.getDataSource()), getFeedType());
-                                    init = false;
-                                } else {
-                                    informationAdapter.notifyDataSetChanged();
-                                }
-
+                                updateFeedUI();
                                 break;
                             case ERROR:
                                 break;
@@ -162,8 +155,6 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
                                 break;
                         }
                     });
-                    break;
-                case ERROR:
                     break;
                 case LOADING:
                     break;
@@ -175,6 +166,19 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
     }
 
     /**
+     * 第一次加载历史feed数据，以后每次监听到following变化仅仅刷新
+     */
+    private void updateFeedUI() {
+        if (init) {
+            //获取以前时间为时间线的历史数据
+            feedViewModel.getHistoryFeedInfor(feedViewModel.getMinTimeLineBy(informationAdapter.getDataSource()), getFeedType());
+            init = false;
+        } else {
+            informationAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
      * 用户登陆成功会回调此方法
      *
      * @param userLoginState
@@ -182,10 +186,10 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(UserLoginState userLoginState) {
         Timber.d(userLoginState.isLogin() ? "用户登陆成功" : "用户退出登陆状态成功");
-        //刷新信息流中feed的状态,主动同步关注数据至数据库
-        feedViewModel.getFollowings().observe(this, dataResource -> {
-        });
         if (getFeedType().equals(USER_FEED)) {
+            //刷新信息流中feed的状态,主动同步关注数据至数据库
+            feedViewModel.getFollowings().observe(this, dataResource -> {
+            });
             //重新获取关注feed
             feedViewModel.getHistoryFeedInfor(feedViewModel.getMinTimeLineBy(informationAdapter.getDataSource()), getFeedType());
         }
@@ -212,7 +216,7 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
 
     private void initView(View view) {
         //Recyclerview
-        RecyclerView recyclerView = view.findViewById(R.id.rv_information);
+        recyclerView = view.findViewById(R.id.rv_information);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         Drawable drawable = getResources().getDrawable(R.drawable.shape_line);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
@@ -300,6 +304,13 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onTabClickRepeat(int index) {
+        if(swipeRefreshView!=null){
+            swipeRefreshView.autoRefresh();
+        }
     }
 
     public static class InformationAdapter extends AutoViewStateAdapter<FeedInfor> {

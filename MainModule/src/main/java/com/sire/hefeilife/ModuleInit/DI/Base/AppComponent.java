@@ -19,6 +19,7 @@ package com.sire.hefeilife.ModuleInit.DI.Base;
 
 import android.app.Application;
 
+import com.sire.baidulocation.DI.InjectorBaiduLocationModule;
 import com.sire.bbsmodule.DI.InjectorBBSModule;
 import com.sire.corelibrary.DI.Environment.InjectorEnvironmentMoudle;
 import com.sire.feedmodule.DI.InjectorFeedModule;
@@ -55,7 +56,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         InjectorMessagePushModule.class,
         InjectorMainModule.class,
         InjectorFeedModule.class,
-        InjectorBBSModule.class
+        InjectorBBSModule.class,
+        InjectorBaiduLocationModule.class
 })
 public interface AppComponent {
     @Component.Builder

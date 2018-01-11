@@ -1,6 +1,9 @@
 package com.sire.feedmodule.Mediator;
 
+import android.os.Bundle;
+
 import com.sire.feedmodule.Controller.fragment.InformationFlowController;
+import com.sire.feedmodule.Controller.fragment.UserDynamicController;
 import com.sire.feedmodule.ViewModel.FeedViewModel;
 import com.sire.mediators.FeedmoduleInterface.FeedMediator;
 import com.sire.mediators.core.CallBack;
@@ -21,17 +24,24 @@ import javax.inject.Singleton;
 @Singleton
 public class FeedMediatorImpl implements FeedMediator {
     private final FeedViewModel feedViewModel;
-    private  InformationFlowController controller;
+    private final UserDynamicController userDynamicController;
+    private  final InformationFlowController informationFlowController;
 
     @Inject
-    public FeedMediatorImpl(InformationFlowController controller, FeedViewModel feedViewModel) {
-        this.controller = controller;
+    public FeedMediatorImpl(InformationFlowController informationFlowController, UserDynamicController userDynamicController, FeedViewModel feedViewModel) {
+        this.informationFlowController = informationFlowController;
+        this.userDynamicController = userDynamicController;
         this.feedViewModel = feedViewModel;
     }
 
     @Override
-    public Object getViewController() {
-        return controller;
+    public Object getInformationFlowController() {
+        return informationFlowController;
+    }
+
+    @Override
+    public Object getUserDynamicController() {
+        return userDynamicController;
     }
 
     @Override

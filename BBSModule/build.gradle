@@ -35,6 +35,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {
@@ -50,5 +52,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
     annotationProcessor "com.zhy:mpermission-compiler:$mpermission_version"
     //    api 'com.github.chrisbanes:PhotoView:2.0.0'
-    api 'com.github.yalantis:ucrop:2.2.1'
+    implementation 'com.github.yalantis:ucrop:2.2.1'
+    implementation 'com.yuyh.imgsel:library:2.0.2'
+
 }

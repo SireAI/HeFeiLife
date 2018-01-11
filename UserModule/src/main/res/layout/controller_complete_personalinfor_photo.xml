@@ -50,19 +50,19 @@
         android:layout_marginRight="44dp"
         android:gravity="center_horizontal"
         >
-        <com.pkmmte.view.CircularImageView
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_marginTop="45dp"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:clickable="true"
             android:scaleType="centerCrop"
-            app:border="true"
             app:border_color="@color/main_bg_2_text"
             app:border_width="1dp"
             android:onClick="onPicture"
             android:id="@+id/iv_user_picture"
-            android:src="@mipmap/camera"/>
-
+            android:src="@mipmap/camera"
+            />
 
             <LinearLayout
                 android:layout_marginTop="48dp"

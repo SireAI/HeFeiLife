@@ -2,9 +2,11 @@ package com.sire.usermodule.Controller;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,9 +26,12 @@ import android.widget.TextView;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Executors.AppExecutors;
+import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Utils.APPUtils;
 import com.sire.corelibrary.Utils.DialogUtils;
 import com.sire.corelibrary.Utils.FileBuilder;
+import com.sire.corelibrary.Utils.FileUtils;
+import com.sire.corelibrary.Utils.ImageUtil;
 import com.sire.corelibrary.Utils.PhotoPickUtils;
 import com.sire.corelibrary.Utils.SnackbarUtils;
 import com.sire.corelibrary.View.ProgressHUD;
@@ -38,16 +43,24 @@ import com.zhy.m.permission.PermissionDenied;
 import com.zhy.m.permission.PermissionGrant;
 
 import java.io.File;
+import java.util.Date;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
 import static com.sire.corelibrary.Permission.PermissionHandler.REQUECT_CODE_BASIC_PERMISSIONS;
 import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_CAMERA;
 import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_PHOTO;
 import static com.sire.corelibrary.Utils.PhotoPickUtils.getPath;
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 
 
 /**
@@ -91,6 +104,9 @@ public class CompletePersonalInforPhotoController extends SireController impleme
         tieNickName.setOnEditorActionListener(this);
     }
 
+    public void onSkip(View view) {
+        segueToCompletePersonalInforSexController();
+    }
 
     @PermissionGrant(REQUECT_CODE_BASIC_PERMISSIONS)
     public void requestPermisssionSuccess() {
@@ -112,10 +128,11 @@ public class CompletePersonalInforPhotoController extends SireController impleme
         });
     }
 
+
     public void onNext(View view) {
         String nickName = tieNickName.getText().toString();
 
-        userViewModel.updateNickname(nickName,userViewModel.getUserId()).observe(this, dataResource -> {
+        userViewModel.updateNickname(nickName, userViewModel.getUserId()).observe(this, dataResource -> {
             switch (dataResource.status) {
                 case LOADING:
                     ProgressHUD.showDialog(CompletePersonalInforPhotoController.this);
@@ -126,9 +143,9 @@ public class CompletePersonalInforPhotoController extends SireController impleme
                     break;
                 case ERROR:
                     ProgressHUD.close();
-                    if(getResources().getString(R.string.name_already_exist).equals(dataResource.message)){
+                    if (getResources().getString(R.string.name_already_exist).equals(dataResource.message)) {
                         tilNickname.setError(getResources().getString(R.string.name_already_exist));
-                    }else {
+                    } else {
                         SnackbarUtils.basicSnackBar(coordinatorLayout, dataResource.message, CompletePersonalInforPhotoController.this);
                     }
                     break;
@@ -140,7 +157,8 @@ public class CompletePersonalInforPhotoController extends SireController impleme
 
     private void segueToCompletePersonalInforSexController() {
         Intent intent = new Intent(this, CompletePersonalInforSexController.class);
-        segue(Segue.SegueType.PUSH,intent);
+        intent.putExtra(FOR_RESULT_REQUEST_CODE, LOGIN_REQUEST_CODE);
+        segueForResult(Segue.SegueType.PUSH, intent);
     }
 
     public void onPicture(View view) {
@@ -175,7 +193,7 @@ public class CompletePersonalInforPhotoController extends SireController impleme
                         .withFileName(pictureName)
                         .build(this);
                 if (file.exists()) {
-                    upoadHeadImage(file);
+                    compressImageAndUpload(file,CODE_CAMERA);
                 } else {
                     SnackbarUtils.basicSnackBar(coordinatorLayout, getResources().getString(R.string.file_not_exist), this);
                 }
@@ -184,14 +202,32 @@ public class CompletePersonalInforPhotoController extends SireController impleme
                 if (uri != null) {
                     File file = new File(getPath(CompletePersonalInforPhotoController.this, uri));
                     if (file.exists()) {
-                        upoadHeadImage(file);
+                        compressImageAndUpload(file,CODE_PHOTO);
                     } else {
                         SnackbarUtils.basicSnackBar(coordinatorLayout, getResources().getString(R.string.file_not_exist), this);
                     }
                 }
             }
+        }else if(requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE){
+            setResult(LOGIN_REQUEST_CODE);
+            finish();
         }
 
+    }
+
+    private void compressImageAndUpload(File file,int action) {
+        Flowable.just(file).map(originalFile -> {
+            byte[] bytes = ImageUtil.compressBitmapToBytes(originalFile.getAbsolutePath(),600,600,100, Bitmap.CompressFormat.WEBP);
+            String webpName = originalFile.getName().substring(0, originalFile.getName().indexOf(".")) + ".webp";
+            File webpFile = new File(originalFile.getParentFile(), webpName);
+            FileUtils.bytesToFile(bytes,webpFile.getAbsolutePath());
+            if(action == CODE_CAMERA){
+                file.delete();
+            }
+            return webpFile;
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(webpFile -> upoadHeadImage(webpFile));
     }
 
     private void setImageWithUri(File file) {
@@ -200,24 +236,19 @@ public class CompletePersonalInforPhotoController extends SireController impleme
     }
 
 
-
     private void upoadHeadImage(File file) {
         String userId = userViewModel.getUserId();
-        if(TextUtils.isEmpty(userId)){
+        if (TextUtils.isEmpty(userId)) {
             SnackbarUtils.basicSnackBar(coordinatorLayout, getResources().getString(R.string.relogin), this);
             return;
         }
-        userViewModel.uploadHeadImage(file,userId).observe(this, dataResource -> {
-            Timber.d("dataResource = [" + dataResource + "]");
+        userViewModel.uploadHeadImage(file, userId).observe(this, dataResource -> {
             switch (dataResource.status) {
                 case LOADING:
                     ProgressHUD.showDialog(CompletePersonalInforPhotoController.this);
                     break;
                 case SUCCESS:
-                    ProgressHUD.close();
-                    setImageWithUri(file);
-                    updateNextBtnState();
-                    ToastSuccess.showDialog(CompletePersonalInforPhotoController.this, getResources().getString(R.string.upload_success));
+                    updateUserAvatar(dataResource.data.getMessage(), file);
                     break;
                 case ERROR:
                     ProgressHUD.close();
@@ -230,6 +261,34 @@ public class CompletePersonalInforPhotoController extends SireController impleme
 
     }
 
+    private void updateUI(File file) {
+        setImageWithUri(file);
+        updateNextBtnState();
+    }
+
+    private void updateUserAvatar(String avartarUrl, File file) {
+        userViewModel.updateUserAvatar(avartarUrl).observe(this, new Observer<DataResource>() {
+            @Override
+            public void onChanged(@Nullable DataResource dataResource) {
+                switch (dataResource.status) {
+                    case LOADING:
+                        break;
+                    case SUCCESS:
+                        ProgressHUD.close();
+                        updateUI(file);
+                        ToastSuccess.showDialog(CompletePersonalInforPhotoController.this, getResources().getString(R.string.upload_success));
+                        break;
+                    case ERROR:
+                        ProgressHUD.close();
+                        SnackbarUtils.basicSnackBar(coordinatorLayout, dataResource.message, CompletePersonalInforPhotoController.this);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+    }
 
 
     private void updateNextBtnState() {
@@ -244,6 +303,7 @@ public class CompletePersonalInforPhotoController extends SireController impleme
     @Override
     public void onOtherButtonClick(ActionSheet actionSheet, int index) {
         if (index == 0) {
+            pictureName = System.currentTimeMillis() +".png";
             PhotoPickUtils.takePicture(this, CODE_CAMERA, pictureName);
         } else if (index == 1) {
             PhotoPickUtils.takePicture(this, CODE_PHOTO, "");
@@ -256,5 +316,6 @@ public class CompletePersonalInforPhotoController extends SireController impleme
             onNext(textView);
             return true;
         }
-        return false;    }
+        return false;
+    }
 }

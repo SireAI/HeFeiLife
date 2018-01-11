@@ -16,6 +16,8 @@ import com.sire.mediators.BBSModuleInterface.BBSMediator;
 import com.sire.mediators.MessagePushModuleInterface.MessagePushMediator;
 import com.sire.mediators.UserModuleInterface.UserMediator;
 import com.sire.mediators.core.CallBack;
+import com.sire.usermodule.Controller.CompletePersonalInforController;
+import com.sire.usermodule.Controller.CompletePersonalInforPhotoController;
 
 import javax.inject.Inject;
 
@@ -84,7 +86,7 @@ public class SplashController extends SireController {
 
     private void segueToMainController() {
         Intent intent = new Intent(this, MainController.class);
-        segue(Segue.SegueType.CROSS, intent);
+        segue(Segue.SegueType.CENTER_SCALE, intent);
         finish();
     }
 

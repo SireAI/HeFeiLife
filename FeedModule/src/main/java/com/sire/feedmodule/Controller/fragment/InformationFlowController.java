@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.sire.corelibrary.Delegate.HomeTabDelegate;
 import com.sire.feedmodule.R;
 import com.sire.mediators.BBSModuleInterface.BBSMediator;
 
@@ -31,10 +33,11 @@ import static com.sire.feedmodule.Constant.Constant.USER_FEED;
  * ==================================================
  */
 @Singleton
-public class InformationFlowController extends LifecycleFragment implements View.OnClickListener {
+public class InformationFlowController extends LifecycleFragment implements View.OnClickListener,HomeTabDelegate {
     @Inject
     BBSMediator bbsMediator;
     private FragmentPagerItemAdapter adapter;
+    private ViewPager viewPager;
 
     @Inject
     public InformationFlowController() {
@@ -50,9 +53,8 @@ public class InformationFlowController extends LifecycleFragment implements View
                 .add(R.string.hot_information, FeedInformationController.class, setArguments(FEED_INFOR))
                 .add(R.string.attention_information, FeedInformationController.class, setArguments(USER_FEED))
                 .create());
-        ViewPager viewPager = view.findViewById(R.id.viewpager);
+        viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
-
         SmartTabLayout viewPagerTab = view.findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
         return view;
@@ -77,5 +79,17 @@ public class InformationFlowController extends LifecycleFragment implements View
     @Override
     public void onClick(View view) {
         bbsMediator.segueToPostPublishController(getActivity(),view);
+    }
+
+
+    @Override
+    public void onTabClickRepeat(int index) {
+        if(viewPager!=null){
+            int currentItem = viewPager.getCurrentItem();
+            Fragment page = adapter.getPage(currentItem);
+            if(page instanceof HomeTabDelegate){
+                ((HomeTabDelegate) page).onTabClickRepeat(currentItem);
+            }
+        }
     }
 }

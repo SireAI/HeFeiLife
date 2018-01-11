@@ -92,4 +92,8 @@ public interface FeedDao {
     void deleteFeed(FeedInfor feedInfor);
     @Query("SELECT * FROM FeedInfor WHERE feedId = :feedId")
     FeedInfor findFeedInforBy(String feedId);
+    @Query("SELECT * FROM UserFeedInfor WHERE authorId = :followingId")
+    List<UserFeedInfor> findUserFeedByAuthorId(String followingId);
+
+
 }

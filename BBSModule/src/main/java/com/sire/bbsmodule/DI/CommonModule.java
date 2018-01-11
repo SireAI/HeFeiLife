@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
@@ -36,6 +37,7 @@ public class CommonModule {
                 .baseUrl(WebUrl.getHostUrl())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(Network.genericClient(application))
                 .build()
                 .create(BBSWebService.class);

@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 public class ReportReason implements Serializable{
     /**
-     * 0表示评论，1表示feed
+     * 0表示评论，1表示feed，2表示个人
      */
     private int type;
     private String id;

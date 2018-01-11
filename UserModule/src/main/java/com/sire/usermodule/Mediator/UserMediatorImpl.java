@@ -14,6 +14,7 @@ import com.sire.mediators.UserModuleInterface.UserMediator;
 import com.sire.mediators.core.CallBack;
 import com.sire.usermodule.Controller.EntranceController;
 import com.sire.usermodule.Controller.LoginController;
+import com.sire.usermodule.Controller.fragment.PersonalInforController;
 import com.sire.usermodule.ViewModel.UserViewModel;
 
 import javax.inject.Inject;
@@ -36,12 +37,14 @@ import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
     private final UserViewModel userViewModel;
     private final Application app;
     private final AppExecutors appExecutors;
+    private final PersonalInforController personalInforController;
 
     @Inject
-    public UserMediatorImpl(UserViewModel userViewModel, Application app, AppExecutors appExecutors) {
+    public UserMediatorImpl(UserViewModel userViewModel, Application app, AppExecutors appExecutors,PersonalInforController personalInforController) {
         this.userViewModel = userViewModel;
         this.app = app;
         this.appExecutors = appExecutors;
+        this.personalInforController = personalInforController;
     }
 
 
@@ -59,6 +62,11 @@ import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
         Intent intent = new Intent(currentContext, EntranceController.class);
         (currentContext).startActivity(intent);
         currentContext.finish();
+    }
+
+    @Override
+    public Object getPersonalInforController() {
+        return personalInforController;
     }
 
     @Override
@@ -101,6 +109,11 @@ import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
     @Override
     public String getUserCurrentAddress() {
         return userViewModel.getUserCurrentAddress();
+    }
+
+    @Override
+    public String getPhoneNumber() {
+        return userViewModel.getPhoneNumber();
     }
 
     @Override

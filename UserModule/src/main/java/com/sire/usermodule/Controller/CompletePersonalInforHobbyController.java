@@ -14,6 +14,8 @@ import com.sire.usermodule.ViewModel.UserViewModel;
 
 import javax.inject.Inject;
 
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.SEX;
 
 /**
@@ -43,17 +45,28 @@ public class CompletePersonalInforHobbyController extends SireController{
     }
 
     public void onSkip(View view){
-
+        segueToCompletePersonalInforController();
     }
 
     public void onNext(View view){
-
+        setResult(LOGIN_REQUEST_CODE);
+        finishActivity(LOGIN_REQUEST_CODE);
+        finish();
     }
 
-    private void segueToCompletePersonalInforBirthdayController(int id) {
-        Intent intent = new Intent(this,CompletePersonalInforBirthdayController.class);
-        intent.putExtra(SEX,id);
-        startActivity(intent);
+    private void segueToCompletePersonalInforController() {
+//        Intent intent = new Intent(this,CompletePersonalInforController.class);
+//        intent.putExtra(FOR_RESULT_REQUEST_CODE, LOGIN_REQUEST_CODE);
+////        intent.putExtra(SEX,id);
+//        startActivity(intent);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE){
+            setResult(LOGIN_REQUEST_CODE);
 
+            finish();
+        }
+    }
 }

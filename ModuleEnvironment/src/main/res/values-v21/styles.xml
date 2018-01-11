@@ -21,6 +21,11 @@
     <style name="ActivityTheme" parent="AppTheme">
         <item name="android:windowBackground">@color/main_bg</item>
     </style>
+    <style name="Activity_tranparent_status_bar_Theme" parent="AppTheme">
+        <item name="android:windowBackground">@color/main_bg</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
     <style name="ActivityFullScreenTheme" parent="AppTheme">
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>

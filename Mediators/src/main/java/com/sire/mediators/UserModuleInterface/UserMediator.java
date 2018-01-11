@@ -5,6 +5,7 @@ import com.sire.mediators.core.CallBack;
 public interface UserMediator  {
     void segueToLoginController(Object context);
     void segueToEntranceController(Object context);
+    Object getPersonalInforController();
     String getUserId();
 
     String getUserImage();
@@ -25,4 +26,7 @@ public interface UserMediator  {
 
 
     String getUserCurrentAddress();
+
+    String getPhoneNumber();
+
 }

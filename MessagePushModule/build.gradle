@@ -43,6 +43,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    api 'com.getui:sdk:2.11.1.0'
+    implementation 'com.getui:sdk:2.11.1.0'
     implementation project(':ModuleEnvironment')
 }

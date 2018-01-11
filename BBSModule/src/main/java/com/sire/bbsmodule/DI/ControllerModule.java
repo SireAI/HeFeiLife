@@ -3,7 +3,9 @@ package com.sire.bbsmodule.DI;
 import android.support.v4.app.Fragment;
 
 
+import com.sire.bbsmodule.Controller.NearyByController;
 import com.sire.bbsmodule.Controller.OtherReasonReportController;
+import com.sire.bbsmodule.Controller.PersonalHomePageController;
 import com.sire.bbsmodule.Controller.PostController;
 import com.sire.bbsmodule.Controller.PostPublishController;
 
@@ -31,4 +33,8 @@ public abstract class ControllerModule {
     abstract OtherReasonReportController contributeOtherReasonReportController();
     @ContributesAndroidInjector
     abstract PostPublishController contributePostPublishController();
+    @ContributesAndroidInjector
+    abstract NearyByController contributeNearyByController();
+    @ContributesAndroidInjector
+    abstract PersonalHomePageController contributePersonalHomePageController();
 }

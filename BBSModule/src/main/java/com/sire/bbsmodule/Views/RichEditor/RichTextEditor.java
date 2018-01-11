@@ -5,11 +5,8 @@ import android.animation.LayoutTransition.TransitionListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -21,27 +18,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.sire.bbsmodule.Pojo.EditData;
 import com.sire.bbsmodule.R;
-import com.sire.bbsmodule.Utils.ImageUtil;
 import com.sire.bbsmodule.Utils.ScreenUtils;
 import com.sire.bbsmodule.Utils.StringUtils;
-import com.sire.corelibrary.DI.Environment.GlideConfigure;
 import com.sire.corelibrary.Executors.AppExecutors;
 import com.sire.corelibrary.Utils.CommonUtils;
 import com.sire.corelibrary.Utils.DialogUtils;
 import com.sire.corelibrary.Utils.FileBuilder;
-import com.sire.corelibrary.Utils.FileProvider7;
+import com.sire.corelibrary.Utils.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,8 +47,6 @@ import static android.os.Environment.DIRECTORY_PICTURES;
  */
 @SuppressLint({"NewApi", "InflateParams"})
 public class RichTextEditor extends ScrollView {
-    private static final int EDIT_PADDING = 10; // edittext常规padding是10dp
-    private static final int EDIT_FIRST_PADDING_TOP = 10; // 第一个EditText的paddingTop值
 
     private int viewTagIndex = 1; // 新生的view都会打一个tag，对每个view来说，这个tag是唯一的。
     private LinearLayout allLayout; // 这个是所有子view的容器，scrollView内部的唯一一个ViewGroup
@@ -139,25 +128,30 @@ public class RichTextEditor extends ScrollView {
         };
 
         addTitleText();
-//        addExtraInforView();
 
         addContentText("写内容~");
-
+        addWhiteView();
     }
 
-    private void addExtraInforView() {
-        LinearLayout.LayoutParams lineParam = new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        lineParam.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
-        TextView extraInfor = new TextView(getContext());
-        extraInfor.setTextColor(getResources().getColor(R.color.color_title_caption));
-        extraInfor.setTextSize(12);
-        extraInfor.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-        extraInfor.setPadding(0, 10, 30, 10);
-        extraInfor.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.svg_gps), null, null, null);
-        extraInfor.setText("合肥高新区");
-        allLayout.addView(extraInfor, lineParam);
+    private void addWhiteView() {
+        double height = Double.valueOf(ScreenUtils.getAppHeight((Activity) getContext()));
+        FrameLayout whiteView = new FrameLayout(getContext());
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
+                (int) (height/2));
+        whiteView.setClickable(true);
+        whiteView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(lastFocusEdit!=null){
+                    View view = allLayout.getChildAt(getLastPreviousViewIndex());
+                    view.requestFocus();
+                    ScreenUtils.showKeyBoard(view);
+                }
+            }
+        });
+        allLayout.addView(whiteView,layoutParams);
     }
+
 
     private void addContentText(String hint) {
         LinearLayout.LayoutParams firstEditParam = new LinearLayout.LayoutParams(
@@ -176,7 +170,9 @@ public class RichTextEditor extends ScrollView {
         titleEdit.setSingleLine(true);
         allLayout.addView(titleEdit, titleEditParam);
     }
-
+    private int getLastPreviousViewIndex(){
+       return allLayout.getChildCount()-2;
+    }
     public void setOnScrollEditEvent(OnScrollEditEvent onScrollEditEvent) {
         this.onScrollEditEvent = onScrollEditEvent;
     }
@@ -265,7 +261,6 @@ public class RichTextEditor extends ScrollView {
      * @param imagePath
      */
     public void insertImage(String imagePath) {
-        File editFile = new File(imagePath);
         File destinatinFile = FileBuilder.create()
                 .withFileType(FileBuilder.FileType.DATA)
                 .withfileTypeDirectoryName(DIRECTORY_PICTURES)
@@ -286,9 +281,9 @@ public class RichTextEditor extends ScrollView {
     @Nullable
     private Bitmap createWaterMark(String imagePath, File destinatinFile) {
         Bitmap source = getScaledBitmap(imagePath, getWidth());
-        Bitmap waterBitmap = ImageUtil.getBitmapFromDrawable(getContext(), R.drawable.logo_white);
+        Bitmap waterBitmap = ImageUtil.getBitmapFromDrawable(getContext(), R.drawable.logo_white,0.7f);
         Bitmap watermarkBitmap = ImageUtil.createWaterMaskLeftBottom(getContext(), source, waterBitmap, 5, 5);
-        Bitmap watermarkBitmapText = ImageUtil.drawTextToLeftBottom(getContext(), watermarkBitmap, getResources().getString(R.string.app_name), 14, getResources().getColor(R.color.main_bg_1_text), 35, 10);
+        Bitmap watermarkBitmapText = ImageUtil.drawTextToLeftBottom(getContext(), watermarkBitmap, getResources().getString(R.string.app_name), 10, getResources().getColor(R.color.main_bg_1_text), 28, 10);
         new AppExecutors().diskIO().execute(() -> ImageUtil.saveBitmaplocal(destinatinFile.getAbsolutePath(), watermarkBitmapText));
         return watermarkBitmapText;
     }
@@ -313,7 +308,7 @@ public class RichTextEditor extends ScrollView {
             lastFocusEdit.setText(editStr1);
             String editStr2 = lastEditStr.substring(cursorIndex).trim();
             EditText addedText = null;
-            if (allLayout.getChildCount() - 1 == lastEditIndex
+            if (getLastPreviousViewIndex() == lastEditIndex
                     || editStr2.length() > 0) {
                 addedText = addEditTextAtIndex(lastEditIndex + 1, editStr2);
             }
@@ -395,15 +390,15 @@ public class RichTextEditor extends ScrollView {
     private void setImageBitmap(Bitmap bmp, String imagePath, DataImageView imageView) {
         imageView.setImageBitmap(bmp);
         imageView.setAbsolutePath(imagePath);
-        imageView.setBitmapWidth(bmp.getWidth());
-        imageView.setBitmapHeight(bmp.getHeight());
+
         // 调整imageView的高度
         double width = Double.valueOf(ScreenUtils.getScreenWidth((Activity) getContext()));
-        width = width - 2* CommonUtils.dip2px(getContext(),6);
+        width = width - 2* getResources().getDimension(R.dimen.post_padding);
          double   imageHeight = width * Double.valueOf(bmp.getHeight()) / Double.valueOf(bmp.getWidth());
-
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, (int) imageHeight);
+        imageView.setBitmapWidth((int) (width+0.5));
+        imageView.setBitmapHeight((int) (imageHeight+0.5));
         imageView.setLayoutParams(lp);
     }
 
@@ -481,18 +476,17 @@ public class RichTextEditor extends ScrollView {
 
     /**
      * 聚合编辑数据
-     * @param localData  如果是本地数据，则图片
      * @return
      */
-    public List<EditData> buildEditData(boolean localData,String imageServerUrl) {
+    public List<EditData> buildEditData() {
         List<EditData> dataList = new ArrayList<EditData>();
-        int num = allLayout.getChildCount();
+        int num = allLayout.getChildCount()-1;
         for (int index = 0; index < num; index++) {
             View itemView = allLayout.getChildAt(index);
             EditData itemData = new EditData();
             if (itemView instanceof EditText ) {
                 EditText item = (EditText) itemView;
-                if(TextUtils.isEmpty(item.getText().toString())){
+                if(index>0&&TextUtils.isEmpty(item.getText().toString())){
                     continue;
                 }
                 itemData.inputStr = item.getText().toString();
@@ -502,15 +496,18 @@ public class RichTextEditor extends ScrollView {
                 if(TextUtils.isEmpty(item.getAbsolutePath())){
                     continue;
                 }
-                if(localData){
-                    itemData.imagePath = item.getAbsolutePath();
-                }else {
-                    itemData.imagePath = imageServerUrl+"?"+"width="+item.getBitmapWidth()+"&height="+item.getBitmapHeight();
-                }
+                itemData.imagePath = item.getAbsolutePath();
+                itemData.imageWidth = item.getBitmapWidth()+"";
+                itemData.imageHeight = item.getBitmapHeight()+"";
+            }else {
+                continue;
             }
             dataList.add(itemData);
         }
 
+        if(dataList.size()==1 && TextUtils.isEmpty(dataList.get(0).inputStr)){
+            dataList.remove(0);
+        }
         return dataList;
     }
 
@@ -522,27 +519,37 @@ public class RichTextEditor extends ScrollView {
             EditData editData = draft.get(i);
             if(i==0){
                 EditText titleText = (EditText) allLayout.getChildAt(0);
-                titleText.setText(editData.inputStr);
+                titleText.setText(editData.inputStr == null ? "":editData.inputStr);
             }else if(i==1){
-                EditText firstText = (EditText) allLayout.getChildAt(1);
-                firstText.setText(editData.inputStr);
+                if(editData.isImage()){
+                    allLayout.removeViewAt(1);
+                    allLayout.getChildAt(0).requestFocus();
+                    rollbackImage(i,editData);
+                }else{
+                    EditText firstText = (EditText) allLayout.getChildAt(1);
+                    firstText.setText(editData.inputStr);
+                }
+
             }else {
-                if (!TextUtils.isEmpty(editData.inputStr)) {
+                if (editData.isNormalText()) {
                     lastFocusEdit =  addEditTextAtIndex(i,editData.inputStr);
                 } else if (!TextUtils.isEmpty(editData.imagePath)) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(editData.imagePath);
-                    if(bitmap!=null) {
-                        addImageViewAtIndex(i,bitmap,editData.imagePath,false);
-                    }
+                    rollbackImage(i, editData);
                 }
             }
         }
-        if(!TextUtils.isEmpty(draft.get(draft.size()-1).imagePath)){
-            addContentText("");
+        if(draft.get(draft.size()-1).isImage()){
+            lastFocusEdit = addEditTextAtIndex(draft.size(), "");
         }
         lastFocusEdit.requestFocus();
     }
 
+    private void rollbackImage(int i, EditData editData) {
+        Bitmap bitmap = BitmapFactory.decodeFile(editData.imagePath);
+        if(bitmap!=null) {
+            addImageViewAtIndex(i,bitmap,editData.imagePath,false);
+        }
+    }
 
 
     public interface OnScrollEditEvent {

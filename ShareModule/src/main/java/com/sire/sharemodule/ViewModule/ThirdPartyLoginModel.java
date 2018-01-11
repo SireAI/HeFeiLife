@@ -64,6 +64,7 @@ public class ThirdPartyLoginModel {
         //使用SSO授权，通过客户单授权
         plat.SSOSetting(false);
         plat.setPlatformActionListener(new PlatformActionListener() {
+            @Override
             public void onComplete(Platform plat, int action, HashMap<String, Object> res) {
                 if (action == Platform.ACTION_USER_INFOR) {
                     Object[] objects = {plat.getName(), res};
@@ -73,6 +74,7 @@ public class ThirdPartyLoginModel {
                 }
             }
 
+            @Override
             public void onError(Platform plat, int action, Throwable t) {
                 if (action == Platform.ACTION_USER_INFOR) {
                     String text = "caught error: " + t.getMessage();
@@ -82,6 +84,7 @@ public class ThirdPartyLoginModel {
                 callBack.apply(null);
             }
 
+            @Override
             public void onCancel(Platform plat, int action) {
                 if (action == Platform.ACTION_USER_INFOR) {
                     Toast.makeText(context, "canceled", Toast.LENGTH_SHORT).show();
@@ -129,4 +132,6 @@ public class ThirdPartyLoginModel {
                 || "FacebookMessenger".equals(platformName) || "Dingding".equals(platformName)
                 || "Youtube".equals(platformName) || "Meipai".equals(platformName));
     }
+
+
 }

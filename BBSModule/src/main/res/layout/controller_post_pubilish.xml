@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_container"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -13,21 +13,21 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:fitsSystemWindows="true"
-        app:navigationIcon="@drawable/svg_delete"
         android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white"
-        app:title="帖子">
+        app:navigationIcon="@drawable/svg_delete"
+        app:title="帖子"
+        app:titleTextColor="@android:color/white">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@android:color/white"
-            android:text="@string/publish"
+            android:layout_gravity="center_vertical|right"
             android:layout_marginRight="17dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_gravity="center_vertical|right"
             android:onClick="onPublish"
-            />
+            android:text="@string/publish"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
     </android.support.v7.widget.Toolbar>
 
 
@@ -35,58 +35,115 @@
         android:id="@+id/richEditor"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-         />
+        android:layout_weight="1" />
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+
+        >
+
+        <TextView
+            android:id="@+id/tv_unlocated"
+            style="@style/caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_line_bg"
+            android:drawableLeft="@drawable/svg_grey_locate"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="你在哪里? "
+            android:visibility="visible"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:id="@+id/ll_located"
+            android:background="@drawable/shape_line_bg"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/tv_located"
+                style="@style/caption_cycan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/svg_cayan_locate"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="你在哪里? "
+                />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/main_bg" />
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:id="@+id/im_delete_loaction"
+                android:src="@drawable/svg_minor_delete" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:elevation="4dp"
+        android:layout_alignParentBottom="true"
         android:background="@android:color/white"
-        android:gravity="center">
+        android:elevation="4dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <ImageButton
+            android:id="@+id/ib_keyboard"
             android:layout_width="30dp"
             android:layout_height="40dp"
-            android:paddingTop="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:id="@+id/ib_keyboard"
-        android:layout_weight="1"
-        android:src="@drawable/svg_keyboard"
-            />
-        <ImageButton
-            android:paddingTop="5dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingTop="4dp"
+            android:src="@drawable/svg_keyboard" />
 
+        <ImageButton
             android:id="@+id/ib_photo"
             android:layout_width="30dp"
             android:layout_height="40dp"
-            android:src="@drawable/svg_photo"
-
-            />
-        <ImageButton
-            android:paddingTop="5dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingTop="5dp"
+            android:src="@drawable/svg_photo" />
 
+        <ImageButton
             android:id="@+id/ib_camera"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
             style="@style/base_tab_bottom_style"
+            android:layout_width="30dp"
+
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingTop="5dp"
             android:src="@drawable/svg_camera"
 
             />
+
         <ImageButton
             android:id="@+id/ib_topic"
             android:layout_width="30dp"
             android:layout_height="40dp"
-            android:paddingTop="5dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_weight="1"
-            android:src="@drawable/svg_topic"
-            />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingTop="5dp"
+            android:src="@drawable/svg_topic" />
     </LinearLayout>
-
 </LinearLayout>

@@ -22,7 +22,9 @@ import com.sire.usermodule.R;
 import com.zhy.m.permission.PermissionDenied;
 import com.zhy.m.permission.PermissionGrant;
 
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
 import static com.sire.corelibrary.Permission.PermissionHandler.REQUECT_CODE_BASIC_PERMISSIONS;
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.PHONENUMBER;
 import static com.sire.usermodule.Constant.Constant.PHONE_REG;
 
@@ -92,11 +94,21 @@ public class PasswordPhonenumberController extends SireController implements Vie
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE){
+            setResult(LOGIN_REQUEST_CODE);
+            finish();
+        }
+    }
+
     @PermissionGrant(REQUECT_CODE_BASIC_PERMISSIONS)
     public void requestPermisssionSuccess() {
         Intent intent = new Intent(this, PasswordVerifyCodeController.class);
         intent.putExtra(PHONENUMBER,editText.getText().toString());
-        segue(Segue.SegueType.PUSH,intent);
+        intent.putExtra(FOR_RESULT_REQUEST_CODE, LOGIN_REQUEST_CODE);
+        segueForResult(Segue.SegueType.PUSH, intent);
     }
 
 

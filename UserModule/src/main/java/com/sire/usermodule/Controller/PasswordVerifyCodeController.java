@@ -27,6 +27,8 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.PHONENUMBER;
 
 /**
@@ -94,8 +96,18 @@ public class PasswordVerifyCodeController extends SireController implements Time
 
     private void segueToPasswordResetController() {
         Intent intent = new Intent(this, PasswordResetController.class);
-        intent.putExtra(PHONENUMBER,getPhoneNumber());
-        segue(Segue.SegueType.PUSH, intent);
+        intent.putExtra(PHONENUMBER, getPhoneNumber());
+        intent.putExtra(FOR_RESULT_REQUEST_CODE, LOGIN_REQUEST_CODE);
+        segueForResult(Segue.SegueType.PUSH, intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE) {
+            setResult(LOGIN_REQUEST_CODE);
+            finish();
+        }
     }
 
     private String regPhoneNumber(String phoneNumber) {

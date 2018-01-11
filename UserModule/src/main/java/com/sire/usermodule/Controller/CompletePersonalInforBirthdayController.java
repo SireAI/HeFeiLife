@@ -25,6 +25,8 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.SEX;
 
 /**
@@ -74,7 +76,7 @@ public class CompletePersonalInforBirthdayController extends SireController{
     }
 
     public void onSkip(View view){
-
+        segueToCompletePersonalInforHobbyController();
     }
     public void onNext(View view){
         userViewModel.updateBirthday(((String)tvBirthday.getTag()),userViewModel.getUserId()).observe(this, dataResource -> {
@@ -98,7 +100,8 @@ public class CompletePersonalInforBirthdayController extends SireController{
 
     private void segueToCompletePersonalInforHobbyController() {
         Intent intent = new Intent(this, CompletePersonalInforHobbyController.class);
-        segue(Segue.SegueType.PUSH,intent);
+        intent.putExtra(FOR_RESULT_REQUEST_CODE, LOGIN_REQUEST_CODE);
+        segueForResult(Segue.SegueType.PUSH,intent);
     }
 
     private void initPicker(DatePicker dp) {
@@ -138,5 +141,12 @@ public class CompletePersonalInforBirthdayController extends SireController{
         tvBirthday.setTag(strDate);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE){
+            setResult(LOGIN_REQUEST_CODE);
+            finish();
+        }
+    }
 }

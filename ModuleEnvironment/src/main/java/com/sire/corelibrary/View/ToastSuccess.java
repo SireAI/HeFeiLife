@@ -30,7 +30,6 @@ public class ToastSuccess extends DialogFragment {
         void onFinish();
     }
 
-    private CallBack callBack;
     public static void showDialog(FragmentActivity activity,CallBack callBack) {
         showDialog(activity,"",callBack);
     }

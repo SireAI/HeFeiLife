@@ -24,17 +24,7 @@
             android:gravity="center"
 
             android:text="@string/complete_personal_infor" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@android:color/white"
-            android:alpha="0.7"
-            android:text="@string/pass"
-            android:layout_marginRight="17dp"
-            android:layout_gravity="center_vertical|right"
-            android:onClick="onSkip"
-            />
+
     </android.support.v7.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,13 +46,13 @@
             android:layout_height="wrap_content"
             style="@style/headline"
             android:layout_marginTop="23dp"
-            android:text="欢迎加入XXX圈"/>
+            android:text="欢迎加入合肥生活圈"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/body1_2"
             android:layout_marginTop="23dp"
-            android:text="xxx圈是个本地社交平台，完善个人资料向您推荐喜欢的人或者物"/>
+            android:text="合肥生活圈是个本地社交平台，完善个人资料向您推荐喜欢的人或者物"/>
         <Button
             android:id="@+id/btn_login"
             style="@style/normal_button_style"

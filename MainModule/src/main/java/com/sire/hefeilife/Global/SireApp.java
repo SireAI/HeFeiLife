@@ -7,10 +7,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
 import android.content.Context;
+import android.os.Environment;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 
 import com.sire.corelibrary.Bug.BugReport;
 import com.sire.corelibrary.Networking.NetConnection.NetStateReceiver;
+import com.sire.corelibrary.Networking.WebUrl;
 import com.sire.corelibrary.UICheck.UIBlockTrack;
 import com.sire.hefeilife.BuildConfig;
 import com.sire.hefeilife.ModuleInit.DI.Base.AppInjector;
@@ -40,13 +43,14 @@ public class SireApp extends Application implements HasActivityInjector,HasServi
 
         AppInjector.init(this);
 
-
         if (BuildConfig.DEBUG) {
             //ANR日志显示
             UIBlockTrack.start();
             Timber.plant(new Timber.DebugTree());
+            WebUrl.setState(WebUrl.APPEnvironment.PRODUCT);
+        }else {
+            WebUrl.setState(WebUrl.APPEnvironment.PRODUCT);
         }
-
     }
 
     @Override
@@ -59,7 +63,7 @@ public class SireApp extends Application implements HasActivityInjector,HasServi
 
         super.attachBaseContext(base);
         //dex分包方案
-//        MultiDex.install(this);
+        MultiDex.install(this);
 
     }
 

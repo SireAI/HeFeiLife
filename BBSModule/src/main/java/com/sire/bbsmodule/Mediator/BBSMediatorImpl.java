@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.sire.bbsmodule.Controller.PostController;
 import com.sire.bbsmodule.Controller.PostPublishController;
 import com.sire.bbsmodule.Views.EmojiView.EmojiManager;
@@ -14,6 +16,8 @@ import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.DI.Environment.ModuleInit;
 import com.sire.corelibrary.DI.Environment.ModuleInitInfor;
 import com.sire.mediators.BBSModuleInterface.BBSMediator;
+import com.yuyh.library.imgsel.ISNav;
+import com.yuyh.library.imgsel.common.ImageLoader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -63,7 +67,8 @@ public class BBSMediatorImpl implements BBSMediator ,ModuleInit{
     public Flowable<ModuleInitInfor> init() {
        return Flowable.just("bbs").flatMap(o -> {
            EmojiManager.install(new IosEmojiProvider());
-           return Flowable.just(new ModuleInitInfor("BBSModule","装载表情"));
+           ISNav.getInstance().init((ImageLoader) (context, path, imageView) -> Glide.with(context).load(path).into(imageView));
+           return Flowable.just(new ModuleInitInfor("BBSModule","装载表情,初始化图片选择器加载库"));
        });
 
     }

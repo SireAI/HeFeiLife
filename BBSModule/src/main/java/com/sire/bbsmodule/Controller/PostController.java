@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -72,6 +73,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +83,10 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static com.sire.bbsmodule.Constant.Constant.AUTHOR_ID;
+import static com.sire.bbsmodule.Constant.Constant.AUTHOR_NAME;
+import static com.sire.bbsmodule.Constant.Constant.FOLLOW;
+import static com.sire.bbsmodule.Constant.Constant.HEADIMAGE;
 import static com.sire.bbsmodule.Constant.Constant.REPORT_REASON;
 
 
@@ -95,8 +101,9 @@ import static com.sire.bbsmodule.Constant.Constant.REPORT_REASON;
 
 public class PostController extends SireController implements OnLoadmoreListener, TextWatcher, View.OnClickListener, BackListenEditText.BackListener, View.OnFocusChangeListener {
 
-    public static final String INPUT_TEXT = "inputText";
+    public static final String INPUT_TEXT = "comment";
     public static final int POST_CODE = 104;
+
     private static List<String> commentIds = new ArrayList<>();
     @Inject
     ViewModelProvider.Factory factory;
@@ -108,7 +115,6 @@ public class PostController extends SireController implements OnLoadmoreListener
     AppExecutors appExecutors;
     private SmartRefreshLayout swipeRefreshView;
     private BBSViewModel bbsViewModel;
-    private AutoClearedValue<HeaderAndFooterWrapper> postAdapterAutoClearedValue;
     private boolean init = true;
     private ImageButton ibPraise;
     private TextView tvSend;
@@ -121,6 +127,7 @@ public class PostController extends SireController implements OnLoadmoreListener
     private boolean scrollToFirstComment;
 
     private RecyclerView rvPost;
+    private HeaderAndFooterWrapper wrapperAdapter;
 
 
     @Override
@@ -148,7 +155,7 @@ public class PostController extends SireController implements OnLoadmoreListener
                         commentIds.add(listDataResource.data.get(i).getCommentId());
                     }
                     if (init) {
-                        bbsViewModel.getCommentsInfor(bbsViewModel.getTimeLineBy(((AutoViewStateAdapter) postAdapterAutoClearedValue.get().getInnerAdapter()).getDataSource()), bbsViewModel.getPostInfor().getFeedId());
+                        bbsViewModel.getCommentsInfor(bbsViewModel.getTimeLineBy(((AutoViewStateAdapter) wrapperAdapter.getInnerAdapter()).getDataSource()), bbsViewModel.getPostInfor().getFeedId());
                         init = false;
                     }
                     break;
@@ -183,12 +190,12 @@ public class PostController extends SireController implements OnLoadmoreListener
             switch (listDataResource.status) {
                 case SUCCESS:
                     closeDataLoading();
-                    if (postAdapterAutoClearedValue.get() != null) {
-                        AutoViewStateAdapter innerAdapter = (AutoViewStateAdapter) postAdapterAutoClearedValue.get().getInnerAdapter();
-                        List<Comment> newCommentInfors = bbsViewModel.collectCommentDataList(innerAdapter.getDataSource(), listDataResource);
+                    if (wrapperAdapter != null) {
+                        AutoViewStateAdapter innerAdapter = (AutoViewStateAdapter) wrapperAdapter.getInnerAdapter();
+                        List<Comment> newCommentInfors = bbsViewModel.collectCommentDataList(innerAdapter.getDataSource(), listDataResource, () -> swipeRefreshView.setLoadmoreFinished(true));
                         innerAdapter.getDataSource().clear();
                         innerAdapter.getDataSource().addAll(newCommentInfors);
-                        postAdapterAutoClearedValue.get().notifyDataSetChanged();
+                        refreshUI();
                         if (scrollToFirstComment) {
                             rvPost.smoothScrollToPosition(1);
                             scrollToFirstComment = false;
@@ -207,28 +214,48 @@ public class PostController extends SireController implements OnLoadmoreListener
         });
     }
 
+    private void refreshUI() {
+        if(rvPost.getAdapter() == null){
+            rvPost.setAdapter(wrapperAdapter);
+        }else {
+            wrapperAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void closeDataLoading() {
         if (swipeRefreshView.isLoading()) {
             swipeRefreshView.finishLoadmore();
         }
     }
-
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
+                try {
+                    Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    method.setAccessible(true);
+                    method.invoke(menu, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
     private void initView() {
         setContentView(R.layout.controller_post);
         //RecycleView Comment
         rvPost = findViewById(R.id.rv_post);
-        rvPost.setItemAnimator(null);
+        rvPost.setItemAnimator(new DefaultItemAnimator());
+        rvPost.requestFocus();
         PostAdapter postAdapter = new PostAdapter(new ArrayList<>(), rvPost, bbsViewModel);
         postAdapter.setEmptyView(UIUtils.inflate(R.layout.view_component_comment_empty_view, this));
-        HeaderAndFooterWrapper wrapperAdapter = new HeaderAndFooterWrapper(postAdapter);
-        postAdapterAutoClearedValue = new AutoClearedValue<>(this, wrapperAdapter);
+        wrapperAdapter = new HeaderAndFooterWrapper(postAdapter);
         postViewHolder = new PostViewHolder();
         bbsViewModel.setPostInfor(getPostInfor());
         View postView = postViewHolder.initView(this);
         postViewHolder.setData(bbsViewModel.getPostInfor(), feedMediator, userMediator);
         wrapperAdapter.addHeaderView(postView);
-        rvPost.setAdapter(wrapperAdapter);
-
         //pull refresh
         swipeRefreshView = findViewById(R.id.srl);
         swipeRefreshView.setEnableRefresh(false);
@@ -272,7 +299,6 @@ public class PostController extends SireController implements OnLoadmoreListener
     private PostInfor getPostInfor() {
         String postStr = getIntent().getStringExtra(Constant.FEED_INFOR);
         PostInfor postInfor = JSONUtils.jsonString2Bean(postStr, PostInfor.class);
-//        postInfor.setContent(IMAGE1);
         return postInfor;
     }
 
@@ -292,7 +318,7 @@ public class PostController extends SireController implements OnLoadmoreListener
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        bbsViewModel.getCommentsInfor(bbsViewModel.getTimeLineBy(((AutoViewStateAdapter) postAdapterAutoClearedValue.get().getInnerAdapter()).getDataSource()), bbsViewModel.getPostInfor().getFeedId());
+        bbsViewModel.getCommentsInfor(bbsViewModel.getTimeLineBy(((AutoViewStateAdapter) wrapperAdapter.getInnerAdapter()).getDataSource()), bbsViewModel.getPostInfor().getFeedId());
     }
 
 
@@ -336,10 +362,18 @@ public class PostController extends SireController implements OnLoadmoreListener
     @Override
     protected void onStop() {
         super.onStop();
-        //记录输入历史
+        //记录或清空评论输入历史
+        saveOrClearComment();
+    }
+
+    private void saveOrClearComment() {
         if (bbsViewModel.getPostInfor() != null) {
             String text = etComment.getText().toString();
-            SPUtils.saveKeyValueString(this, INPUT_TEXT + bbsViewModel.getPostInfor().getFeedId(), TextUtils.isEmpty(text) ? "" : text);
+            if(TextUtils.isEmpty(text)){
+                SPUtils.removeKeyValue(this,INPUT_TEXT + bbsViewModel.getPostInfor().getFeedId());
+            }else {
+                SPUtils.saveKeyValueString(this, INPUT_TEXT + bbsViewModel.getPostInfor().getFeedId(), TextUtils.isEmpty(text) ? "" : text);
+            }
         }
     }
 
@@ -501,24 +535,22 @@ public class PostController extends SireController implements OnLoadmoreListener
     }
 
     private void getFeedFocus() {
-        feedMediator.getFeedFocusInfor(bbsViewModel.getPostInfor().getAuthorId(), bbsViewModel.getPostInfor().getFeedId(), new CallBack<Map<String, Boolean>>() {
-            @Override
-            public void apply(Map<String, Boolean> data) {
-                //刷新关注按钮
-                if (postViewHolder != null) {
-                    bbsViewModel.getPostInfor().setFollow(data.get("following"));
-                    postViewHolder.viewCommponentPostBinding.setPostInfor(bbsViewModel.getPostInfor());
-                }
-                //刷新点赞按钮
-                praised = data.get("feedPraiseInfor");
-                ibPraise.setImageResource(praised ? R.drawable.svg_good_select : R.drawable.svg_good);
+        feedMediator.getFeedFocusInfor(bbsViewModel.getPostInfor().getAuthorId(), bbsViewModel.getPostInfor().getFeedId(), data -> {
+            //刷新关注按钮
+            if (postViewHolder != null) {
+                bbsViewModel.getPostInfor().setFollow(data.get("following"));
+                postViewHolder.viewCommponentPostBinding.setPostInfor(bbsViewModel.getPostInfor());
             }
+            //刷新点赞按钮
+            praised = data.get("feedPraiseInfor");
+            ibPraise.setImageResource(praised ? R.drawable.svg_good_select : R.drawable.svg_good);
         });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        wrapperAdapter.onDestroy();
         EventBus.getDefault().unregister(this);
         postViewHolder = null;
     }
@@ -533,6 +565,8 @@ public class PostController extends SireController implements OnLoadmoreListener
         isPanShow = show;
         setPanInputImage(show);
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -791,10 +825,9 @@ public class PostController extends SireController implements OnLoadmoreListener
 
         public View initView(Context context) {
             View postView = getPostView(context);
-            postView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             viewCommponentPostBinding = DataBindingUtil.bind(postView);
             //RecycleView Praise User
-            viewCommponentPostBinding.rvPraiseUsers.setItemAnimator(new DefaultItemAnimator());
+            viewCommponentPostBinding.rvPraiseUsers.setFocusableInTouchMode(false);
             viewCommponentPostBinding.rvPraiseUsers.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             viewCommponentPostBinding.rvPraiseUsers.setAdapter(userPraiseAdapter = new UserPraiseAdapter(praiseUsers = new ArrayList<>()));
             return postView;
@@ -809,14 +842,27 @@ public class PostController extends SireController implements OnLoadmoreListener
             viewCommponentPostBinding.setUserMediator(userMediator);
             viewCommponentPostBinding.tvContent.showEditData(StringUtils.cutStringBy(postInfor.getContent()));
         }
+        public void onPerson(View view,PostInfor postInfor) {
+            segueToPersonalHomePageController(view.getContext(),postInfor);
+        }
+
+        private void segueToPersonalHomePageController(Context context, PostInfor postInfor) {
+            Intent intent = new Intent(context,PersonalHomePageController.class);
+            intent.putExtra(HEADIMAGE,postInfor.getAuthorIcon());
+            intent.putExtra(AUTHOR_ID,postInfor.getAuthorId());
+            intent.putExtra(AUTHOR_NAME,postInfor.getAuthorName());
+            intent.putExtra(FOLLOW,postInfor.isFollow());
+            ((SireController)context).segue(Segue.SegueType.PUSH,intent);
+        }
+
 
         /**
-         * 关注
-         *
-         * @param feedMediator
-         * @param followingId
-         * @param postInfor
-         */
+             * 关注
+             *
+             * @param feedMediator
+             * @param followingId
+             * @param postInfor
+             */
         public void onFollow(FeedMediator feedMediator, UserMediator userMediator, String followingId, PostInfor postInfor) {
             if (feedMediator != null && userMediator != null) {
 
@@ -856,7 +902,7 @@ public class PostController extends SireController implements OnLoadmoreListener
                                     break;
                                 case LOADING:
                                     setLoading(true);
-                                    break;
+                                     break;
                                 default:
                                     break;
                             }

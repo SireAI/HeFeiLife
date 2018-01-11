@@ -2,6 +2,7 @@ package com.sire.feedmodule.Repository;
 
 import android.arch.lifecycle.LiveData;
 
+import com.sire.corelibrary.Lifecycle.DataLife.AbsentLiveData;
 import com.sire.corelibrary.Networking.Response.JsonResponse;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Networking.dataBound.DataSourceStrategy;
@@ -27,6 +28,7 @@ import javax.inject.Singleton;
 import retrofit2.Response;
 
 import static com.sire.feedmodule.Constant.Constant.FEED_INFOR;
+import static com.sire.feedmodule.Constant.Constant.USER_FEED;
 
 /**
  * ==================================================
@@ -51,7 +53,7 @@ public class FeedRepository {
     public LiveData fetchFeedsInfor(FeedRequestInfor feedRequestInfor) {
         Map<String, Object> params = ObjectMapConversionUtils.Object2Map(feedRequestInfor);
         return new DataSourceStrategy.Builder()
-                .appDataFromStrategy(feedRequestInfor.dataFromStrategy)
+                .appDataFromStrategy(feedRequestInfor.getDataFromStrategy())
                 .cacheData()
                 .build()
                 .apply(new DataSourceStrategy.DataDecision<JsonResponse<List<FeedInfor>>, List<FeedInfor>>() {
@@ -59,9 +61,12 @@ public class FeedRepository {
                     public LiveData<List<FeedInfor>> loadFromDb() {
                         if (feedRequestInfor.getFeedType().equals(FEED_INFOR)) {
                             return feedDao.queryFeedInfors(feedRequestInfor.getTimeLine().getTime(), feedRequestInfor.getPageSize());
-                        } else {
+                        } else if(feedRequestInfor.getFeedType().equals(USER_FEED)){
                             //user feed
                             return feedDao.queryUserFeedInfors(feedRequestInfor.getTimeLine().getTime(), feedRequestInfor.getPageSize(), feedRequestInfor.getUserId());
+                        }else {
+                            //dynamic feed
+                            return AbsentLiveData.create();
                         }
                     }
 
@@ -74,7 +79,7 @@ public class FeedRepository {
                     public void saveData2DB(List<FeedInfor> infors) {
                         if (feedRequestInfor.getFeedType().equals(FEED_INFOR)) {
                             feedDao.insertFeedInfor(infors);
-                        } else {
+                        } else if(feedRequestInfor.getFeedType().equals(USER_FEED)){
                             //user feed
                             List<UserFeedInfor> userFeedInfors = new ArrayList<>();
                             for (int i = 0; i < infors.size(); i++) {
@@ -168,6 +173,8 @@ public class FeedRepository {
                            @Override
                            public void saveData2DB(Following following) {
                                feedDao.deleteFollowingBy(following);
+                               List<UserFeedInfor> cancelUserFeeds = feedDao.findUserFeedByAuthorId(following.getFollowingId());
+                               feedDao.deleteUserFeedsBy(cancelUserFeeds);
                            }
                        }
                 );

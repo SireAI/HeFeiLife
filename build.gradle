@@ -54,7 +54,7 @@ ext {
     compileSdkVersion = 26
     buildToolsVersion = "26.0.2"
     minSdkVersion = 18
-    targetSdkVersion = 26
+    targetSdkVersion = 21
     versionCode = 1
     versionName = "1.0"
     mainapplicationId = "com.sire.hefeilife"

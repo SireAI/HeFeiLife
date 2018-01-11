@@ -19,7 +19,9 @@
         app:navigationIcon="@drawable/svg_back_arrow"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ToolbarTheme"
-        app:title=" ">
+        app:title="正文"
+        app:titleTextColor="@android:color/white"
+        >
     </android.support.v7.widget.Toolbar>
 <com.scwang.smartrefresh.layout.SmartRefreshLayout
     android:layout_width="match_parent"

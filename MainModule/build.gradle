@@ -29,24 +29,51 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        multiDexEnabled true
+        multiDexEnabled true
 
 
     }
+    packagingOptions {
 
+        //Espresso excludes
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'LICENSE.txt'
+        //Espresso excludes
+
+    }
     dataBinding {
         enabled = true
     }
 
     buildTypes {
+        debug{
+            signingConfig signingConfigs.config
+            manifestPlaceholders = [
+                    Environment    : "Ie0zw3b4TwANzTQGwJo7o1"
+            ]
+        }
         release {
-            minifyEnabled true
+            minifyEnabled false
             zipAlignEnabled true
-
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
+            manifestPlaceholders = [
+                    Environment    : "Ie0zw3b4TwANzTQGwJo7o1"
+            ]
         }
     }
+
+
 
 }
 
@@ -72,14 +99,14 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-    //    implementation  'com.android.support:multidex:1.0.1'
     implementation project(':FeedModule')
     implementation project(':ShareModule')
     implementation project(':UpgradeModule')
     implementation project(':UserModule')
     implementation project(':MessagePushModule')
     implementation project(':BBSModule')
-//    api 'com.android.support:multidex:1.0.0'
+    implementation project(':BaiduLocationModule')
+    api 'com.android.support:multidex:1.0.1'
 
 }
 

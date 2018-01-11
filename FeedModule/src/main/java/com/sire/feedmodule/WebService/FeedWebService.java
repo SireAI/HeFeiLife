@@ -29,9 +29,9 @@ import retrofit2.http.QueryMap;
  */
 
 public interface FeedWebService {
-    @GET("feed/getFeeds")
+    @GET("feed/getfeeds")
     LiveData<Response<JsonResponse<List<FeedInfor>>>> fetchFeedsInfor(@QueryMap Map<String,Object> params);
-    @GET("feed/getFollowings")
+    @GET("feed/getfollowings")
     LiveData<Response<JsonResponse<List<Following>>>> fetchFollowingInfor(@Query("userId") String userId);
     @POST("feed/follow")
     LiveData<Response<JsonResponse<Following>>> follow(@Body Following following);

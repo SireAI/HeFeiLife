@@ -1,5 +1,7 @@
 package com.sire.usermodule.DI;
 
+import android.support.v4.app.Fragment;
+
 import com.sire.usermodule.Controller.CompletePersonalInforBirthdayController;
 import com.sire.usermodule.Controller.CompletePersonalInforController;
 import com.sire.usermodule.Controller.CompletePersonalInforHobbyController;
@@ -12,9 +14,14 @@ import com.sire.usermodule.Controller.PasswordResetController;
 import com.sire.usermodule.Controller.PasswordVerifyCodeController;
 import com.sire.usermodule.Controller.RegisterPhoneNumberController;
 import com.sire.usermodule.Controller.RegisterVerifyCodeController;
+import com.sire.usermodule.Controller.fragment.PersonalInforController;
 
+import dagger.Binds;
 import dagger.Module;
+import dagger.android.AndroidInjector;
 import dagger.android.ContributesAndroidInjector;
+import dagger.android.support.FragmentKey;
+import dagger.multibindings.IntoMap;
 
 /**
  * ==================================================
@@ -24,7 +31,7 @@ import dagger.android.ContributesAndroidInjector;
  * Description:controller di
  * ==================================================
  */
-@Module
+@Module(subcomponents = {PersonalInforControllerSubcomponent.class})
 public abstract class ControllerModule {
     @ContributesAndroidInjector
     abstract LoginController contributeLoginController();
@@ -50,4 +57,11 @@ public abstract class ControllerModule {
     abstract PasswordVerifyCodeController contributePasswordVerifyCodeController();
     @ContributesAndroidInjector
     abstract PasswordResetController contributePasswordResetController();
+
+
+    @Binds
+    @IntoMap
+    @FragmentKey(PersonalInforController.class)
+    abstract AndroidInjector.Factory<? extends Fragment>
+    bindUserDynamicControllerInjectorFactory(PersonalInforControllerSubcomponent.PersonalInforControllerBuilder builder);
 }

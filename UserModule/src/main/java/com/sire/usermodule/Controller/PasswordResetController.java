@@ -12,12 +12,10 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Utils.AutoClearedValue;
 import com.sire.corelibrary.Utils.SnackbarUtils;
-import com.sire.corelibrary.Utils.ToastUtils;
 import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.corelibrary.View.ToastSuccess;
 import com.sire.usermodule.DB.Entry.User;
@@ -29,6 +27,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.PHONENUMBER;
 
 /**
@@ -69,10 +68,10 @@ public class PasswordResetController extends SireController  {
 
 
 
-    private void segueToLoginController() {
-        Intent intent = new Intent(this, LoginController.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        segue(Segue.SegueType.PUSH, intent);
+    private void segueToPreviousController() {
+        setResult(LOGIN_REQUEST_CODE);
+        finishActivity(LOGIN_REQUEST_CODE);
+        finish();
     }
 
     private String regPhoneNumber(String phoneNumber) {
@@ -131,8 +130,7 @@ public class PasswordResetController extends SireController  {
                             ToastSuccess.showDialog(PasswordResetController.this, getResources().getString(R.string.reset_success), new ToastSuccess.CallBack() {
                                 @Override
                                 public void onFinish() {
-                                    ToastUtils.showToast(PasswordResetController.this,"跳转主页");
-                                    segueToLoginController();
+                                    segueToPreviousController();
                                 }
                             });
                             break;

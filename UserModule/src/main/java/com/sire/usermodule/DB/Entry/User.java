@@ -13,7 +13,10 @@ import java.util.Date;
  * All Right Reserved
  * Date:2017/07/24
  * Author:Sire
- * Description:
+ * Description: private String college;
+    private String hobby;
+    private String homePageImg;
+    private String instruction;
  * ==================================================
  */
 @Entity(primaryKeys = "userId")
@@ -27,17 +30,74 @@ public class User {
     private String sex;
     private String birthday;
     private String phonenumber;
+    private String college;
+    private String hobby;
+    private String homePageImg;
+    private String instruction;
     private int level;
-    private boolean alreadyLogin;
     private Date loginTime;
-    @Ignore
-    private String token;
+
     @Ignore
     public User(String userId, String name, String pwd,Date loginTime) {
         this.userId = userId;
         this.name = name;
         this.pwd = pwd;
         this.loginTime = loginTime;
+    }
+    //以下为非数据库字段
+    @Ignore
+    private String followingCount;
+    @Ignore
+    private String followoerCount;
+    @Ignore
+    private String token;
+
+    public String getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(String followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public String getFollowoerCount() {
+        return followoerCount;
+    }
+
+    public void setFollowoerCount(String followoerCount) {
+        this.followoerCount = followoerCount;
+    }
+
+    public String getCollege() {
+        return college;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+
+    public String getHomePageImg() {
+        return homePageImg;
+    }
+
+    public void setHomePageImg(String homePageImg) {
+        this.homePageImg = homePageImg;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
 
     public String getPhonenumber() {
@@ -67,13 +127,7 @@ public class User {
     public User() {
     }
 
-    public boolean isAlreadyLogin() {
-        return alreadyLogin;
-    }
 
-    public void setAlreadyLogin(boolean alreadyLogin) {
-        this.alreadyLogin = alreadyLogin;
-    }
 
     public String getUserId() {
         return userId;
@@ -142,8 +196,11 @@ public class User {
                 ", sex='" + sex + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", phonenumber='" + phonenumber + '\'' +
+                ", college='" + college + '\'' +
+                ", hobby='" + hobby + '\'' +
+                ", homePageImg='" + homePageImg + '\'' +
+                ", instruction='" + instruction + '\'' +
                 ", level=" + level +
-                ", alreadyLogin=" + alreadyLogin +
                 ", loginTime=" + loginTime +
                 ", token='" + token + '\'' +
                 '}';

@@ -1,4 +1,4 @@
-include ':MainModule', ':BBSModule',
+include ':MainModule', ':BBSModule', ':BaiduLocationModule',
         ':ModuleEnvironment',
         ':UserModule',
         ':UpgradeModule',

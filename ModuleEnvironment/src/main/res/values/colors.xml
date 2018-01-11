@@ -45,6 +45,8 @@
     <color name="material_cyan_500">#00bcd4</color>
     <color name="material_cyan_700">#0097a7</color>
     <color name="material_deep_yelow_500">#FFEB3B</color>
+    <color name="material_deep_yelow_700">#FFA000</color>
+    <color name="material_deep_yelow">#EEFD54</color>
 
     <!--文字主题色-->
 

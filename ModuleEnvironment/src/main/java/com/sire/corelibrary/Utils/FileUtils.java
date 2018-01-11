@@ -1,6 +1,11 @@
 package com.sire.corelibrary.Utils;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * ==================================================
@@ -25,5 +30,45 @@ public class FileUtils {
         } else if (file.exists()) {
             file.delete();
         }
+    }
+
+    public static void bytesToFile(byte[] buffer, final String filePath){
+
+        File file = new File(filePath);
+
+        OutputStream output = null;
+        BufferedOutputStream bufferedOutput = null;
+
+        try {
+            output = new FileOutputStream(file);
+
+            bufferedOutput = new BufferedOutputStream(output);
+
+            bufferedOutput.write(buffer);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
+            if(null!=bufferedOutput){
+                try {
+                    bufferedOutput.flush();
+                    bufferedOutput.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(null != output){
+                try {
+                    output.flush();
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
     }
 }

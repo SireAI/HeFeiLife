@@ -12,7 +12,7 @@ package com.sire.usermodule.Constant;
 public interface Constant {
     String PHONE_REG = "^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$";
     String PHONENUMBER = "phonenumber";
-    String CUREENT_LOGIN_USER_ID = "phonenumber";
+    String CUREENT_LOGIN_USER_ID = "currentLoginUserID";
     String SEX = "sex";
      int LOGIN_REQUEST_CODE = 99;
 }

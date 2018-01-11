@@ -7,6 +7,7 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.sire.corelibrary.DI.Environment.ModuleInitInfor;
 import com.sire.corelibrary.Lifecycle.DataLife.AbsentLiveData;
@@ -127,8 +128,12 @@ public class UserViewModel extends ViewModel {
     }
 
 
-    public LiveData<DataResource<JsonResponse<User>>> uploadHeadImage(File file, String userId) {
+    public LiveData<DataResource<JsonResponse>> uploadHeadImage(File file, String userId) {
         return userRepository.uploadHeadImage(file, userId);
+    }
+
+    public LiveData<DataResource<User>> getUserInfor(String userId,boolean withFeedInfor){
+        return userRepository.getUserInfor(userId,withFeedInfor);
     }
 
 
@@ -137,9 +142,9 @@ public class UserViewModel extends ViewModel {
      * @param context
      */
     public Flowable<ModuleInitInfor> initUserState(Context context) {
+        UserViewModel.currentUser = new User();
         String userId = getUserIdFromSP(context);
         Flowable<List<User>> usersFromCache = getUsers();
-
         return usersFromCache.flatMap((List<User> users) -> {
             for (int i = 0; i < users.size(); i++) {
                 if (users.get(i).getUserId().equals(userId)) {
@@ -210,11 +215,25 @@ public class UserViewModel extends ViewModel {
     }
 
     public String getUserName() {
-        return currentUser.getName();
+        String name = currentUser.getName();
+        if(TextUtils.isEmpty(name)){
+            name = currentUser.getPhonenumber();
+        }
+        return name;
     }
 
     public String getUserLevel() {
         return currentUser.getLevel()+"";
     }
 
+    public LiveData<DataResource> updateUserAvatar(String avartarUrl) {
+        User user = new User();
+        user.setUserId(getUserId());
+        user.setAvatar(avartarUrl);
+        return userRepository.completeUserInfor(user);
+    }
+
+    public String getPhoneNumber() {
+        return currentUser.getPhonenumber();
+    }
 }

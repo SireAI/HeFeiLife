@@ -3,11 +3,11 @@ package com.sire.feedmodule.DI;
 import android.support.v4.app.Fragment;
 
 import com.sire.feedmodule.Controller.fragment.FeedInformationController;
+import com.sire.feedmodule.Controller.fragment.UserDynamicController;
 
 import dagger.Binds;
 import dagger.Module;
 import dagger.android.AndroidInjector;
-import dagger.android.ContributesAndroidInjector;
 import dagger.android.support.FragmentKey;
 import dagger.multibindings.IntoMap;
 
@@ -19,7 +19,7 @@ import dagger.multibindings.IntoMap;
  * Description:controller di
  * ==================================================
  */
-@Module(subcomponents = {LatestInformationControllerSubcomponent.class})
+@Module(subcomponents = {FeedInformationControllerSubcomponent.class,UserDynamicControllerSubcomponent.class})
 public abstract class ControllerModule {
 
 
@@ -27,5 +27,11 @@ public abstract class ControllerModule {
     @IntoMap
     @FragmentKey(FeedInformationController.class)
     abstract AndroidInjector.Factory<? extends Fragment>
-    bindLatestInformationControllerInjectorFactory(LatestInformationControllerSubcomponent.Builder builder);
+    bindFeedInformationControllerInjectorFactory(FeedInformationControllerSubcomponent.FeedInformationControllerBuilder builder);
+
+    @Binds
+    @IntoMap
+    @FragmentKey(UserDynamicController.class)
+    abstract AndroidInjector.Factory<? extends Fragment>
+    bindUserDynamicControllerInjectorFactory(UserDynamicControllerSubcomponent.UserDynamicControllerBuilder builder);
 }

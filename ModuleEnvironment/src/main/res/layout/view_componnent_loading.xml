@@ -2,8 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
+    android:background="@color/main_bg"
+    android:minHeight="300dp"
     >
+
+
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -11,4 +14,5 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_centerInParent="true"/>
+
 </RelativeLayout>

@@ -30,6 +30,18 @@ public class FeedPraiseInfor {
      */
     private String userImage;
 
+    /**
+     * 用户姓名
+     */
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getFeedId() {
         return feedId;
@@ -55,9 +67,13 @@ public class FeedPraiseInfor {
         this.userImage = userImage;
     }
 
-
     @Override
     public String toString() {
-        return super.toString();
+        return "FeedPraiseInfor{" +
+                "feedId='" + feedId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", userImage='" + userImage + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
     }
 }

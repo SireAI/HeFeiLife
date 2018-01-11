@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="enterAlways|scroll"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <com.ogaclejapan.smarttablayout.SmartTabLayout
@@ -73,7 +73,7 @@
         app:elevation="6dp"
         app:fabSize="normal"
         app:borderWidth="0dp"
-        app:backgroundTint="?attr/colorPrimaryDark"
+        app:backgroundTint="@color/material_deep_yelow"
         app:backgroundTintMode="src_in"
 
         app:pressedTranslationZ="12dp"

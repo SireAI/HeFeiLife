@@ -3,16 +3,15 @@ package com.sire.hefeilife.Controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.sire.corelibrary.Controller.MainContainerComponnent;
 import com.sire.corelibrary.Controller.SireController;
+import com.sire.corelibrary.Delegate.HomeTabDelegate;
 import com.sire.corelibrary.RecyclerView.OnScrollDelegate;
 import com.sire.hefeilife.Controller.fragment.DiscoveryController;
 import com.sire.hefeilife.Controller.fragment.MessageController;
@@ -34,7 +33,7 @@ import me.majiajie.pagerbottomtabstrip.NavigationController;
 import me.majiajie.pagerbottomtabstrip.PageNavigationView;
 import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectedListener;
 
-public class MainController extends SireController implements MainContainerComponnent,OnScrollDelegate, OnTabItemSelectedListener {
+public class MainController extends SireController implements MainContainerComponnent, OnScrollDelegate, OnTabItemSelectedListener {
 
     @Inject
     ShareMediator shareMediator;
@@ -71,9 +70,10 @@ public class MainController extends SireController implements MainContainerCompo
 
     }
 
+
     private List<Fragment> initPages() {
         List<Fragment> pages = new ArrayList<>();
-        pages.add((Fragment) feedMediator.getViewController());
+        pages.add((Fragment) feedMediator.getInformationFlowController());
         pages.add(new DiscoveryController());
         pages.add(new MessageController());
         pages.add(new MineController());
@@ -105,6 +105,7 @@ public class MainController extends SireController implements MainContainerCompo
 
     /**
      * 回调传递
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -112,9 +113,9 @@ public class MainController extends SireController implements MainContainerCompo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(pages!=null){
+        if (pages != null) {
             for (int i = 0; i < pages.size(); i++) {
-                pages.get(i).onActivityResult(requestCode,resultCode,data);
+                pages.get(i).onActivityResult(requestCode, resultCode, data);
             }
         }
     }
@@ -126,10 +127,10 @@ public class MainController extends SireController implements MainContainerCompo
 
     @Override
     public void onScroll(RecyclerView recyclerView, int dx, int dy) {
-        if(navigationController!=null){
-            if(dy > 8){//列表向上滑动
+        if (navigationController != null) {
+            if (dy > 8) {//列表向上滑动
                 navigationController.hideBottomLayout();
-            } else if(dy < -8){//列表向下滑动
+            } else if (dy < -8) {//列表向下滑动
                 navigationController.showBottomLayout();
             }
         }
@@ -142,7 +143,11 @@ public class MainController extends SireController implements MainContainerCompo
 
     @Override
     public void onRepeat(int index) {
-        System.out.println("====="+index);
+        if(index == 0){
+            if(pages!=null&&pages.size()>0){
+                ((HomeTabDelegate)pages.get(0)).onTabClickRepeat(index);
+            }
+        }
     }
 
     private static class PagerAdapter extends FragmentPagerAdapter {
@@ -153,7 +158,6 @@ public class MainController extends SireController implements MainContainerCompo
             super(fm);
             this.fragments = fragments;
         }
-
 
 
         @Override

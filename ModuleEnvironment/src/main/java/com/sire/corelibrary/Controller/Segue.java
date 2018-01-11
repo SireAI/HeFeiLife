@@ -38,6 +38,7 @@ public class Segue {
         new SegueAnimation(SegueType.PUSH, R.anim.controller_push_enter, R.anim.controller_push_exit_under, R.anim.controller_push_enter_under, R.anim.controller_push_exit);
         new SegueAnimation(SegueType.MODAL, R.anim.controller_modal_enter_from_bottom, R.anim.controller_modal_exit_under, R.anim.controller_modal_enter_under, R.anim.controller_modal_exit_from_bottom);
         new SegueAnimation(SegueType.CROSS, R.anim.controller_cross_enter, R.anim.controller_cross_exit_under, R.anim.controller_cross_enter_under, R.anim.controller_cross_exit);
+        new SegueAnimation(SegueType.CENTER_SCALE, R.anim.controller_center_scale_enter, R.anim.controller_center_scale_exsit_under, R.anim.controller_center_scale_enter_under, R.anim.controller_center_scale_exsit);
         new SegueAnimation(SegueType.SACLE_UP, NO_ANIM, NO_ANIM, NO_ANIM, NO_ANIM);
         new SegueAnimation(SegueType.TRADITIONAL, NO_ANIM, NO_ANIM, NO_ANIM, NO_ANIM);
     }
@@ -47,12 +48,13 @@ public class Segue {
     }
 
     @SuppressLint("RestrictedApi")
-    public void segueForward(SegueType segueType, Intent intent, SireController controller, boolean forResult,PagePositionData pagePositionData) {
+    public void segueForward(SegueType segueType, Intent intent, SireController controller, boolean forResult, PagePositionData pagePositionData) {
 
         switch (segueType) {
             case PUSH:
             case CROSS:
             case MODAL:
+            case CENTER_SCALE:
                 intent.putExtra(SEGUE_TYPE, segueType.name());
                 SegueAnimation segueAnimation = mAnimResource.get(segueType);
                 ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeCustomAnimation(controller, segueAnimation.forwordAnimIn, segueAnimation.forwordAnimOut);
@@ -69,13 +71,13 @@ public class Segue {
                 ActivityOptionsCompat activityOptionsCompatReveal;
                 if (Build.VERSION.SDK_INT >= 23) {
                     activityOptionsCompatReveal = ActivityOptionsCompat.makeClipRevealAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
-                }else {
-                     activityOptionsCompatReveal = ActivityOptionsCompat.makeScaleUpAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
+                } else {
+                    activityOptionsCompatReveal = ActivityOptionsCompat.makeScaleUpAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
                 }
                 animateTransition(intent, controller, forResult, activityOptionsCompatReveal);
                 break;
             case SACLE_UP:
-                ActivityOptionsCompat  activityOptionsCompatScaleUp = ActivityOptionsCompat.makeScaleUpAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
+                ActivityOptionsCompat activityOptionsCompatScaleUp = ActivityOptionsCompat.makeScaleUpAnimation(pagePositionData.getSource(), pagePositionData.getStartX(), pagePositionData.getStartY(), pagePositionData.getWidth(), pagePositionData.getHeight());
                 animateTransition(intent, controller, forResult, activityOptionsCompatScaleUp);
 
                 break;
@@ -103,21 +105,23 @@ public class Segue {
      */
     public void segueBack(SireController controller) {
         SegueType segueType = getSegueType(controller);
-        if(segueType!=null){
-            switch (segueType){
+        if (segueType != null) {
+            switch (segueType) {
                 case TRADITIONAL:
                     break;
                 case MODAL:
                 case PUSH:
                 case CROSS:
+                case CENTER_SCALE:
                     SegueAnimation segueAnimation = mAnimResource.get(segueType);
                     controller.overridePendingTransition(segueAnimation.backAnimIn, segueAnimation.backAnimOut);
                     break;
                 case SACLE_UP:
+
                 case CLIP_REVEAL:
                     break;
-                    default:
-                        break;
+                default:
+                    break;
             }
         }
 
@@ -136,7 +140,7 @@ public class Segue {
      * transition animation type
      */
     public enum SegueType {
-        PUSH, MODAL, CROSS, TRADITIONAL, SACLE_UP,CLIP_REVEAL;
+        PUSH, MODAL, CROSS, TRADITIONAL, SACLE_UP, CLIP_REVEAL, CENTER_SCALE
     }
 
 
@@ -160,7 +164,7 @@ public class Segue {
         }
     }
 
-    public static class PagePositionData implements Serializable{
+    public static class PagePositionData implements Serializable {
         View source;
         int startX;
         int startY;

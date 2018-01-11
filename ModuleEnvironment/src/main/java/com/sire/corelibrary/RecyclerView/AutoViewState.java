@@ -45,6 +45,7 @@ public class AutoViewState  {
         return itemCount;
     }
 
+
     int getItemViewType() {
         switch (viewState) {
             case LOADING:

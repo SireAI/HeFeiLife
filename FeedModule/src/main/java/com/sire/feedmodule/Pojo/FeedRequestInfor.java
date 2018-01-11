@@ -2,23 +2,22 @@ package com.sire.feedmodule.Pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sire.corelibrary.Networking.dataBound.DataSourceStrategy;
 
 import java.util.Date;
-
 public class FeedRequestInfor {
-    public String userId;
-    public int pageSize;
-    public int pageIndex;
-    public int pageOffset;
-    public String feedType;
+    private String userId;
+    private int pageSize;
+    private int pageIndex;
+    private int pageOffset;
+    private String feedType;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss SSS")
-    public Date timeLine;
+    private Date timeLine;
     public boolean getNewFeeds;
-
     @JsonIgnore
-    public DataSourceStrategy.DataFromStrategy dataFromStrategy;
-
+    private DataSourceStrategy.DataFromStrategy dataFromStrategy;
     public DataSourceStrategy.DataFromStrategy getDataFromStrategy() {
         return dataFromStrategy;
     }

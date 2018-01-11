@@ -6,11 +6,17 @@ import android.content.Context;
 import com.sire.corelibrary.Utils.APPUtils;
 import com.sire.corelibrary.Utils.SPUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okio.BufferedSink;
+import okio.GzipSink;
+import okio.Okio;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -69,6 +75,24 @@ public class Network {
 
 
         return httpClient;
+
+    }
+    public static RequestBody gzip(final RequestBody body) {
+        return new RequestBody() {
+            @Override public MediaType contentType() {
+                return body.contentType();
+            }
+
+            @Override public long contentLength() {
+                return -1; // We don't know the compressed length in advance!
+            }
+
+            @Override public void writeTo(BufferedSink sink) throws IOException {
+                BufferedSink gzipSink = Okio.buffer(new GzipSink(sink));
+                body.writeTo(gzipSink);
+//                gzipSink.close();
+            }
+        };
 
     }
 }

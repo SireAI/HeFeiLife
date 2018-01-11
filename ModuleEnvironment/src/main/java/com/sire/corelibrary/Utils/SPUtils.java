@@ -18,6 +18,12 @@ public class SPUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         sharedPreferences.edit().putString(key,value).apply();
     }
+    public static void removeKeyValue(Context context,String key){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(key)){
+            sharedPreferences.edit().remove(key).apply();
+        }
+    }
 
     public static void saveKeyValueBlooen(Context context,String key,boolean value){
         SharedPreferences sharedPreferences = context.getSharedPreferences(spName, Context.MODE_PRIVATE);

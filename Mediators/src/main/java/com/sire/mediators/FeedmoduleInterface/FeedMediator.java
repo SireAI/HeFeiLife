@@ -2,7 +2,6 @@ package com.sire.mediators.FeedmoduleInterface;
 
 import com.sire.mediators.core.CallBack;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,7 +14,8 @@ import java.util.Map;
  */
 
 public interface FeedMediator {
-    Object getViewController();
+    Object getInformationFlowController();
+    Object getUserDynamicController();
     Object follow(String followingId);
 
     Object cancelFollow(String followingId);

@@ -28,6 +28,8 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
+import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.PHONENUMBER;
 
 /**
@@ -81,7 +83,14 @@ public class RegisterVerifyCodeController extends SireController implements Time
                 appExecutors.mainThread().execute(() ->
                         smshandler(data)));
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE){
+            setResult(LOGIN_REQUEST_CODE);
+            finish();
+        }
+    }
     private void smshandler(String data) {
 
         if (data.equals("success")) {
@@ -115,8 +124,8 @@ public class RegisterVerifyCodeController extends SireController implements Time
 
     private void segueToCompletePersonalInforController() {
         Intent intent = new Intent(this, CompletePersonalInforController.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        segue(Segue.SegueType.PUSH, intent);
+        intent.putExtra(FOR_RESULT_REQUEST_CODE, LOGIN_REQUEST_CODE);
+        segueForResult(Segue.SegueType.MODAL, intent);
     }
 
     private String regPhoneNumber(String phoneNumber) {
@@ -153,7 +162,6 @@ public class RegisterVerifyCodeController extends SireController implements Time
     public void onRegister(View view) {
         String verifycode = binding.get().tieVerifycode.getText().toString();
         shareMediator.submitVerifyCode(phoneNumber, verifycode);
-//        smshandler("success");
         ProgressHUD.showDialog(this);
     }
 

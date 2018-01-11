@@ -10,6 +10,7 @@ import com.sire.bbsmodule.Pojo.PublishInfor;
 import com.sire.bbsmodule.Pojo.ReportReason;
 import com.sire.bbsmodule.WebService.BBSWebService;
 import com.sire.corelibrary.Networking.Response.JsonResponse;
+import com.sire.corelibrary.Networking.WebUrl;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Networking.dataBound.DataSourceStrategy;
 import com.sire.corelibrary.Utils.ObjectMapConversionUtils;
@@ -20,6 +21,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Flowable;
+import okhttp3.RequestBody;
 import retrofit2.Response;
 
 /**
@@ -148,18 +151,13 @@ public class BBSRepository {
                 );
     }
 
-    public LiveData<DataResource<JsonResponse>> publishPost(PublishInfor post) {
-        return new DataSourceStrategy.Builder()
-                .appDataFromStrategy(DataSourceStrategy.DataFromStrategy.NET)
-                .build()
-                .apply(new DataSourceStrategy.DataDecision<JsonResponse, JsonResponse>() {
-                           @Override
-                           public LiveData<Response<JsonResponse>> makeNetCall() {
-                               return bbsWebService.publishPost(post);
-                           }
+    public Flowable<JsonResponse> publishPost(PublishInfor post) {
+        return bbsWebService.publishPost(post);
+    }
 
-                       }
-                );
+    public Flowable<JsonResponse> uploadImage(RequestBody requestBody) {
+        String imageUrl = WebUrl.getFileStorageUrl()+"uploadimage/image";
+        return bbsWebService.uploadFile(imageUrl,requestBody);
     }
 }
 

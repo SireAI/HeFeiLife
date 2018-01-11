@@ -26,23 +26,26 @@ import com.bumptech.glide.request.transition.Transition;
 import com.sire.bbsmodule.Pojo.EditData;
 import com.sire.bbsmodule.R;
 import com.sire.bbsmodule.Utils.ScreenUtils;
+import com.sire.bbsmodule.Utils.StringUtils;
 import com.sire.bbsmodule.Views.EmojiView.EmojiTextView;
 import com.sire.corelibrary.DI.Environment.GlideConfigure;
 import com.sire.corelibrary.Utils.CommonUtils;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * 这是一个富文本编辑器，给外部提供insertImage接口，添加的图片跟当前光标所在位置有关
  *
- * @author xmuSistone
+ * @author sire
  */
 @SuppressLint({"NewApi", "InflateParams"})
-public class RichTextView extends ScrollView {
+public class RichTextView extends LinearLayout {
 
     private int viewTagIndex = 1; // 新生的view都会打一个tag，对每个view来说，这个tag是唯一的。
-    private LinearLayout allLayout; // 这个是所有子view的容器，scrollView内部的唯一一个ViewGroup
     private LayoutInflater inflater;
 
 
@@ -57,14 +60,9 @@ public class RichTextView extends ScrollView {
     public RichTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         inflater = LayoutInflater.from(context);
-
-        // 1. 初始化allLayout
-        allLayout = new LinearLayout(context);
-        allLayout.setOrientation(LinearLayout.VERTICAL);
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT);
-        addView(allLayout, layoutParams);
+        setOrientation(VERTICAL);
     }
+
 
 
     private void addContentText(String lineData) {
@@ -72,7 +70,7 @@ public class RichTextView extends ScrollView {
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         TextView firstEdit = createTextView();
         firstEdit.setText(lineData);
-        allLayout.addView(firstEdit, firstEditParam);
+        addView(firstEdit, firstEditParam);
     }
 
     private void addTitleText(String title) {
@@ -82,7 +80,7 @@ public class RichTextView extends ScrollView {
         titleEdit.setTextColor(getResources().getColor(R.color.color_title_black));
         titleEdit.setTextSize(20);
         titleEdit.setText(title);
-        allLayout.addView(titleEdit, titleEditParam);
+        addView(titleEdit, titleEditParam);
     }
 
 
@@ -114,50 +112,28 @@ public class RichTextView extends ScrollView {
         final RelativeLayout imageLayout = createImageLayout();
         DataImageView imageView = (DataImageView) imageLayout
                 .findViewById(R.id.edit_imageView);
-        RequestOptions configure = GlideConfigure.getConfigure(DiskCacheStrategy.NONE);
+        RequestOptions configure = GlideConfigure.getConfigure(DiskCacheStrategy.AUTOMATIC);
         //图片适配屏幕尺寸，根据地址上的匡高和控件的宽高进行缩放
         double width = Double.valueOf(ScreenUtils.getScreenWidth((Activity) getContext()));
         width = width - 2*CommonUtils.dip2px(getContext(),getResources().getDimension(R.dimen.post_padding));
         double height = Double.valueOf(ScreenUtils.getScreenHeight((Activity) getContext())*3/5);
         try {
-            String params = imagePath.substring(imagePath.indexOf("?") + 1);
-            String[] split = params.split("&");
-            double imageWidth = Double.valueOf(split[0].split("=")[1]);
-            double imageHeight = Double.valueOf(split[1].split("=")[1]);
-            height = width/imageWidth*imageHeight;
+            Map<String, String> params = StringUtils.cutUrlParams2Map(imagePath);
+            double imageWidth = Double.valueOf(params.get("width"));
+            double imageHeight = Double.valueOf(params.get("height"));
+            height = imageHeight;
+            width = imageWidth;
         }catch (Exception e){
+            Timber.e(e);
         }
-        if(!imagePath.startsWith("http")){
-            imagePath = imagePath.substring(0,imagePath.indexOf("?"));
-        }
-        configure.override((int) width,(int) height);
+        configure.override((int) (width+0.5),(int) (height+0.5));
         Glide.with(getContext()).load(imagePath).apply(configure).into(imageView);
         imageView.setAbsolutePath(imagePath);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.bottomMargin = 10;
-        imageView.setLayoutParams(lp);
-        allLayout.addView(imageLayout);
+        addView(imageLayout);
 
     }
 
-    public Bitmap createScaleBitmap(Bitmap bitmap,int parentWidth){
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int sampleSize = width > parentWidth ? width / parentWidth
-                + 1 : 1;
-        //放大為屏幕的1/2大小
 
-        float scaleWidth = width/sampleSize;
-        float scaleHeight = height/sampleSize;
-
-        // 取得想要缩放的matrix參數
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-        // 得到新的圖片
-        Bitmap newbm = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix,true);
-        return newbm;
-    }
 
     public void showEditData(List<EditData> datas) {
         if (datas == null || datas.size() == 0) {

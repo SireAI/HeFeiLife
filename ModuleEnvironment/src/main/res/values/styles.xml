@@ -37,7 +37,7 @@
 
     </style>
     <style name="toastTheme" parent="BaseDialog">
-        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
 
@@ -91,6 +91,7 @@ android:textStyle="normal|bold|italic"
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@color/colortextColorPrimary</item>
+        <item name="android:textColorSecondary">@color/colortextColorPrimary</item>
         <item name="android:windowBackground">?attr/colorPrimary</item>
         <item name="android:textViewStyle">@style/body1</item>
         <item name="android:buttonStyle">@style/normal_button_style</item>
@@ -104,7 +105,9 @@ android:textStyle="normal|bold|italic"
 
     <style name="ActivityTheme" parent="AppTheme">
         <item name="android:windowBackground">@color/main_bg</item>
-
+    </style>
+    <style name="Activity_tranparent_status_bar_Theme" parent="AppTheme">
+        <item name="android:windowBackground">@color/main_bg</item>
     </style>
     <style name="ActivityFullScreenTheme.StatusOverlay" parent="ActivityTheme">
 

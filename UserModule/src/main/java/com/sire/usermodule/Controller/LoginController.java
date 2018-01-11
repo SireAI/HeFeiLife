@@ -26,6 +26,7 @@ import com.sire.usermodule.databinding.ControllerLoginBinding;
 
 import javax.inject.Inject;
 
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.PHONE_REG;
 
@@ -100,6 +101,14 @@ public class LoginController extends SireController {
         super.onResume();
         binding.get().btnLogin.setEnabled(phoneNumberReady && passwordReady);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE){
+            setResult(LOGIN_REQUEST_CODE);
+            finish();
+        }
+    }
 
     /**
      * onclick event
@@ -137,7 +146,8 @@ public class LoginController extends SireController {
 
     public void onResetPassword(View view) {
         Intent intent = new Intent(this, PasswordPhonenumberController.class);
-        segue(Segue.SegueType.PUSH, intent);
+        intent.putExtra(FOR_RESULT_REQUEST_CODE, LOGIN_REQUEST_CODE);
+        segueForResult(Segue.SegueType.PUSH, intent);
     }
 
 }
