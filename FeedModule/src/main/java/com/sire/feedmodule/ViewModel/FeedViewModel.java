@@ -148,7 +148,7 @@ public class FeedViewModel extends ViewModel {
             }
 
         } else if (dataSourceStrategy == DataSourceStrategy.DataFromStrategy.CACHE_NET) {
-            if (comeFeedInfors.size() > 0) {
+            if (comeFeedInfors!=null&&comeFeedInfors.size() > 0) {
                 newFeedInfors.addAll(comeFeedInfors);
             } else {
                 refreshNew.onNoMore();

@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +29,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sire.bbsmodule.Pojo.ReportReason;
 import com.sire.bbsmodule.R;
 import com.sire.bbsmodule.ViewModel.BBSViewModel;
-import com.sire.bbsmodule.Views.PopOperation;
+import com.sire.corelibrary.Utils.PhotoPickUtils;
+import com.sire.corelibrary.View.PopOperation;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.DI.Environment.GlideConfigure;
@@ -79,6 +81,11 @@ public class PersonalHomePageController extends SireController implements CallBa
     private CollapsingToolbarLayoutState state;
     private TextView tvStateText;
     private boolean isSelf;
+    private ImageView backdrop;
+    private ImageView ivUserPicture;
+    private Adapter adapter;
+    private String updatedUserName = "";
+    private TextView tvUserName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,7 +107,11 @@ public class PersonalHomePageController extends SireController implements CallBa
     }
 
     private String getPersonName() {
-        return getIntent().getStringExtra(AUTHOR_NAME);
+        String userName = getIntent().getStringExtra(AUTHOR_NAME);
+        if(!TextUtils.isEmpty(updatedUserName)){
+            userName = updatedUserName;
+        }
+        return userName;
     }
 
     private void initView() {
@@ -110,7 +121,11 @@ public class PersonalHomePageController extends SireController implements CallBa
         ivState = findViewById(R.id.iv_state);
         tvStateText = findViewById(R.id.tv_state_text);
         rlPersonalInfor = findViewById(R.id.rl_personal_infor);
-        TextView tvUserName = findViewById(R.id.tv_user_name);
+        backdrop = findViewById(R.id.backdrop);
+        ivUserPicture = findViewById(R.id.iv_user_picture);
+
+
+        tvUserName = findViewById(R.id.tv_user_name);
         tvUserName.setText(getPersonName());
         toolBar.setTitle(getPersonName());
         setFollowUIState(isFollow()?FOLLOWED:UN_FOLLOW);
@@ -164,6 +179,8 @@ public class PersonalHomePageController extends SireController implements CallBa
         this.isSelf = isSelf;
     }
 
+
+
     private void alphaPersonalInfor(int verticalOffset) {
         if (rlPersonalInfor != null) {
             float ratio = 1 - Float.valueOf(Math.abs(verticalOffset)) / 660;
@@ -183,7 +200,7 @@ public class PersonalHomePageController extends SireController implements CallBa
 
     public void onFollowAuthor(View view) {
         if (isSelf) {
-            ToastUtils.showToast(this,"去往资料编辑页面");
+            userMediator.segueToPersonalProfileController(this);
         } else {
             if (feedMediator != null && userMediator != null) {
 
@@ -229,14 +246,13 @@ public class PersonalHomePageController extends SireController implements CallBa
     }
 
     private void loadBackdrop() {
-        ImageView ivUserPicture = findViewById(R.id.iv_user_picture);
-        ImageView backdrop = findViewById(R.id.backdrop);
+
         Glide.with(this).load(getIntent().getStringExtra(HEADIMAGE)).apply(GlideConfigure.getConfigure(DiskCacheStrategy.AUTOMATIC)).into(backdrop);
-        Glide.with(this).load(getIntent().getStringExtra(HEADIMAGE)).apply(GlideConfigure.getConfigure(DiskCacheStrategy.AUTOMATIC)).into(ivUserPicture);
+        Glide.with(this).load(getIntent().getStringExtra(HEADIMAGE)).apply(GlideConfigure.getConfigure(DiskCacheStrategy.AUTOMATIC).placeholder(R.drawable.svg_person)).into(ivUserPicture);
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+        adapter = new Adapter(getSupportFragmentManager());
         Bundle bundle = new Bundle();
         bundle.putString(AUTHOR_ID,getPersonId());
         Fragment userDynamicController = (Fragment) feedMediator.getUserDynamicController();
@@ -364,6 +380,17 @@ public class PersonalHomePageController extends SireController implements CallBa
         tvFollowingCount.setText(data.get("followingCount"));
         TextView tvFollowerCount = findViewById(R.id.tv_follower_count);
         tvFollowerCount.setText(data.get("followerCount"));
+        String userHomeImage = data.get("userHomeImage");
+        String headImage = data.get("headImage");
+        updatedUserName = data.get("userName");
+        tvUserName.setText(getPersonName());
+        toolBar.setTitle(getPersonName());
+        if(!TextUtils.isEmpty(userHomeImage)){
+            Glide.with(this).load(userHomeImage).apply(GlideConfigure.getConfigure(DiskCacheStrategy.AUTOMATIC)).into(backdrop);
+        }
+        if(!TextUtils.isEmpty(headImage)){
+            Glide.with(this).load(headImage).apply(GlideConfigure.getConfigure(DiskCacheStrategy.AUTOMATIC).placeholder(R.drawable.svg_person)).into(ivUserPicture);
+        }
     }
 
     private enum CollapsingToolbarLayoutState {
@@ -375,6 +402,10 @@ public class PersonalHomePageController extends SireController implements CallBa
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public List<Fragment> getFragments() {
+            return mFragments;
+        }
 
         public Adapter(FragmentManager fm) {
             super(fm);
@@ -398,6 +429,16 @@ public class PersonalHomePageController extends SireController implements CallBa
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(adapter.getFragments()!=null&&adapter.getFragments().size()>0){
+            for (int i = 0; i < adapter.getFragments().size(); i++) {
+                adapter.getFragments().get(i).onActivityResult(requestCode,resultCode,data);
+            }
         }
     }
 }

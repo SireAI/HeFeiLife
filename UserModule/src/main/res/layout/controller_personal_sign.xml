@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/grey_bg"
+    >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        app:navigationIcon="@drawable/svg_back_arrow"
+        app:title="@string/change_sign"
+        app:titleTextColor="@android:color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="17dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:onClick="onSave"
+        android:text="@string/save"
+        android:textColor="@android:color/white"
+        android:textSize="15sp" />
+    </android.support.v7.widget.Toolbar>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <EditText
+        android:padding="10dp"
+        android:hint="@string/instruction"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/et_sign"
+        style="@style/body1"
+        android:gravity="left"
+        android:maxLength="150"
+        android:background="@color/main_bg"/>
+        <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/caption"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="150"/>
+    </FrameLayout>
+</LinearLayout>

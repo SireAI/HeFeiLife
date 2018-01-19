@@ -19,7 +19,6 @@ import javax.inject.Singleton;
  * Description:
  * ==================================================
  */
-@Singleton
 public class UpgradeMediatorImpl implements UpgradeMediator {
     private final AppUpgradeViewModel appUpgradeViewModel;
     @Inject

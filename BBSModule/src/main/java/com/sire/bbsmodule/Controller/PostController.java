@@ -23,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -44,7 +43,7 @@ import com.sire.bbsmodule.Utils.ScreenUtils;
 import com.sire.bbsmodule.Utils.StringUtils;
 import com.sire.bbsmodule.ViewModel.BBSViewModel;
 import com.sire.bbsmodule.Views.EmojiView.EmojiPopup;
-import com.sire.bbsmodule.Views.PopOperation;
+import com.sire.corelibrary.View.PopOperation;
 import com.sire.bbsmodule.Views.RichEditor.BackListenEditText;
 import com.sire.bbsmodule.databinding.ViewCommponentPostBinding;
 import com.sire.corelibrary.Controller.Segue;
@@ -57,7 +56,6 @@ import com.sire.corelibrary.RecyclerView.base.ItemViewDataBindingDelegate;
 import com.sire.corelibrary.RecyclerView.base.ViewHolder;
 import com.sire.corelibrary.RecyclerView.wrapper.HeaderAndFooterWrapper;
 import com.sire.corelibrary.Utils.APPUtils;
-import com.sire.corelibrary.Utils.AutoClearedValue;
 import com.sire.corelibrary.Utils.JSONUtils;
 import com.sire.corelibrary.Utils.SPUtils;
 import com.sire.corelibrary.Utils.ToastUtils;
@@ -77,7 +75,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -111,8 +108,7 @@ public class PostController extends SireController implements OnLoadmoreListener
     FeedMediator feedMediator;
     @Inject
     UserMediator userMediator;
-    @Inject
-    AppExecutors appExecutors;
+
     private SmartRefreshLayout swipeRefreshView;
     private BBSViewModel bbsViewModel;
     private boolean init = true;
@@ -204,6 +200,7 @@ public class PostController extends SireController implements OnLoadmoreListener
                     break;
                 case ERROR:
                     closeDataLoading();
+                    refreshUI();
                     break;
                 case LOADING:
 
@@ -397,7 +394,10 @@ public class PostController extends SireController implements OnLoadmoreListener
                 setPanState(true);
             }
         } else if (i == R.id.tv_send) {
-
+            //登陆状态校验
+            if (!userMediator.isLoginState(this, true)) {
+                return;
+            }
             //传递
             final String comment = etComment.getText().toString().trim();
             String questionCommentId = (String) etComment.getTag();

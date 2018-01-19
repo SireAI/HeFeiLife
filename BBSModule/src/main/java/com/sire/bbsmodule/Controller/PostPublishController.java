@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,10 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.sire.bbsmodule.Pojo.EditData;
 import com.sire.bbsmodule.R;
-import com.sire.bbsmodule.Utils.ImagePickerUtils;
 import com.sire.bbsmodule.Utils.ScreenUtils;
 import com.sire.bbsmodule.Utils.StringUtils;
 import com.sire.bbsmodule.ViewModel.BBSViewModel;
@@ -30,6 +30,7 @@ import com.sire.bbsmodule.Views.EmojiView.EmojiEditText;
 import com.sire.bbsmodule.Views.EmojiView.EmojiPopup;
 import com.sire.bbsmodule.Views.RichEditor.BackListenEditText;
 import com.sire.bbsmodule.Views.RichEditor.RichTextEditor;
+import com.sire.corelibrary.Bug.CleanLeakUtils;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Executors.AppExecutors;
@@ -46,7 +47,6 @@ import com.sire.mediators.BaiduLocationModuleInterface.BaiduLocationMeditor;
 import com.sire.mediators.UserModuleInterface.UserMediator;
 import com.sire.mediators.core.CallBack;
 import com.yalantis.ucrop.UCrop;
-
 import com.zhy.m.permission.PermissionDenied;
 import com.zhy.m.permission.PermissionGrant;
 
@@ -67,12 +67,8 @@ import static android.os.Environment.DIRECTORY_PICTURES;
 import static com.sire.bbsmodule.Constant.Constant.NEARBY;
 import static com.sire.bbsmodule.Constant.Constant.NEAR_BY;
 import static com.sire.bbsmodule.Constant.Constant.PLACE;
-import static com.sire.bbsmodule.Utils.ImagePickerUtils.REQUEST_CAMERA_CODE;
 import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
 import static com.sire.corelibrary.Permission.PermissionHandler.REQUECT_CODE_BASIC_PERMISSIONS;
-import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_CAMERA;
-import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_PHOTO;
-import static com.sire.corelibrary.Utils.PhotoPickUtils.getPath;
 
 /**
  * ==================================================
@@ -169,26 +165,17 @@ public class PostPublishController extends SireController implements RadioGroup.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK ) {
-            if (requestCode == CODE_CAMERA) {
-                File file = FileBuilder.create()
-                        .withFileType(FileBuilder.FileType.DATA)
-                        .withfileTypeDirectoryName(DIRECTORY_PICTURES)
-                        .withFileName(currentPictureName)
-                        .build(this);
-                showImage(file);
-            } else if (requestCode == CODE_PHOTO) {
-                Uri uri = data.getData();
-                if (uri != null) {
-                    File file = new File(getPath(PostPublishController.this, uri));
-                    currentPictureName = file.getName();
-                    showImage(file);
-                }
-            } else if (requestCode == UCrop.REQUEST_CROP) {
-                Uri resultUri = UCrop.getOutput(data);
-                if (resultUri != null) {
-                    File file = new File(getPath(PostPublishController.this, resultUri));
-                    replaceImage(file);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+                List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
+                String cutPath = selectList.get(0).getCutPath();
+                File imageFile = new File(cutPath);
+
+                if (imageFile.exists()) {
+                    showImage(imageFile);
+
+                } else {
+                    ToastUtils.showToast(PostPublishController.this, "文件不存在");
                 }
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
@@ -312,9 +299,11 @@ public class PostPublishController extends SireController implements RadioGroup.
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.ib_camera) {
-            PhotoPickUtils.takePicture(this, CODE_CAMERA, currentPictureName = StringUtils.getPhotoFileName());
+            PhotoPickUtils.openCamera(this, false, false, 0, 0);
+
         } else if (view.getId() == R.id.ib_photo) {
-            PhotoPickUtils.takePicture(this, CODE_PHOTO, "");
+            PhotoPickUtils.takePictureFromThirdParty(this, false, false, 0, 0);
+
         } else if (view.getId() == R.id.ib_keyboard) {
             if (isPanShow) {
                 emojiPopup.toggle();
@@ -407,6 +396,7 @@ public class PostPublishController extends SireController implements RadioGroup.
         }
         destroyDispose(postDisposable);
         destroyDispose(resultDisposable);
+        CleanLeakUtils.fixInputMethodManagerLeak(this);
     }
 
     private void destroyDispose(Disposable disposable) {
@@ -477,4 +467,6 @@ public class PostPublishController extends SireController implements RadioGroup.
             tvLocated.setText(location);
         }
     }
+
+
 }

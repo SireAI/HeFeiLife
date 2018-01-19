@@ -17,7 +17,6 @@ import javax.inject.Singleton;
  * Description:
  * ==================================================
  */
-@Singleton
 public class BaiduLocationMediatorImpl implements BaiduLocationMeditor {
     private  BaiduLocationViewModel baiduLocationViewModel;
 

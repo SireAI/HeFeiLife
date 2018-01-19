@@ -187,5 +187,12 @@ public class UserDynamicController extends LifecycleFragment implements Injectab
         }
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        recyclerView.setAdapter(null);
+        recyclerView = null;
+        swipeRefreshView = null;
+        informationAdapter = null;
+    }
 }

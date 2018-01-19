@@ -54,5 +54,7 @@ dependencies {
     annotationProcessor "com.zhy:mpermission-compiler:$mpermission_version"
 
 
+
+
     api project(':ModuleEnvironment')
 }

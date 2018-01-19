@@ -69,7 +69,6 @@
                     app:border_width="1dp"
                     android:src="@drawable/svg_person"
                     />
-
                 <TextView
                     android:id="@+id/tv_user_name"
                     style="@style/title"

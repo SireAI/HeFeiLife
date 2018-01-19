@@ -21,7 +21,6 @@ import javax.inject.Singleton;
  * Description:
  * ==================================================
  */
-@Singleton
 public class ShareMediatorImpl implements ShareMediator {
 
     private ThirdPartyLoginModel thirdPartyLoginModel;

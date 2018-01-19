@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 
+import com.sire.corelibrary.Bug.CleanLeakUtils;
+import com.sire.corelibrary.Bug.IMMLeaks;
 import com.sire.corelibrary.Controller.MainContainerComponnent;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Delegate.HomeTabDelegate;
@@ -35,8 +37,6 @@ import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectedListener;
 
 public class MainController extends SireController implements MainContainerComponnent, OnScrollDelegate, OnTabItemSelectedListener {
 
-    @Inject
-    ShareMediator shareMediator;
     @Inject
     UpgradeMediator upgradeMediator;
     @Inject
@@ -68,6 +68,7 @@ public class MainController extends SireController implements MainContainerCompo
 
         navigationController.setupWithViewPager(viewPagerContainer);
 
+        upgradeMediator.checkVersion(this);
     }
 
 
@@ -143,9 +144,9 @@ public class MainController extends SireController implements MainContainerCompo
 
     @Override
     public void onRepeat(int index) {
-        if(index == 0){
-            if(pages!=null&&pages.size()>0){
-                ((HomeTabDelegate)pages.get(0)).onTabClickRepeat(index);
+        if (index == 0) {
+            if (pages != null && pages.size() > 0) {
+                ((HomeTabDelegate) pages.get(0)).onTabClickRepeat(index);
             }
         }
     }
@@ -175,5 +176,11 @@ public class MainController extends SireController implements MainContainerCompo
             }
             return 0;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CleanLeakUtils.fixInputMethodManagerLeak(this);
     }
 }

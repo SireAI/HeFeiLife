@@ -1,4 +1,4 @@
-package com.sire.bbsmodule.Views;
+package com.sire.corelibrary.View;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sire.bbsmodule.R;
+import com.sire.corelibrary.R;
 import com.sire.corelibrary.Utils.APPUtils;
 import com.sire.corelibrary.Utils.CommonUtils;
 

@@ -40,7 +40,7 @@
         android:smallScreens="true" />
     <application>
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="com.sire.corelibrary.FileAuthority.MyFileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true"

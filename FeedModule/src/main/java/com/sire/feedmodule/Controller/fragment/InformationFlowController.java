@@ -32,7 +32,6 @@ import static com.sire.feedmodule.Constant.Constant.USER_FEED;
  * Description:
  * ==================================================
  */
-@Singleton
 public class InformationFlowController extends LifecycleFragment implements View.OnClickListener,HomeTabDelegate {
     @Inject
     BBSMediator bbsMediator;
@@ -78,7 +77,9 @@ public class InformationFlowController extends LifecycleFragment implements View
 
     @Override
     public void onClick(View view) {
-        bbsMediator.segueToPostPublishController(getActivity(),view);
+        if(bbsMediator!=null){
+            bbsMediator.segueToPostPublishController(getActivity(),view);
+        }
     }
 
 
@@ -91,5 +92,14 @@ public class InformationFlowController extends LifecycleFragment implements View
                 ((HomeTabDelegate) page).onTabClickRepeat(currentItem);
             }
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewPager.setAdapter(null);
+        viewPager = null;
+        adapter = null;
+        bbsMediator = null;
     }
 }

@@ -14,5 +14,13 @@ public interface Constant {
     String PHONENUMBER = "phonenumber";
     String CUREENT_LOGIN_USER_ID = "currentLoginUserID";
     String SEX = "sex";
-     int LOGIN_REQUEST_CODE = 99;
+    int LOGIN_REQUEST_CODE = 99;
+    int PERSONAL_INFOR_CODE = 105;
+    String NEW_NICK_NAME = "newNickName";
+    String OLD_NICK_NAME = "oldNickName";
+    String COLLEGE = "college";
+    String OLD_COLLEGE = "oldCollege";
+    String OLD_SIGN = "oldSign";
+     String INSTRUCTION = "instruction";
+
 }

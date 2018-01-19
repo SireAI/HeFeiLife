@@ -29,14 +29,12 @@ public class DialogUtils {
         alertDialog.show();
     }
     public static void showDialog(Context cotext, String message,DialogInterface.OnClickListener onDismiss, DialogInterface.OnClickListener onSureClick){
-
         AlertDialog.Builder builder = new AlertDialog.Builder(cotext, R.style.dialog_marterial);
         AlertDialog alertDialog = builder.setTitle("温馨提示").setMessage(message).setNegativeButton("取消", onDismiss).setPositiveButton("确定", onSureClick).create();
         alertDialog.show();
     }
 
     public static void showDialog(Context cotext,String positiveButton,String negativeButton, String message,DialogInterface.OnClickListener onDismiss, DialogInterface.OnClickListener onSureClick){
-
         AlertDialog.Builder builder = new AlertDialog.Builder(cotext, R.style.dialog_marterial);
         AlertDialog alertDialog = builder.setTitle("温馨提示").setMessage(message).setNegativeButton(negativeButton, onDismiss).setPositiveButton(positiveButton, onSureClick).create();
         alertDialog.show();

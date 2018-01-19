@@ -32,7 +32,7 @@ public class DownloadFileInfor {
     @Ignore
     private long tempBrokenPosition = -1;
     /*超时设置*/
-    private int connectonTime = 6;
+    private int connectonTime = 600;
     /*state状态数据库保存*/
     private int stateInte;
     /*url*/

@@ -14,6 +14,7 @@ import com.sire.mediators.UserModuleInterface.UserMediator;
 import com.sire.mediators.core.CallBack;
 import com.sire.usermodule.Controller.EntranceController;
 import com.sire.usermodule.Controller.LoginController;
+import com.sire.usermodule.Controller.PersonalProfileController;
 import com.sire.usermodule.Controller.fragment.PersonalInforController;
 import com.sire.usermodule.ViewModel.UserViewModel;
 
@@ -22,7 +23,9 @@ import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 
+import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
 import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
+import static com.sire.usermodule.Constant.Constant.PERSONAL_INFOR_CODE;
 
 /**
  * ==================================================
@@ -32,7 +35,6 @@ import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
  * Description:
  * ==================================================
  */
-@Singleton
  public class UserMediatorImpl implements UserMediator,ModuleInit {
     private final UserViewModel userViewModel;
     private final Application app;
@@ -62,6 +64,14 @@ import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
         Intent intent = new Intent(currentContext, EntranceController.class);
         (currentContext).startActivity(intent);
         currentContext.finish();
+    }
+
+    @Override
+    public void segueToPersonalProfileController(Object context) {
+        SireController currentContext = (SireController) context;
+        Intent intent = new Intent(currentContext, PersonalProfileController.class);
+        intent.putExtra(FOR_RESULT_REQUEST_CODE, PERSONAL_INFOR_CODE);
+        currentContext.segueForResult(Segue.SegueType.PUSH,intent);
     }
 
     @Override

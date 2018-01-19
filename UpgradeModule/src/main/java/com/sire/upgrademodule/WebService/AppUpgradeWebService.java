@@ -31,8 +31,7 @@ import retrofit2.http.Url;
 public interface AppUpgradeWebService {
 
     @Headers({"Content-Type:application/json","Cache-Control:no-cache"})
-    @Streaming
-    @GET("/upgrade/checkupgrade")
+    @GET("upgrade/checkupgrade")
     Observable<JsonResponse<UpgradeInfor>> checkAPPVersion(@QueryMap Map<String, Object> params);
 
 }

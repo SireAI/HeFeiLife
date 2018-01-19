@@ -2,6 +2,7 @@ package com.sire.usermodule.Controller.fragment;
 
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import static com.sire.corelibrary.Controller.SireController.FOR_CONTROLLER_BACK;
+import static com.sire.usermodule.Constant.Constant.PERSONAL_INFOR_CODE;
 
 /**
  * ==================================================
@@ -51,32 +55,39 @@ public class PersonalInforController extends LifecycleFragment implements Inject
         User user = new User();
         controllerPersonalInforBinding.setUser(user);
         autoStateView = new AutoStateView();
-        userViewModel.getUserInfor(getArguments().getString("authorId"), true).observe(this, new Observer<DataResource<User>>() {
-            @Override
-            public void onChanged(@Nullable DataResource<User> userDataResource) {
-                switch (userDataResource.status) {
-                    case LOADING:
-                        autoStateView.loadView(AutoStateView.State.LOADING, (ViewGroup) ((ViewGroup) controllerPersonalInforBinding.getRoot()).getChildAt(0));
-                        break;
-                    case SUCCESS:
-                        controllerPersonalInforBinding.setUser(userDataResource.data);
-                        if(getActivity() instanceof CallBack){
-                            Map<String, String> map = new HashMap<>();
-                            map.put("followingCount",userDataResource.data.getFollowingCount());
-                            map.put("followerCount",userDataResource.data.getFollowoerCount());
-                            ((CallBack) getActivity()).apply(map);
-                        }
-                        autoStateView.loadView(AutoStateView.State.NORMAL, (ViewGroup) ((ViewGroup) controllerPersonalInforBinding.getRoot()).getChildAt(0));
-                        break;
-                    case ERROR:
-                        autoStateView.loadView(AutoStateView.State.ERROR, (ViewGroup) ((ViewGroup) controllerPersonalInforBinding.getRoot()).getChildAt(0));
-                        break;
-                    default:
-                        break;
-                }
+        getUserData();
+        return controllerPersonalInforBinding.getRoot();
+    }
+
+    private void getUserData() {
+        if(userViewModel==null) {
+            return;
+        }
+        userViewModel.getUserInfor(getArguments().getString("authorId"), true).observe(this, userDataResource -> {
+            switch (userDataResource.status) {
+                case LOADING:
+                    autoStateView.loadView(AutoStateView.State.LOADING, (ViewGroup) ((ViewGroup) controllerPersonalInforBinding.getRoot()).getChildAt(0));
+                    break;
+                case SUCCESS:
+                    controllerPersonalInforBinding.setUser(userDataResource.data);
+                    if(getActivity() instanceof CallBack){
+                        Map<String, String> map = new HashMap<>();
+                        map.put("followingCount",userDataResource.data.getFollowingCount());
+                        map.put("followerCount",userDataResource.data.getFollowoerCount());
+                        map.put("userHomeImage",userDataResource.data.getHomePageImg());
+                        map.put("headImage",userDataResource.data.getAvatar());
+                        map.put("userName",userDataResource.data.getName());
+                        ((CallBack) getActivity()).apply(map);
+                    }
+                    autoStateView.loadView(AutoStateView.State.NORMAL, (ViewGroup) ((ViewGroup) controllerPersonalInforBinding.getRoot()).getChildAt(0));
+                    break;
+                case ERROR:
+                    autoStateView.loadView(AutoStateView.State.ERROR, (ViewGroup) ((ViewGroup) controllerPersonalInforBinding.getRoot()).getChildAt(0));
+                    break;
+                default:
+                    break;
             }
         });
-        return controllerPersonalInforBinding.getRoot();
     }
 
     public void setUser(User user) {
@@ -90,8 +101,19 @@ public class PersonalInforController extends LifecycleFragment implements Inject
 
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == FOR_CONTROLLER_BACK && requestCode == PERSONAL_INFOR_CODE){
+            getUserData();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         autoStateView = null;
+        userViewModel = null;
+        controllerPersonalInforBinding.setUser(null);
+        controllerPersonalInforBinding = null;
     }
 }

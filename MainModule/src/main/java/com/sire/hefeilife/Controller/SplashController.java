@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.sire.corelibrary.Bug.BugReport;
+import com.sire.corelibrary.Bug.CleanLeakUtils;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.DI.Environment.ModuleInit;
@@ -18,6 +19,7 @@ import com.sire.mediators.UserModuleInterface.UserMediator;
 import com.sire.mediators.core.CallBack;
 import com.sire.usermodule.Controller.CompletePersonalInforController;
 import com.sire.usermodule.Controller.CompletePersonalInforPhotoController;
+import com.squareup.leakcanary.LeakCanary;
 
 import javax.inject.Inject;
 
@@ -57,7 +59,13 @@ public class SplashController extends SireController {
     }
 
     private void appInit() {
-
+        //内存泄露检测
+        if (LeakCanary.isInAnalyzerProcess(this.getApplication())) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this.getApplication());
         //bug记录收集
         BugReport.configuration(this);
         //模块初始化
@@ -90,5 +98,9 @@ public class SplashController extends SireController {
         finish();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CleanLeakUtils.fixInputMethodManagerLeak(this);
+    }
 }

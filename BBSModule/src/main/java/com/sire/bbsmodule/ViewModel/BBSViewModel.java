@@ -24,8 +24,6 @@ import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Utils.SPUtils;
 import com.sire.mediators.UserModuleInterface.UserMediator;
 
-import org.reactivestreams.Publisher;
-
 import java.io.File;
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -40,10 +38,7 @@ import javax.inject.Inject;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -90,8 +85,8 @@ public class BBSViewModel extends ViewModel {
     public List<Comment> collectCommentDataList(List<Comment> oldCommentInfors, DataResource<List<Comment>> listDataResource,RefreshNew refreshNew) {
 
         List<Comment> newCommentInfors = new ArrayList<>();
-        //如果最新的Item事件大于当前后的时间，就认为是刷新操作，这里排序很重要，错误的排序导致错误的时间
-        if (oldCommentInfors != null) {
+        //如果最新的Item事件大于当前队列中最小时间，就认为是刷新操作，所有数据从最新事件出获取，这里排序很重要，错误的排序导致错误的时间
+        if (!isRefreshNew(oldCommentInfors,listDataResource.data)) {
             newCommentInfors.addAll(oldCommentInfors);
         }
         if(listDataResource.data == null || listDataResource.data.size() ==0){
@@ -105,6 +100,24 @@ public class BBSViewModel extends ViewModel {
         return newCommentInfors;
     }
 
+    /**
+     * 判断是加载更多还是刷新最新，最近的时间排在序列第一个，最久的时间排在对垒最后一个
+     *
+     * @param oldCommentInfors
+     * @param newCommentInfors
+     * @return
+     */
+    private boolean isRefreshNew(List<Comment> oldCommentInfors, List<Comment> newCommentInfors) {
+        if (oldCommentInfors == null || oldCommentInfors.size() == 0) {
+            return true;
+        }
+        if (newCommentInfors == null || newCommentInfors.size() == 0) {
+            return false;
+        }
+        Date lastTimeLine = oldCommentInfors.get(oldCommentInfors.size() - 1).getTimeLine();
+        Date nearestTimeLine = newCommentInfors.get(0).getTimeLine();
+        return nearestTimeLine.getTime() > lastTimeLine.getTime();
+    }
 
 
     public Date getTimeLineBy(List<Comment> comments) {
@@ -332,7 +345,6 @@ public class BBSViewModel extends ViewModel {
 
 
     public interface RefreshNew {
-
         void onNoMore();
     }
 }

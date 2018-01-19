@@ -49,6 +49,21 @@
         <activity android:name=".Controller.PasswordResetController"
             android:theme="@style/ActivityTheme"
             />
+        <activity android:name=".Controller.PersonalProfileController"
+            android:theme="@style/ActivityTheme"
+            />
+        <activity android:name=".Controller.NickNameUpdateController"
+            android:theme="@style/ActivityTheme"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            />
+        <activity android:name=".Controller.CollegeUpdateController"
+            android:theme="@style/ActivityTheme"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            />
+        <activity android:name=".Controller.PersonalSignController"
+            android:theme="@style/ActivityTheme"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            />
     </application>
 
 </manifest>

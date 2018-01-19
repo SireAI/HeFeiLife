@@ -32,7 +32,6 @@ import com.sire.corelibrary.Utils.JSONUtils;
 import com.sire.feedmodule.BR;
 import com.sire.feedmodule.DB.Entry.FeedInfor;
 import com.sire.feedmodule.R;
-import com.sire.feedmodule.ViewModel.CacheClearViewModel;
 import com.sire.feedmodule.ViewModel.FeedViewModel;
 import com.sire.feedmodule.Views.TopToast;
 import com.sire.mediators.BBSModuleInterface.BBSMediator;
@@ -63,7 +62,7 @@ import static com.sire.feedmodule.Constant.Constant.USER_FEED;
  * ==================================================
  */
 
-public class FeedInformationController extends LifecycleFragment implements OnRefreshListener, OnLoadmoreListener, Injectable, AutoViewStateAdapter.OnItemClickListener,HomeTabDelegate {
+public class FeedInformationController extends LifecycleFragment implements OnRefreshListener, OnLoadmoreListener, Injectable, AutoViewStateAdapter.OnItemClickListener, HomeTabDelegate {
 
 
     /**
@@ -75,8 +74,7 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
     protected FeedViewModel feedViewModel;
     @Inject
     ViewModelProvider.Factory factory;
-    @Inject
-    CacheClearViewModel cacheClearViewModel;
+
     @Inject
     BBSMediator bbsMediator;
     /**
@@ -304,11 +302,18 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+        swipeRefreshView = null;
+        informationAdapter = null;
+        feedViewModel = null;
+        factory = null;
+        bbsMediator = null;
+        recyclerView.setAdapter(null);
+        recyclerView = null;
     }
 
     @Override
     public void onTabClickRepeat(int index) {
-        if(swipeRefreshView!=null){
+        if (swipeRefreshView != null) {
             swipeRefreshView.autoRefresh();
         }
     }
@@ -354,4 +359,6 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
             return true;
         }
     }
+
+
 }

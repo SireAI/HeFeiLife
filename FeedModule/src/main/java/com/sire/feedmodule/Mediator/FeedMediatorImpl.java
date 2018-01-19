@@ -21,7 +21,6 @@ import javax.inject.Singleton;
  * Description:
  * ==================================================
  */
-@Singleton
 public class FeedMediatorImpl implements FeedMediator {
     private final FeedViewModel feedViewModel;
     private final UserDynamicController userDynamicController;

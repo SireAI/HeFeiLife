@@ -2,11 +2,9 @@ package com.sire.usermodule.ViewModel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.sire.corelibrary.DI.Environment.ModuleInitInfor;
@@ -15,7 +13,6 @@ import com.sire.corelibrary.Networking.Response.JsonResponse;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Utils.SPUtils;
 import com.sire.mediators.UserModuleInterface.UserLoginState;
-import com.sire.mediators.core.CallBack;
 import com.sire.usermodule.DB.Entry.User;
 import com.sire.usermodule.Pojo.UserAuth;
 import com.sire.usermodule.Pojo.UserLoginInfo;
@@ -30,7 +27,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
 
 import static com.sire.corelibrary.Networking.Network.LOGIN_TOKEN;
 import static com.sire.usermodule.Constant.Constant.CUREENT_LOGIN_USER_ID;
@@ -102,21 +98,21 @@ public class UserViewModel extends ViewModel {
         User user = new User();
         user.setUserId(userId);
         user.setName(nickName);
-        return userRepository.completeUserInfor(user);
+        return userRepository.completeUserInfor(user, user1 -> currentUser = user1);
     }
 
     public LiveData<DataResource> updateSex(String sex, String userId) {
         User user = new User();
         user.setUserId(userId);
         user.setSex(sex);
-        return userRepository.completeUserInfor(user);
+        return userRepository.completeUserInfor(user, user1 -> currentUser = user1);
     }
 
     public LiveData<DataResource> updateBirthday(String birthday, String userId) {
         User user = new User();
         user.setUserId(userId);
         user.setBirthday(birthday);
-        return userRepository.completeUserInfor(user);
+        return userRepository.completeUserInfor(user, user1 -> currentUser = user1);
     }
 
     @Override
@@ -128,7 +124,7 @@ public class UserViewModel extends ViewModel {
     }
 
 
-    public LiveData<DataResource<JsonResponse>> uploadHeadImage(File file, String userId) {
+    public LiveData<DataResource<JsonResponse>> uploadImage(File file, String userId) {
         return userRepository.uploadHeadImage(file, userId);
     }
 
@@ -156,6 +152,7 @@ public class UserViewModel extends ViewModel {
         });
 
     }
+
 
     public  User getCurrentUser() {
         return currentUser;
@@ -230,10 +227,50 @@ public class UserViewModel extends ViewModel {
         User user = new User();
         user.setUserId(getUserId());
         user.setAvatar(avartarUrl);
-        return userRepository.completeUserInfor(user);
+        return userRepository.completeUserInfor(user, user1 -> currentUser = user1);
+    }
+
+    public LiveData<DataResource> updateUserHomeimage(String homeImageUrl) {
+        User user = new User();
+        user.setUserId(getUserId());
+        user.setHomePageImg(homeImageUrl);
+        return userRepository.completeUserInfor(user, user1 -> currentUser = user1);
     }
 
     public String getPhoneNumber() {
         return currentUser.getPhonenumber();
     }
+
+    public String getHomePageImage() {
+        return currentUser.getHomePageImg();
+    }
+
+    public String getSex() {
+        return currentUser.getSex();
+    }
+
+    public String getCollege() {
+        return currentUser.getCollege();
+    }
+
+    public LiveData<DataResource> updateCollege(String college) {
+        User user = new User();
+        user.setUserId(getUserId());
+        user.setCollege(college);
+        return userRepository.completeUserInfor(user, user1 -> currentUser = user1);
+    }
+
+    public String getBirthday() {
+        return currentUser.getBirthday();
+    }
+
+    public String getInstruction() {
+        return currentUser.getInstruction();
+    }
+
+    public LiveData<DataResource> updateUserInstruction(String insturction) {
+        User user = new User();
+        user.setUserId(getUserId());
+        user.setInstruction(insturction);
+        return userRepository.completeUserInfor(user, user1 -> currentUser = user1);    }
 }

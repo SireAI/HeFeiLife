@@ -16,8 +16,6 @@ import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.DI.Environment.ModuleInit;
 import com.sire.corelibrary.DI.Environment.ModuleInitInfor;
 import com.sire.mediators.BBSModuleInterface.BBSMediator;
-import com.yuyh.library.imgsel.ISNav;
-import com.yuyh.library.imgsel.common.ImageLoader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,7 +34,6 @@ import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
  * Description:
  * ==================================================
  */
-@Singleton
 public class BBSMediatorImpl implements BBSMediator ,ModuleInit{
     @Inject
     public BBSMediatorImpl() {
@@ -67,7 +64,6 @@ public class BBSMediatorImpl implements BBSMediator ,ModuleInit{
     public Flowable<ModuleInitInfor> init() {
        return Flowable.just("bbs").flatMap(o -> {
            EmojiManager.install(new IosEmojiProvider());
-           ISNav.getInstance().init((ImageLoader) (context, path, imageView) -> Glide.with(context).load(path).into(imageView));
            return Flowable.just(new ModuleInitInfor("BBSModule","装载表情,初始化图片选择器加载库"));
        });
 

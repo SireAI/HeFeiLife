@@ -46,10 +46,8 @@ import timber.log.Timber;
  * Description:
  * ==================================================
  */
-@Singleton
 public class AppUpgradeViewModel extends ViewModel {
     public static final String DOWNLOADING = "downloading";
-    private static final String PACKAGE = "package";
     private static final String VERSION_CODE = "versionCode";
     private static final String VERSION_NAME = "versionName";
     private static final String DOWNLOAD_APK_URL = "downloadAPKUrl";
@@ -184,7 +182,9 @@ public class AppUpgradeViewModel extends ViewModel {
 
                 @Override
                 public void onError(Throwable e) {
-                    pogressEmit.setDownloadError();
+                    if(pogressEmit!=null){
+                        pogressEmit.setDownloadError();
+                    }
                     SPUtils.saveKeyValueBlooen(context, DOWNLOADING, false);
                 }
 

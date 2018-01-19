@@ -5,6 +5,7 @@ import com.sire.mediators.core.CallBack;
 public interface UserMediator  {
     void segueToLoginController(Object context);
     void segueToEntranceController(Object context);
+    void segueToPersonalProfileController(Object context);
     Object getPersonalInforController();
     String getUserId();
 

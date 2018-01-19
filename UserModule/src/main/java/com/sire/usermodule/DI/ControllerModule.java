@@ -2,6 +2,7 @@ package com.sire.usermodule.DI;
 
 import android.support.v4.app.Fragment;
 
+import com.sire.usermodule.Controller.CollegeUpdateController;
 import com.sire.usermodule.Controller.CompletePersonalInforBirthdayController;
 import com.sire.usermodule.Controller.CompletePersonalInforController;
 import com.sire.usermodule.Controller.CompletePersonalInforHobbyController;
@@ -9,9 +10,12 @@ import com.sire.usermodule.Controller.CompletePersonalInforPhotoController;
 import com.sire.usermodule.Controller.CompletePersonalInforSexController;
 import com.sire.usermodule.Controller.EntranceController;
 import com.sire.usermodule.Controller.LoginController;
+import com.sire.usermodule.Controller.NickNameUpdateController;
 import com.sire.usermodule.Controller.PasswordPhonenumberController;
 import com.sire.usermodule.Controller.PasswordResetController;
 import com.sire.usermodule.Controller.PasswordVerifyCodeController;
+import com.sire.usermodule.Controller.PersonalProfileController;
+import com.sire.usermodule.Controller.PersonalSignController;
 import com.sire.usermodule.Controller.RegisterPhoneNumberController;
 import com.sire.usermodule.Controller.RegisterVerifyCodeController;
 import com.sire.usermodule.Controller.fragment.PersonalInforController;
@@ -57,8 +61,14 @@ public abstract class ControllerModule {
     abstract PasswordVerifyCodeController contributePasswordVerifyCodeController();
     @ContributesAndroidInjector
     abstract PasswordResetController contributePasswordResetController();
-
-
+    @ContributesAndroidInjector
+    abstract PersonalProfileController contributePersonalProfileController();
+    @ContributesAndroidInjector
+    abstract NickNameUpdateController contributeNickNameUpdateController();
+    @ContributesAndroidInjector
+    abstract CollegeUpdateController contributeCollegeUpdateController();
+    @ContributesAndroidInjector
+    abstract PersonalSignController contributePersonalSignController();
     @Binds
     @IntoMap
     @FragmentKey(PersonalInforController.class)

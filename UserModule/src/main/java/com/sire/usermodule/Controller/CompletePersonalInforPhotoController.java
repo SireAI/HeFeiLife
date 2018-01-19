@@ -23,13 +23,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.tools.ScreenUtils;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Executors.AppExecutors;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.Utils.APPUtils;
 import com.sire.corelibrary.Utils.DialogUtils;
-import com.sire.corelibrary.Utils.FileBuilder;
 import com.sire.corelibrary.Utils.FileUtils;
 import com.sire.corelibrary.Utils.ImageUtil;
 import com.sire.corelibrary.Utils.PhotoPickUtils;
@@ -43,23 +46,16 @@ import com.zhy.m.permission.PermissionDenied;
 import com.zhy.m.permission.PermissionGrant;
 
 import java.io.File;
-import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
-import static android.os.Environment.DIRECTORY_PICTURES;
 import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
 import static com.sire.corelibrary.Permission.PermissionHandler.REQUECT_CODE_BASIC_PERMISSIONS;
-import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_CAMERA;
-import static com.sire.corelibrary.Utils.PhotoPickUtils.CODE_PHOTO;
-import static com.sire.corelibrary.Utils.PhotoPickUtils.getPath;
 import static com.sire.usermodule.Constant.Constant.LOGIN_REQUEST_CODE;
 
 
@@ -81,7 +77,6 @@ public class CompletePersonalInforPhotoController extends SireController impleme
     private boolean pictureReady = false;
     private boolean nickNameReady = false;
     private Button btnNext;
-    private String pictureName = "userpicture.png";
     private ImageView ivUserPicture;
     private CoordinatorLayout coordinatorLayout;
     private TextInputLayout tilNickname;
@@ -186,44 +181,31 @@ public class CompletePersonalInforPhotoController extends SireController impleme
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == CODE_CAMERA) {
-                File file = FileBuilder.create()
-                        .withFileType(FileBuilder.FileType.DATA)
-                        .withfileTypeDirectoryName(DIRECTORY_PICTURES)
-                        .withFileName(pictureName)
-                        .build(this);
-                if (file.exists()) {
-                    compressImageAndUpload(file,CODE_CAMERA);
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+                List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
+                String cutPath = selectList.get(0).getCutPath();
+                File imageFile = new File(cutPath);
+
+                if (imageFile.exists()) {
+                    compressImageAndUpload(imageFile);
                 } else {
                     SnackbarUtils.basicSnackBar(coordinatorLayout, getResources().getString(R.string.file_not_exist), this);
                 }
-            } else if (requestCode == CODE_PHOTO) {
-                Uri uri = data.getData();
-                if (uri != null) {
-                    File file = new File(getPath(CompletePersonalInforPhotoController.this, uri));
-                    if (file.exists()) {
-                        compressImageAndUpload(file,CODE_PHOTO);
-                    } else {
-                        SnackbarUtils.basicSnackBar(coordinatorLayout, getResources().getString(R.string.file_not_exist), this);
-                    }
-                }
             }
-        }else if(requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE){
+        } else if (requestCode == LOGIN_REQUEST_CODE && resultCode == LOGIN_REQUEST_CODE) {
             setResult(LOGIN_REQUEST_CODE);
             finish();
         }
 
     }
 
-    private void compressImageAndUpload(File file,int action) {
+    private void compressImageAndUpload(File file) {
+        int screenWidth = ScreenUtils.getScreenWidth(this);
         Flowable.just(file).map(originalFile -> {
-            byte[] bytes = ImageUtil.compressBitmapToBytes(originalFile.getAbsolutePath(),600,600,100, Bitmap.CompressFormat.WEBP);
+            byte[] bytes = ImageUtil.compressBitmapToBytes(originalFile.getAbsolutePath(), screenWidth, screenWidth, 100, Bitmap.CompressFormat.WEBP);
             String webpName = originalFile.getName().substring(0, originalFile.getName().indexOf(".")) + ".webp";
             File webpFile = new File(originalFile.getParentFile(), webpName);
-            FileUtils.bytesToFile(bytes,webpFile.getAbsolutePath());
-            if(action == CODE_CAMERA){
-                file.delete();
-            }
+            FileUtils.bytesToFile(bytes, webpFile.getAbsolutePath());
             return webpFile;
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -242,7 +224,7 @@ public class CompletePersonalInforPhotoController extends SireController impleme
             SnackbarUtils.basicSnackBar(coordinatorLayout, getResources().getString(R.string.relogin), this);
             return;
         }
-        userViewModel.uploadHeadImage(file, userId).observe(this, dataResource -> {
+        userViewModel.uploadImage(file, userId).observe(this, dataResource -> {
             switch (dataResource.status) {
                 case LOADING:
                     ProgressHUD.showDialog(CompletePersonalInforPhotoController.this);
@@ -303,10 +285,10 @@ public class CompletePersonalInforPhotoController extends SireController impleme
     @Override
     public void onOtherButtonClick(ActionSheet actionSheet, int index) {
         if (index == 0) {
-            pictureName = System.currentTimeMillis() +".png";
-            PhotoPickUtils.takePicture(this, CODE_CAMERA, pictureName);
+            PhotoPickUtils.takePictureFromThirdParty(this, false, false, 1, 1);
+
         } else if (index == 1) {
-            PhotoPickUtils.takePicture(this, CODE_PHOTO, "");
+            PhotoPickUtils.openCamera(this, false, false, 1, 1);
         }
     }
 

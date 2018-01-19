@@ -87,6 +87,7 @@ public class UserRepository {
                     @Override
                     public void saveData2DB(User user) {
                         userDao.insert(user);
+
                     }
                 });
     }
@@ -119,7 +120,7 @@ public class UserRepository {
 
     }
 
-    public LiveData completeUserInfor(User user) {
+    public LiveData completeUserInfor(User user,CallBack callBack) {
         return new DataSourceStrategy.Builder()
                 .appDataFromStrategy(DataSourceStrategy.DataFromStrategy.NET)
                 .cacheData()
@@ -133,6 +134,9 @@ public class UserRepository {
                     @Override
                     public void saveData2DB(User user) {
                         userDao.insert(user);
+                        if(callBack!=null){
+                            callBack.onUserUpdate(user);
+                        }
                     }
                 });
     }
@@ -161,5 +165,11 @@ public class UserRepository {
                         return webService.getUserInfor(userId,withFeedInfor);
                     }
                 });
+    }
+
+
+
+    public interface CallBack{
+        void onUserUpdate(User user);
     }
 }
