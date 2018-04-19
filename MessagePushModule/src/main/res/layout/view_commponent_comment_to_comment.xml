@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="java.lang.Boolean" />
+
+        <import type="android.view.View" />
+
+        <import type="com.sire.corelibrary.Utils.TimeConverterUtils" />
+
+        <variable
+            name="commentToCommentItem"
+            type="com.sire.messagepushmodule.Pojo.CommentMessage" />
+
+        <variable
+            name="commentToCommentDelegate"
+            type="com.sire.messagepushmodule.Controller.fragment.MessageController.CommentToCommentMessageDelegate" />
+
+        <variable
+            name="message"
+            type="com.sire.messagepushmodule.DB.Entry.Message" />
+
+
+
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{(v)->commentToCommentDelegate.onClick(v,message)}"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        >
+
+
+        <ImageView
+            android:id="@+id/iv_user_icon_message"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:cirlce="@{true}"
+            android:layout_marginStart="10dp"
+            android:imageUrl="@{commentToCommentItem.fromAuthorImg}"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <me.majiajie.pagerbottomtabstrip.internal.RoundMessageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_message"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:hasMessage="@{!message.messageRead}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon_message"
+            />
+        <TextView
+            android:id="@+id/tv_user_message"
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{commentToCommentItem.fromAuthorName}"
+            app:layout_constraintLeft_toRightOf="@id/tv_message"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="Sire" />
+
+
+
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_comment_comment"-->
+            <!--style="@style/body1_2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="4dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:text="回复了我的评论:"-->
+            <!--app:layout_constraintLeft_toRightOf="@id/tv_user_message"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_question_comment_message"-->
+            <!--style="@style/caption"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="4dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:ellipsize="end"-->
+            <!--android:layout_marginEnd="10dp"-->
+
+            <!--android:maxLines="1"-->
+            <!--android:onClick="@{(v)->commentToCommentDelegate.onClick(v,commentToCommentItem)}"-->
+            <!--android:text='@{commentToCommentItem.questionComment.content}'-->
+            <!--app:layout_constraintLeft_toRightOf="@id/tv_comment_comment"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <TextView
+            android:id="@+id/tv_comment_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            style="@style/caption"
+            app:layout_constraintLeft_toRightOf="@id/tv_message"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_message"
+            android:text='@{"回复了我: "+commentToCommentItem.content}'
+            tool:text="真的好么" />
+        <TextView
+            android:id="@+id/tv_address_time_message"
+            style="@style/caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:maxLines="1"
+            android:text='@{TimeConverterUtils.date2SimpleDescription(commentToCommentItem.timeLine)}'
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+</layout>

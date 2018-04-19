@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
 
     <data>
 
@@ -12,13 +13,14 @@
             name="callback"
             type="com.sire.upgrademodule.Views.dialogs.ForceUpgradeDialog.Callback"/>
 
-        <variable
-            name="isForce"
-            type="java.lang.Boolean" />
 
         <variable
             name="dialog"
             type="android.support.v4.app.DialogFragment" />
+
+        <variable
+            name="upgradeInfor"
+            type="com.sire.upgrademodule.Pojo.UpgradeInfor" />
 
 
     </data>
@@ -30,7 +32,7 @@
             style="@style/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="合肥生活圈 v1.0.3" />
+            android:text='@{upgradeInfor.versionName}'/>
 
         <TextView
             android:id="@+id/tv_dialog_content"
@@ -38,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="left"
-            android:text="1.fsadfsafasfas\n2.fdasfsafsafsa"
+            android:text="@{upgradeInfor.upgradeMessage}"
+            tool:text="1.fsadfsafasfas\n2.fdasfsafsafsa"
             app:layout_constraintTop_toBottomOf="@id/tv_upgrade_title" />
 
         <LinearLayout
@@ -52,13 +55,15 @@
                 style="@style/dialog_button"
                 android:text="@string/btn_next_time"
                 android:textStyle="normal"
-                android:visibility="@{safeUnbox(isForce)? View.GONE : View.VISIBLE}"
+                android:background="?android:attr/selectableItemBackground"
+                android:visibility="@{upgradeInfor.forceUpgrade? View.GONE : View.VISIBLE}"
                 android:onClick="@{()->callback.onUpgrade(dialog,false)}"
                 />
 
             <TextView
                 android:id="@+id/tv_sure"
                 style="@style/dialog_button"
+                android:background="?android:attr/selectableItemBackground"
                 android:text="@string/btn_upgrade"
                 android:textColor="?attr/colorPrimaryDark"
                 android:onClick="@{()->callback.onUpgrade(dialog,true)}"/>

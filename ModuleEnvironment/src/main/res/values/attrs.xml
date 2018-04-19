@@ -18,4 +18,20 @@
         <attr name="cancelButtonMarginTop" format="dimension|reference" />
         <attr name="actionSheetTextSize" format="dimension|reference" />
     </declare-styleable>
+
+
+
+    <attr name="emojiSize" format="dimension"/>
+
+    <declare-styleable name="EmojiButton">
+        <attr name="emojiSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="EmojiEditText">
+        <attr name="emojiSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="EmojiTextView">
+        <attr name="emojiSize"/>
+    </declare-styleable>
 </resources>

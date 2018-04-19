@@ -1,10 +1,15 @@
 package com.sire.corelibrary.Utils;
 
+import android.content.Context;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 /**
@@ -70,5 +75,54 @@ public class FileUtils {
         }
 
 
+    }
+
+    public static synchronized Object readObjectFromFile(Context context, String fileName) {
+        File file = null;
+        Object object = null;
+        try {
+            file = FileBuilder
+                    .create()
+                    .withFileType(FileBuilder.FileType.DATA)
+                    .withfileTypeDirectoryName("Object")
+                    .withFileName(fileName).build(context);
+            if (!file.exists()) {
+                return null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            object = objectInputStream.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return object;
+    }
+
+    public static synchronized void objectToFile(Context context,String fileName, Object object) {
+        File file = null;
+        try {
+            file = FileBuilder
+                    .create()
+                    .withFileType(FileBuilder.FileType.DATA)
+                    .withfileTypeDirectoryName("Object")
+                    .withFileName(fileName).build(context);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(object);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

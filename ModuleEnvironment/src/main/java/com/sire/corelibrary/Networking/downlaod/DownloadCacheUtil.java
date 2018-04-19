@@ -72,8 +72,9 @@ public class DownloadCacheUtil {
      * @throws IOException
      */
     public  static  void writeFile(ResponseBody responseBody, File file, DownloadFileInfor info) throws IOException{
-        if (!file.getParentFile().exists())
+        if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
+        }
         long allLength;
         if (info.getContentLength()==0){
             allLength=responseBody.contentLength();

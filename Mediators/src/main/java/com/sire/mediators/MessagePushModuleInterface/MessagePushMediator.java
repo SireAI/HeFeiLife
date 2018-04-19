@@ -10,4 +10,5 @@ package com.sire.mediators.MessagePushModuleInterface;
  */
 
 public interface MessagePushMediator {
+    Object getMessageController();
 }

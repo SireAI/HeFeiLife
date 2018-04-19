@@ -16,8 +16,11 @@ import com.sire.corelibrary.Networking.downlaod.downloadCore.DownloadProgressLis
 import com.sire.corelibrary.Networking.downlaod.downloadInfor.DownloadFileInfor;
 import com.sire.corelibrary.Utils.APKInstallUtils;
 import com.sire.corelibrary.Utils.FileBuilder;
+import com.sire.corelibrary.Utils.FileUtils;
 import com.sire.corelibrary.Utils.SPUtils;
+import com.sire.corelibrary.Utils.ToastUtils;
 import com.sire.mediators.UpgradeModuleInterface.UpgradeCallback;
+import com.sire.mediators.core.AppExit;
 import com.sire.upgrademodule.BuildConfig;
 import com.sire.upgrademodule.Pojo.UpgradeInfor;
 import com.sire.upgrademodule.R;
@@ -25,6 +28,9 @@ import com.sire.upgrademodule.Utils.APPUpgradeUtils;
 import com.sire.upgrademodule.Views.dialogs.ForceUpgradeDialog;
 import com.sire.upgrademodule.Views.notifycations.ProgressEmit;
 import com.sire.upgrademodule.WebService.AppUpgradeWebService;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.HashMap;
@@ -56,16 +62,18 @@ public class AppUpgradeViewModel extends ViewModel {
     private final AppExecutors appExecutors;
 
     private AppUpgradeWebService appUpgradeWebService;
+    private ProgressEmit progressEmit;
 
     @Inject
     public AppUpgradeViewModel(AppUpgradeWebService appUpgradeWebService, Application context, AppExecutors appExecutors) {
         this.appUpgradeWebService = appUpgradeWebService;
         this.context = context;
         this.appExecutors = appExecutors;
+        EventBus.getDefault().register(this);
     }
 
 
-    public void checkVersion(FragmentActivity context) {
+    public void checkVersion(FragmentActivity controller) {
         int versionCode = APPUpgradeUtils.getVersionCode(this.context);
         String versionName = APPUpgradeUtils.getVersionName(this.context);
         Map<String, Object> params = new HashMap<>();
@@ -84,15 +92,17 @@ public class AppUpgradeViewModel extends ViewModel {
                             installApk(this.context, file);
                     }else if(hasDownloaded){
                         //显示选择按钮是否需要安装，确定安装，取消则不安装
-                        ForceUpgradeDialog.showDialog(context, false, new ForceUpgradeDialog.Callback() {
-                            @Override
-                            public void onUpgrade(DialogFragment dialog,boolean force) {
+                        UpgradeInfor upgradeInfor = (UpgradeInfor) FileUtils.readObjectFromFile(context, UpgradeInfor.class.getName());
+                        if(upgradeInfor!=null){
+                            controller.runOnUiThread(() -> ForceUpgradeDialog.showDialog(controller, upgradeInfor, (ForceUpgradeDialog.Callback) (dialog, force) -> {
                                 if (force) {
                                     installApk(context, file);
                                 }
                                 dialog.dismiss();
-                            }
-                        });
+                            }));
+                        }else {
+                            installApk(context, file);
+                        }
                     }
                     return !hasDownloaded;
                 }).flatMap(undownload -> {
@@ -104,9 +114,11 @@ public class AppUpgradeViewModel extends ViewModel {
                     //网络检测，是否需要下载
                     if (jsonResponse.isOK() && jsonResponse.getData() != null) {
                         if (jsonResponse.getData().isNeedUpgrade()) {
+                            //存储升级信息
+                            appExecutors.diskIO().execute(() -> FileUtils.objectToFile(context,jsonResponse.getData().getClass().getName(),jsonResponse.getData()));
                             if (jsonResponse.getData().isForceUpgrade()) {
                                 //点击确认后进行强制下载
-                                ForceUpgradeDialog.showDialog(context, true, (ForceUpgradeDialog.Callback) (dialog, force) -> {
+                                ForceUpgradeDialog.showDialog(controller, jsonResponse.getData(), (ForceUpgradeDialog.Callback) (dialog, force) -> {
                                     if(force){
                                         forceDownloadAPK(jsonResponse.getData());
                                     }
@@ -122,6 +134,13 @@ public class AppUpgradeViewModel extends ViewModel {
                 }, throwable -> Timber.e(throwable));
     }
 
+    /**
+     * 检测是否已经下载新版本apk，并且apk的版本要大于安装的版本，否则视为无效版本
+     * 将删除
+     * @param downloadUrl
+     * @param file
+     * @return
+     */
     private boolean isRightVersionDownloaded(String downloadUrl, File file) {
         boolean isRightVersionDownloaded = false;
         boolean fileExist = !(TextUtils.isEmpty(downloadUrl) || !file.exists());
@@ -140,20 +159,20 @@ public class AppUpgradeViewModel extends ViewModel {
     }
 
     private void forceDownloadAPK(UpgradeInfor upgradeInfor) {
-        ProgressEmit progressEmit = new ProgressEmit(context, context.getResources().getString(R.string.app_name));
-        AppUpgradeViewModel.this.upgradeAppVersion(upgradeInfor, progressEmit);
+        progressEmit = new ProgressEmit(context, context.getResources().getString(R.string.app_name));
+        AppUpgradeViewModel.this.upgradeAppVersion(upgradeInfor);
     }
 
     private void startBackgroundDownload(UpgradeInfor upgradeInfor) {
         boolean downloading = SPUtils.getValueBoolen(context, DOWNLOADING);
         if (!downloading) {
-            appExecutors.diskIO().execute(() -> upgradeAppVersion(upgradeInfor, null));
+            appExecutors.diskIO().execute(() -> upgradeAppVersion(upgradeInfor));
             SPUtils.saveKeyValueBlooen(context, DOWNLOADING, true);
             Timber.i("后台启动下载APK服务");
         }
     }
 
-    private void upgradeAppVersion(UpgradeInfor upgradeInfor, ProgressEmit pogressEmit) {
+    private void upgradeAppVersion(UpgradeInfor upgradeInfor) {
         if (!TextUtils.isEmpty(upgradeInfor.getDownloadUrl()) && context != null) {
             DownloadFileInfor downloadFileInfor = new DownloadFileInfor();
             downloadFileInfor.setReadStartPonint(0);
@@ -170,8 +189,8 @@ public class AppUpgradeViewModel extends ViewModel {
             downloadApp(context, downloadFileInfor, new DownloadProgressListener() {
                 @Override
                 public void update(long read, long count, boolean done) {
-                    if (pogressEmit != null) {
-                        pogressEmit.notifyProgress(read, count, done);
+                    if (progressEmit != null) {
+                        progressEmit.notifyProgress(read, count, done);
                     }
                 }
 
@@ -182,8 +201,8 @@ public class AppUpgradeViewModel extends ViewModel {
 
                 @Override
                 public void onError(Throwable e) {
-                    if(pogressEmit!=null){
-                        pogressEmit.setDownloadError();
+                    if(progressEmit!=null){
+                        progressEmit.setDownloadError();
                     }
                     SPUtils.saveKeyValueBlooen(context, DOWNLOADING, false);
                 }
@@ -198,6 +217,10 @@ public class AppUpgradeViewModel extends ViewModel {
                     if(upgradeInfor.isForceUpgrade()){
                         installApk(context, new File(downloadFileInfor.getSavePath()));
                     }
+                    if(progressEmit!=null){
+                        progressEmit.setNotifycationClear();
+                    }
+
                 }
             });
         } else {
@@ -228,7 +251,7 @@ public class AppUpgradeViewModel extends ViewModel {
                     boolean isComplete = APPUpgradeUtils.getUninatllApkInfo(context, apkFile.toString());
                     if (!isComplete) {
                         deletePackage(context, apkFile);
-                        Timber.e("文件" + apkFile.toString() + "不完整,已经删除");
+                        ToastUtils.showToast(context,"文件" + apkFile.toString() + "不完整,已经删除");
                     }
                     return isComplete;
                 })
@@ -240,8 +263,41 @@ public class AppUpgradeViewModel extends ViewModel {
     private void deletePackage(Context context, File apkFile) {
         apkFile.delete();
         SPUtils.saveKeyValueString(context, DOWNLOAD_APK_URL, "");
+        //删除升级信息
+        File desFile = FileBuilder
+                .create()
+                .withFileType(FileBuilder.FileType.DATA)
+                .withfileTypeDirectoryName("Object")
+                .withFileName(UpgradeInfor.class.getName()).build(context);
+        if(desFile!=null&&desFile.exists()){
+            desFile.delete();
+        }
         Timber.i("安装完成，删除apk文件："+apkFile.toString());
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        clearNotify();
+        progressEmit = null;
+    }
 
+    private void clearNotify() {
+        //如果下载时退出应用，那么取消通知显示
+        if(progressEmit!=null){
+            progressEmit.setNotifycationClear();
+            progressEmit = null;
+        }
+        SPUtils.saveKeyValueBlooen(context, DOWNLOADING, false);
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 应用退出时清除下载状态通知
+     * @param appExit
+     */
+    @Subscribe
+    public void onEvent(AppExit appExit){
+        clearNotify();
+    }
 }

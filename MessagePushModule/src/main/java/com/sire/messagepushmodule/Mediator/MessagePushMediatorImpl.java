@@ -1,10 +1,14 @@
 package com.sire.messagepushmodule.Mediator;
 
+import android.os.Message;
+
 import com.sire.corelibrary.DI.Environment.ModuleInit;
 import com.sire.corelibrary.DI.Environment.ModuleInitInfor;
 import com.sire.mediators.MessagePushModuleInterface.MessagePushMediator;
+import com.sire.messagepushmodule.Controller.fragment.MessageController;
 import com.sire.messagepushmodule.ViewModel.MessagePushViewModel;
 
+import org.greenrobot.eventbus.EventBus;
 import org.reactivestreams.Publisher;
 
 import javax.inject.Inject;
@@ -21,12 +25,13 @@ import io.reactivex.functions.Function;
  * Description:
  * ==================================================
  */
-@Singleton
 public class MessagePushMediatorImpl implements MessagePushMediator,ModuleInit{
-    private MessagePushViewModel messagePushViewModel;
+    private final MessageController messageController;
+    private final MessagePushViewModel messagePushViewModel;
     @Inject
-    public MessagePushMediatorImpl(MessagePushViewModel messagePushViewModel) {
+    public MessagePushMediatorImpl(MessagePushViewModel messagePushViewModel, MessageController messageController) {
         this.messagePushViewModel = messagePushViewModel;
+        this.messageController = messageController;
     }
 
 
@@ -39,5 +44,11 @@ public class MessagePushMediatorImpl implements MessagePushMediator,ModuleInit{
                 return Flowable.just(new ModuleInitInfor("MessagePushModule","推送服务初始化"));
             }
         });
+    }
+
+    @Override
+    public Object getMessageController() {
+
+        return messageController;
     }
 }

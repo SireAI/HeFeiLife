@@ -509,7 +509,6 @@ public class PersonalProfileController extends SireController implements View.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CleanLeakUtils.fixInputMethodManagerLeak(this);
     }
 }
 

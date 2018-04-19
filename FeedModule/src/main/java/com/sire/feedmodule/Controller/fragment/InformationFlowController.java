@@ -1,6 +1,5 @@
 package com.sire.feedmodule.Controller.fragment;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,7 +31,7 @@ import static com.sire.feedmodule.Constant.Constant.USER_FEED;
  * Description:
  * ==================================================
  */
-public class InformationFlowController extends LifecycleFragment implements View.OnClickListener,HomeTabDelegate {
+public class InformationFlowController extends Fragment implements View.OnClickListener,HomeTabDelegate {
     @Inject
     BBSMediator bbsMediator;
     private FragmentPagerItemAdapter adapter;
@@ -100,6 +99,5 @@ public class InformationFlowController extends LifecycleFragment implements View
         viewPager.setAdapter(null);
         viewPager = null;
         adapter = null;
-        bbsMediator = null;
     }
 }

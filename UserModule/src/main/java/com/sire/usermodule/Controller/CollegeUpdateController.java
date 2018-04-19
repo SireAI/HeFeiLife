@@ -96,6 +96,5 @@ public class CollegeUpdateController extends SireController implements TextWatch
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CleanLeakUtils.fixInputMethodManagerLeak(this);
     }
 }

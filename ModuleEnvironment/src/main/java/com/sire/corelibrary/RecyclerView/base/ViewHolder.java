@@ -24,7 +24,6 @@ import android.widget.TextView;
 public class ViewHolder extends RecyclerView.ViewHolder
 {
     private SparseArray<View> mViews;
-
     public ViewHolder(View itemView)
     {
         super(itemView);
@@ -48,6 +47,8 @@ public class ViewHolder extends RecyclerView.ViewHolder
         ViewHolder holder = new ViewHolder(itemView);
         return holder;
     }
+
+
 
     /**
      * 创建viewHolder的一种方式

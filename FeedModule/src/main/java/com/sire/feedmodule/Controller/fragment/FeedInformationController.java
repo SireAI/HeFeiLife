@@ -1,12 +1,13 @@
 package com.sire.feedmodule.Controller.fragment;
 
-import android.arch.lifecycle.LifecycleFragment;
+
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,7 @@ import static com.sire.feedmodule.Constant.Constant.USER_FEED;
  * ==================================================
  */
 
-public class FeedInformationController extends LifecycleFragment implements OnRefreshListener, OnLoadmoreListener, Injectable, AutoViewStateAdapter.OnItemClickListener, HomeTabDelegate {
+public class FeedInformationController extends Fragment implements OnRefreshListener, OnLoadmoreListener, Injectable, AutoViewStateAdapter.OnItemClickListener, HomeTabDelegate {
 
 
     /**
@@ -83,6 +84,18 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
     private boolean init = true;
     private RecyclerView recyclerView;
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
+        View view = inflater.inflate(R.layout.controller_feed_information, container, false);
+        initView(view);
+        initModel();
+
+        return view;
+    }
+
+
     private void initModel() {
         feedViewModel = ViewModelProviders.of(this, factory).get(FeedViewModel.class);
         feedsCallBack();
@@ -101,7 +114,6 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
                     refreshFeeds(listDataResource.data);
                     break;
                 case LOADING:
-
                     break;
                 default:
                     break;
@@ -111,21 +123,22 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
 
     private void refreshFeeds(List<FeedInfor> listDataResource) {
         if (informationAdapter != null) {
-            List<FeedInfor> newFeedInfors = feedViewModel.collectFeedDataList(informationAdapter.getDataSource(), listDataResource, new FeedViewModel.RefreshNew() {
+            feedViewModel.collectFeedDataList(informationAdapter.getDataSource(), listDataResource, new FeedViewModel.RefreshNew() {
                 @Override
                 public void onNew(int count) {
                     TopToast.showToast(getActivity(), String.format("更新了%d条信息", count));
                 }
-
                 @Override
                 public void onNoMore() {
                     if (swipeRefreshView != null) {
                         swipeRefreshView.setLoadmoreFinished(true);
-
                     }
                 }
+                @Override
+                public void onCallBack(List<FeedInfor> feedInfors) {
+                    informationAdapter.refreshDataSource(feedInfors);
+                }
             });
-            informationAdapter.refreshDataSource(newFeedInfors);
         }
     }
 
@@ -202,21 +215,13 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
         }
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
-        View view = inflater.inflate(R.layout.controller_feed_information, container, false);
-        initView(view);
-        initModel();
-        return view;
-    }
+
 
     private void initView(View view) {
         //Recyclerview
         recyclerView = view.findViewById(R.id.rv_information);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        Drawable drawable = getResources().getDrawable(R.drawable.shape_line);
+        Drawable drawable = getResources().getDrawable(R.drawable.shape_line_6);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(drawable);
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -313,7 +318,7 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
 
     @Override
     public void onTabClickRepeat(int index) {
-        if (swipeRefreshView != null) {
+        if (swipeRefreshView != null && !swipeRefreshView.isRefreshing() && !swipeRefreshView.isLoading()) {
             swipeRefreshView.autoRefresh();
         }
     }
@@ -343,7 +348,7 @@ public class FeedInformationController extends LifecycleFragment implements OnRe
         }
 
         @Override
-        public int getItemViewLayoutId() {
+        public int getItemViewLayoutId(int viewType) {
             return R.layout.view_componnent_information_flow_item;
         }
 

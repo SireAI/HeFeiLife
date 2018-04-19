@@ -73,5 +73,5 @@ public abstract class ControllerModule {
     @IntoMap
     @FragmentKey(PersonalInforController.class)
     abstract AndroidInjector.Factory<? extends Fragment>
-    bindUserDynamicControllerInjectorFactory(PersonalInforControllerSubcomponent.PersonalInforControllerBuilder builder);
+    bindPersonalInforControllerInjectorFactory(PersonalInforControllerSubcomponent.PersonalInforControllerBuilder builder);
 }

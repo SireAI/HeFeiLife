@@ -23,7 +23,7 @@ public class CleanLeakUtils {
             return;
         }
 
-        String [] viewArray = new String[]{"mCurRootView", "mServedView", "mNextServedView","mLastSrvView"};
+        String [] viewArray = new String[]{"mCurRootView", "mServedView", "mNextServedView","mLastSrvView","mServedInputConnectionWrapper"};
         Field filed;
         Object filedObject;
 

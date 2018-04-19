@@ -1,0 +1,16 @@
+def latestRelease = "latest.release"
+
+ext{
+    arch_room_version = '1.1.0-beta2'
+    dagger_version = "2.14.1"
+    crashreport_version = "latest.release"
+    mpermission_version = "1.0.0"
+    glide_version = "4.1.1"
+    compileSdkVersion = 27
+    buildToolsVersion = "27.0.3"
+    minSdkVersion = 18
+    targetSdkVersion = 21
+    versionCode = 1
+    versionName = "1.0.0"
+    mainapplicationId = "com.sire.hefeilife"
+}

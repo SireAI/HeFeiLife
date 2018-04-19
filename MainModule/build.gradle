@@ -102,7 +102,6 @@ android {
 configurations.all {
     resolutionStrategy {
         force "com.android.support:support-v4:$support_version"
-
     }
 
 
@@ -116,19 +115,20 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$arch_room_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-    implementation project(':FeedModule')
-    implementation project(':ShareModule')
-    implementation project(':UpgradeModule')
-    implementation project(':UserModule')
-    implementation project(':MessagePushModule')
-    implementation project(':BBSModule')
-    implementation project(':BaiduLocationModule')
-    api 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.1'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    implementation 'com.sire:Mediators:1.0.0'
+    implementation 'com.sire:ModuleEnvironment:1.0.0'
+    implementation 'com.sire:BaiduLocationModule:1.0.0'
+    implementation 'com.sire:BBSModule:1.0.0'
+    implementation 'com.sire:FeedModule:1.0.0'
+    implementation 'com.sire:MessagePushModule:1.0.0'
+    implementation 'com.sire:UpgradeModule:1.0.0'
+    implementation 'com.sire:UserModule:1.0.0'
+    implementation 'com.sire:ShareModule:1.0.0'
 }
 
 

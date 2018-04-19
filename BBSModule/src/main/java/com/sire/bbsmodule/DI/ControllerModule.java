@@ -26,9 +26,9 @@ import dagger.multibindings.IntoMap;
  */
 @Module()
 public abstract class ControllerModule {
+
     @ContributesAndroidInjector
     abstract PostController contributePostController();
-
     @ContributesAndroidInjector
     abstract OtherReasonReportController contributeOtherReasonReportController();
     @ContributesAndroidInjector

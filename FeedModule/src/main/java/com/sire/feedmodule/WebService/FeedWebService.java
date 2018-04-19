@@ -47,4 +47,6 @@ public interface FeedWebService {
     LiveData<Response<JsonResponse<FeedPraiseUser>>> getfeedpraiseinfor(@Body FeedPraiseUserRequestInfor feedPraiseUserRequestInfor);
     @POST("feed/deletefeed")
     LiveData<Response<JsonResponse>> deleteFeed(@Query("feedId") String feedId);
+    @GET("feed/getsinglefeed")
+    LiveData<Response<JsonResponse<FeedInfor>>> getFeedById(@Query("feedId") String feedId);
 }

@@ -1,7 +1,6 @@
 package com.sire.bbsmodule.Views.RichEditor;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 

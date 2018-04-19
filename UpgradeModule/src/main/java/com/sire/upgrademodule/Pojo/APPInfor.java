@@ -1,6 +1,8 @@
 package com.sire.upgrademodule.Pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * ==================================================
  * All Right Reserved
@@ -9,6 +11,8 @@ package com.sire.upgrademodule.Pojo;
  * Description:
  * ==================================================
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class APPInfor {
 
     private String  versionName;

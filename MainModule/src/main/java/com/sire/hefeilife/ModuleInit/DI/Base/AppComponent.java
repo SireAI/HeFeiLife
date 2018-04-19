@@ -25,7 +25,7 @@ import com.sire.corelibrary.DI.Environment.InjectorEnvironmentMoudle;
 import com.sire.feedmodule.DI.InjectorFeedModule;
 import com.sire.hefeilife.Global.SireApp;
 import com.sire.hefeilife.ModuleInit.DI.InjectorMainModule;
-import com.sire.messagepushmodule.ModuleInit.DI.InjectorMessagePushModule;
+import com.sire.messagepushmodule.DI.InjectorMessagePushModule;
 import com.sire.sharemodule.ModuleInit.DI.InjectorShareModule;
 import com.sire.upgrademodule.ModuleInit.DI.InjectorUpgradeModule;
 import com.sire.usermodule.DI.InjectorUserModule;
@@ -57,7 +57,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         InjectorMainModule.class,
         InjectorFeedModule.class,
         InjectorBBSModule.class,
-        InjectorBaiduLocationModule.class
+        InjectorBaiduLocationModule.class,
 })
 public interface AppComponent {
     @Component.Builder

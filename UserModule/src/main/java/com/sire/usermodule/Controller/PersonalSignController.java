@@ -87,9 +87,5 @@ public class PersonalSignController extends SireController implements TextWatche
         ((InputMethodManager) paramEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        CleanLeakUtils.fixInputMethodManagerLeak(this);
-    }
+
 }

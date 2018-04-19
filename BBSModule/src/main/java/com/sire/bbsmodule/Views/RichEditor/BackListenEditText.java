@@ -7,7 +7,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
 
-import com.sire.bbsmodule.Views.EmojiView.EmojiEditText;
+import com.sire.corelibrary.View.EmojiView.EmojiEditText;
 
 
 /**
@@ -20,6 +20,9 @@ import com.sire.bbsmodule.Views.EmojiView.EmojiEditText;
  */
 
 public class BackListenEditText extends EmojiEditText {
+
+    private DeleteInputConnection deleteInputConnection;
+
     public interface BackListener{
         boolean onBackSoftInputDismiss();
     }
@@ -52,11 +55,25 @@ public class BackListenEditText extends EmojiEditText {
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return new BackListenEditText.DeleteInputConnection(super.onCreateInputConnection(outAttrs),
+        deleteInputConnection = new DeleteInputConnection(super.onCreateInputConnection(outAttrs),
                 true);
+
+        return deleteInputConnection;
+    }
+    private void setDeleteInputConnection(){
+        if(deleteInputConnection!=null){
+            deleteInputConnection.setTarget(null);
+            deleteInputConnection = null;
+        }
     }
 
-    private class DeleteInputConnection extends InputConnectionWrapper {
+    public void onDestroy(){
+        setBackListener(null);
+        setDeleteInputConnection();
+    }
+
+
+    private static class DeleteInputConnection extends InputConnectionWrapper {
 
         public DeleteInputConnection(InputConnection target, boolean mutable) {
             super(target, mutable);

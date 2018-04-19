@@ -1,15 +1,18 @@
 package com.sire.upgrademodule.Views.notifycations;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
+import com.sire.upgrademodule.BuildConfig;
 import com.sire.upgrademodule.R;
 
 import java.util.Observable;
@@ -30,8 +33,15 @@ public class ProgressNotifycation  {
 
     public ProgressNotifycation(Context context, String appName) {
         manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        builder = new NotificationCompat.Builder(context);
-       Intent intent = new Intent("");
+        String channelId = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channelId = "channel_download";
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, "下载", NotificationManager.IMPORTANCE_HIGH);
+            manager.createNotificationChannel(notificationChannel);
+        }
+        builder = new NotificationCompat.Builder(context,channelId);
+
+        Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 1,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -46,6 +56,7 @@ public class ProgressNotifycation  {
                 .setFullScreenIntent(contentIntent,true)
                 .setContentIntent(contentIntent)
                 .setWhen(SystemClock.currentThreadTimeMillis())
+                .setShowWhen(false)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.logo));
     }
 
@@ -54,6 +65,7 @@ public class ProgressNotifycation  {
                 if (downloadMessage.done) {
                     builder.setContentText("应用下载完毕").setProgress(0, 0, false);
                     builder .setAutoCancel(true);
+                    setNotifycationClear();
                 } else {
                     builder.setProgress(100, (int) downloadMessage.progress, false);
                     builder.setContentInfo(downloadMessage.rightContent);
@@ -65,9 +77,15 @@ public class ProgressNotifycation  {
 
     }
     public void setDownloadError(){
-        builder.setContentText("应用下载停止");
+        builder.setContentText("应用下载出错");
         builder .setAutoCancel(true);
         manager.notify(0, builder.build());
+    }
+
+    public void setNotifycationClear(){
+        if(manager!=null){
+            manager.cancel(0);
+        }
     }
 
     public static class DownloadMessage {

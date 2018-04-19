@@ -1,7 +1,6 @@
 package com.sire.corelibrary.RecyclerView;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 
 import com.sire.corelibrary.RecyclerView.base.ItemViewDelegate;
 import com.sire.corelibrary.RecyclerView.base.ViewHolder;
@@ -23,7 +22,7 @@ public abstract class CommonAdapter<T> extends AutoViewStateAdapter<T> {
         super(datas, recyclerView);
         addItemViewDelegate(new ItemViewDelegate<T>() {
             @Override
-            public int getItemViewLayoutId() {
+            public int getItemViewLayoutId(int viewType) {
                 return layoutId;
             }
 

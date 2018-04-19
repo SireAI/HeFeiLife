@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +21,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.sire.bbsmodule.Pojo.EditData;
 import com.sire.bbsmodule.R;
-import com.sire.bbsmodule.Utils.ScreenUtils;
+import com.sire.corelibrary.Utils.ScreenUtils;
 import com.sire.bbsmodule.Utils.StringUtils;
 import com.sire.corelibrary.Executors.AppExecutors;
-import com.sire.corelibrary.Utils.CommonUtils;
 import com.sire.corelibrary.Utils.DialogUtils;
 import com.sire.corelibrary.Utils.FileBuilder;
 import com.sire.corelibrary.Utils.ImageUtil;
@@ -137,19 +134,19 @@ public class RichTextEditor extends ScrollView {
         double height = Double.valueOf(ScreenUtils.getAppHeight((Activity) getContext()));
         FrameLayout whiteView = new FrameLayout(getContext());
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-                (int) (height/2));
+                (int) (height / 2));
         whiteView.setClickable(true);
         whiteView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(lastFocusEdit!=null){
+                if (lastFocusEdit != null) {
                     View view = allLayout.getChildAt(getLastPreviousViewIndex());
                     view.requestFocus();
                     ScreenUtils.showKeyBoard(view);
                 }
             }
         });
-        allLayout.addView(whiteView,layoutParams);
+        allLayout.addView(whiteView, layoutParams);
     }
 
 
@@ -170,9 +167,11 @@ public class RichTextEditor extends ScrollView {
         titleEdit.setSingleLine(true);
         allLayout.addView(titleEdit, titleEditParam);
     }
-    private int getLastPreviousViewIndex(){
-       return allLayout.getChildCount()-2;
+
+    private int getLastPreviousViewIndex() {
+        return allLayout.getChildCount() - 2;
     }
+
     public void setOnScrollEditEvent(OnScrollEditEvent onScrollEditEvent) {
         this.onScrollEditEvent = onScrollEditEvent;
     }
@@ -193,7 +192,7 @@ public class RichTextEditor extends ScrollView {
                 if (preView instanceof RelativeLayout) {
                     // 光标EditText的上一个view对应的是图片
                     onImageCloseClick(preView);
-                } else if (preView instanceof EditText && editIndex!=1) {
+                } else if (preView instanceof EditText && editIndex != 1) {
                     // 光标EditText的上一个view对应的还是文本框EditText
                     String str1 = editTxt.getText().toString();
                     EditText preEdit = (EditText) preView;
@@ -264,9 +263,9 @@ public class RichTextEditor extends ScrollView {
         File destinatinFile = FileBuilder.create()
                 .withFileType(FileBuilder.FileType.DATA)
                 .withfileTypeDirectoryName(DIRECTORY_PICTURES)
-                .withFileName("watermark"+ StringUtils.getPhotoFileName())
+                .withFileName("watermark" + StringUtils.getPhotoFileName())
                 .build(getContext());
-        Bitmap watermarkBitmap = createWaterMark(imagePath,destinatinFile);
+        Bitmap watermarkBitmap = createWaterMark(imagePath, destinatinFile);
         insertImage(watermarkBitmap, destinatinFile.getAbsolutePath());
     }
 
@@ -281,7 +280,7 @@ public class RichTextEditor extends ScrollView {
     @Nullable
     private Bitmap createWaterMark(String imagePath, File destinatinFile) {
         Bitmap source = getScaledBitmap(imagePath, getWidth());
-        Bitmap waterBitmap = ImageUtil.getBitmapFromDrawable(getContext(), R.drawable.logo_white,0.7f);
+        Bitmap waterBitmap = ImageUtil.getBitmapFromDrawable(getContext(), R.drawable.logo_white, 0.7f);
         Bitmap watermarkBitmap = ImageUtil.createWaterMaskLeftBottom(getContext(), source, waterBitmap, 5, 5);
         Bitmap watermarkBitmapText = ImageUtil.drawTextToLeftBottom(getContext(), watermarkBitmap, getResources().getString(R.string.app_name), 10, getResources().getColor(R.color.main_bg_1_text), 28, 10);
         new AppExecutors().diskIO().execute(() -> ImageUtil.saveBitmaplocal(destinatinFile.getAbsolutePath(), watermarkBitmapText));
@@ -302,7 +301,7 @@ public class RichTextEditor extends ScrollView {
         }
         if (lastEditStr.length() == 0 || editStr1.length() == 0) {
             // 如果EditText为空，或者光标已经顶在了editText的最前面，则直接插入图片，并且EditText下移即可
-            addImageViewAtIndex(lastEditIndex, bitmap, imagePath,true);
+            addImageViewAtIndex(lastEditIndex, bitmap, imagePath, true);
         } else {
             // 如果EditText非空且光标不在最顶端，则需要添加新的imageView和EditText
             lastFocusEdit.setText(editStr1);
@@ -313,7 +312,7 @@ public class RichTextEditor extends ScrollView {
                 addedText = addEditTextAtIndex(lastEditIndex + 1, editStr2);
             }
 
-            addImageViewAtIndex(lastEditIndex + 1, bitmap, imagePath,true);
+            addImageViewAtIndex(lastEditIndex + 1, bitmap, imagePath, true);
             if (addedText == null) {
                 lastFocusEdit.requestFocus();
                 lastFocusEdit.setSelection(editStr1.length(), editStr1.length());
@@ -365,8 +364,8 @@ public class RichTextEditor extends ScrollView {
     /**
      * 在特定位置添加ImageView
      */
-    private void addImageViewAtIndex( int index, Bitmap bmp,
-                                     String imagePath,boolean addDelay) {
+    private void addImageViewAtIndex(int index, Bitmap bmp,
+                                     String imagePath, boolean addDelay) {
         final RelativeLayout imageLayout = createImageLayout();
         DataImageView imageView = (DataImageView) imageLayout
                 .findViewById(R.id.edit_imageView);
@@ -374,14 +373,14 @@ public class RichTextEditor extends ScrollView {
         // onActivityResult无法触发动画，此处post处理
 //        allLayout.addView(imageLayout, index);
         int imageindex = index;
-        if(addDelay){
+        if (addDelay) {
             allLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     allLayout.addView(imageLayout, imageindex);
                 }
             }, 200);
-        }else {
+        } else {
             allLayout.addView(imageLayout, imageindex);
         }
 
@@ -393,12 +392,12 @@ public class RichTextEditor extends ScrollView {
 
         // 调整imageView的高度
         double width = Double.valueOf(ScreenUtils.getScreenWidth((Activity) getContext()));
-        width = width - 2* getResources().getDimension(R.dimen.post_padding);
-         double   imageHeight = width * Double.valueOf(bmp.getHeight()) / Double.valueOf(bmp.getWidth());
+        width = width - 2 * getResources().getDimension(R.dimen.post_padding);
+        double imageHeight = width * Double.valueOf(bmp.getHeight()) / Double.valueOf(bmp.getWidth());
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, (int) imageHeight);
-        imageView.setBitmapWidth((int) (width+0.5));
-        imageView.setBitmapHeight((int) (imageHeight+0.5));
+        imageView.setBitmapWidth((int) (width + 0.5));
+        imageView.setBitmapHeight((int) (imageHeight + 0.5));
         imageView.setLayoutParams(lp);
     }
 
@@ -476,69 +475,70 @@ public class RichTextEditor extends ScrollView {
 
     /**
      * 聚合编辑数据
+     *
      * @return
      */
     public List<EditData> buildEditData() {
         List<EditData> dataList = new ArrayList<EditData>();
-        int num = allLayout.getChildCount()-1;
+        int num = allLayout.getChildCount() - 1;
         for (int index = 0; index < num; index++) {
             View itemView = allLayout.getChildAt(index);
             EditData itemData = new EditData();
-            if (itemView instanceof EditText ) {
+            if (itemView instanceof EditText) {
                 EditText item = (EditText) itemView;
-                if(index>0&&TextUtils.isEmpty(item.getText().toString())){
+                if (index > 0 && TextUtils.isEmpty(item.getText().toString())) {
                     continue;
                 }
                 itemData.inputStr = item.getText().toString();
             } else if (itemView instanceof RelativeLayout) {
                 DataImageView item = itemView
                         .findViewById(R.id.edit_imageView);
-                if(TextUtils.isEmpty(item.getAbsolutePath())){
+                if (TextUtils.isEmpty(item.getAbsolutePath())) {
                     continue;
                 }
                 itemData.imagePath = item.getAbsolutePath();
-                itemData.imageWidth = item.getBitmapWidth()+"";
-                itemData.imageHeight = item.getBitmapHeight()+"";
-            }else {
+                itemData.imageWidth = item.getBitmapWidth() + "";
+                itemData.imageHeight = item.getBitmapHeight() + "";
+            } else {
                 continue;
             }
             dataList.add(itemData);
         }
 
-        if(dataList.size()==1 && TextUtils.isEmpty(dataList.get(0).inputStr)){
+        if (dataList.size() == 1 && TextUtils.isEmpty(dataList.get(0).inputStr)) {
             dataList.remove(0);
         }
         return dataList;
     }
 
     public void fillDraft(List<EditData> draft) {
-        if(draft == null || draft.size() == 0){
+        if (draft == null || draft.size() == 0) {
             return;
         }
         for (int i = 0; i < draft.size(); i++) {
             EditData editData = draft.get(i);
-            if(i==0){
+            if (i == 0) {
                 EditText titleText = (EditText) allLayout.getChildAt(0);
-                titleText.setText(editData.inputStr == null ? "":editData.inputStr);
-            }else if(i==1){
-                if(editData.isImage()){
+                titleText.setText(editData.inputStr == null ? "" : editData.inputStr);
+            } else if (i == 1) {
+                if (editData.isImage()) {
                     allLayout.removeViewAt(1);
                     allLayout.getChildAt(0).requestFocus();
-                    rollbackImage(i,editData);
-                }else{
+                    rollbackImage(i, editData);
+                } else {
                     EditText firstText = (EditText) allLayout.getChildAt(1);
                     firstText.setText(editData.inputStr);
                 }
 
-            }else {
+            } else {
                 if (editData.isNormalText()) {
-                    lastFocusEdit =  addEditTextAtIndex(i,editData.inputStr);
+                    lastFocusEdit = addEditTextAtIndex(i, editData.inputStr);
                 } else if (!TextUtils.isEmpty(editData.imagePath)) {
                     rollbackImage(i, editData);
                 }
             }
         }
-        if(draft.get(draft.size()-1).isImage()){
+        if (draft.get(draft.size() - 1).isImage()) {
             lastFocusEdit = addEditTextAtIndex(draft.size(), "");
         }
         lastFocusEdit.requestFocus();
@@ -546,17 +546,24 @@ public class RichTextEditor extends ScrollView {
 
     private void rollbackImage(int i, EditData editData) {
         Bitmap bitmap = BitmapFactory.decodeFile(editData.imagePath);
-        if(bitmap!=null) {
-            addImageViewAtIndex(i,bitmap,editData.imagePath,false);
+        if (bitmap != null) {
+            addImageViewAtIndex(i, bitmap, editData.imagePath, false);
         }
     }
 
+    public void onDestroy() {
+        if (allLayout != null) {
+            for (int i = 0; i < allLayout.getChildCount(); i++) {
+                if(allLayout.getChildAt(i) instanceof BackListenEditText){
+                    ((BackListenEditText) allLayout.getChildAt(i)).onDestroy();
+                }
+            }
+        }
+    }
 
     public interface OnScrollEditEvent {
         void onEditChange(EditText currentEditText);
 
         void onPhotoEdit(String imageUrl);
     }
-
-
 }

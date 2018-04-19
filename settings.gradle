@@ -1,9 +1,11 @@
-include ':MainModule', ':BBSModule', ':BaiduLocationModule',
-        ':ModuleEnvironment',
-        ':UserModule',
-        ':UpgradeModule',
-        ':MessagePushModule',
-        ':FeedModule' ,
-        ':ShareModule',
-        ':Mediators'
+include ':MainModule'
+//include ':BBSModule'
+//include ':BaiduLocationModule'
+//include ':ModuleEnvironment'
+//include ':UserModule'
+//include ':UpgradeModule'
+//include ':MessagePushModule'
+//include ':FeedModule'
+//include ':ShareModule'
+//include ':Mediators'
 

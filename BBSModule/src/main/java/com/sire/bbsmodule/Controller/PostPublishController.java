@@ -23,11 +23,11 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.sire.bbsmodule.Pojo.EditData;
 import com.sire.bbsmodule.R;
-import com.sire.bbsmodule.Utils.ScreenUtils;
+import com.sire.corelibrary.Utils.ScreenUtils;
 import com.sire.bbsmodule.Utils.StringUtils;
 import com.sire.bbsmodule.ViewModel.BBSViewModel;
-import com.sire.bbsmodule.Views.EmojiView.EmojiEditText;
-import com.sire.bbsmodule.Views.EmojiView.EmojiPopup;
+import com.sire.corelibrary.View.EmojiView.EmojiEditText;
+import com.sire.corelibrary.View.EmojiView.EmojiPopup;
 import com.sire.bbsmodule.Views.RichEditor.BackListenEditText;
 import com.sire.bbsmodule.Views.RichEditor.RichTextEditor;
 import com.sire.corelibrary.Bug.CleanLeakUtils;
@@ -91,7 +91,6 @@ public class PostPublishController extends SireController implements RadioGroup.
     BaiduLocationMeditor baiduLocationMeditor;
     private LinearLayout ll;
     private RichTextEditor editor;
-    private String currentPictureName = "current";
     private EmojiPopup emojiPopup;
     private ImageButton ibKeyboard;
     private boolean isPanShow;
@@ -109,7 +108,6 @@ public class PostPublishController extends SireController implements RadioGroup.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bbsViewModel = ViewModelProviders.of(this, factory).get(BBSViewModel.class);
-
         setContentView(R.layout.controller_post_pubilish);
         initView();
         baiduLocationMeditor.registerCommponnent(this.getClass(), this);
@@ -394,9 +392,16 @@ public class PostPublishController extends SireController implements RadioGroup.
         if (ll != null) {
             ll.removeOnLayoutChangeListener(this);
         }
+        if(editor!=null){
+            editor.setOnScrollEditEvent(null);
+            editor.onDestroy();
+        }
+        if(ibKeyboard!=null){
+            ibKeyboard.setOnClickListener(null);
+        }
         destroyDispose(postDisposable);
         destroyDispose(resultDisposable);
-        CleanLeakUtils.fixInputMethodManagerLeak(this);
+
     }
 
     private void destroyDispose(Disposable disposable) {

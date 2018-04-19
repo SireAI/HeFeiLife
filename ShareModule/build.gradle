@@ -21,7 +21,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -32,11 +32,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    api project(':ModuleEnvironment')
+    implementation 'com.sire:ModuleEnvironment:1.0.0'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-
+    implementation 'com.sire:Mediators:1.0.0'
 }
+apply from: '../publish.gradle'

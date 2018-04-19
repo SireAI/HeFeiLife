@@ -5,6 +5,7 @@ package com.sire.hefeilife.Global;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.os.Environment;
@@ -66,6 +67,7 @@ public class SireApp extends Application implements HasActivityInjector,HasServi
         MultiDex.install(this);
 
     }
+
 
     @Override
     public AndroidInjector<Service> serviceInjector() {

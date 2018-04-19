@@ -19,8 +19,11 @@ import com.sire.usermodule.Controller.fragment.PersonalInforController;
 import com.sire.usermodule.ViewModel.UserViewModel;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import dagger.Lazy;
+import dagger.Provides;
 import io.reactivex.Flowable;
 
 import static com.sire.corelibrary.Controller.Segue.FOR_RESULT_REQUEST_CODE;
@@ -36,17 +39,17 @@ import static com.sire.usermodule.Constant.Constant.PERSONAL_INFOR_CODE;
  * ==================================================
  */
  public class UserMediatorImpl implements UserMediator,ModuleInit {
-    private final UserViewModel userViewModel;
+    private final Lazy<UserViewModel> userViewModel;
     private final Application app;
-    private final AppExecutors appExecutors;
-    private final PersonalInforController personalInforController;
+    private final Lazy<AppExecutors> appExecutors;
+    @Inject
+    Provider<PersonalInforController> personalInforController;
 
     @Inject
-    public UserMediatorImpl(UserViewModel userViewModel, Application app, AppExecutors appExecutors,PersonalInforController personalInforController) {
+    public UserMediatorImpl(Lazy<UserViewModel> userViewModel, Application app, Lazy<AppExecutors> appExecutors) {
         this.userViewModel = userViewModel;
         this.app = app;
         this.appExecutors = appExecutors;
-        this.personalInforController = personalInforController;
     }
 
 
@@ -76,25 +79,25 @@ import static com.sire.usermodule.Constant.Constant.PERSONAL_INFOR_CODE;
 
     @Override
     public Object getPersonalInforController() {
-        return personalInforController;
+        return personalInforController.get();
     }
 
     @Override
     public String getUserId() {
-        return userViewModel.getUserId();
+        return userViewModel.get().getUserId();
     }
 
     @Override
     public String getUserImage() {
-        return userViewModel.getUserImage();
+        return userViewModel.get().getUserImage();
     }
 
 
     @Override
     public boolean isLoginState(Object context, boolean needLogin) {
-        boolean notInLoginState = TextUtils.isEmpty(userViewModel.getUserId());
+        boolean notInLoginState = TextUtils.isEmpty(userViewModel.get().getUserId());
         if(notInLoginState&&needLogin){
-            appExecutors.mainHandler().postDelayed(() -> {
+            appExecutors.get().mainHandler().postDelayed(() -> {
                 Intent intent = new Intent(app, EntranceController.class);
                 intent.putExtra(Segue.FOR_RESULT_REQUEST_CODE,LOGIN_REQUEST_CODE);
                 ((SireController)context).segueForResult(Segue.SegueType.MODAL,intent);
@@ -106,28 +109,28 @@ import static com.sire.usermodule.Constant.Constant.PERSONAL_INFOR_CODE;
 
     @Override
     public String getUserLevel() {
-        return userViewModel.getUserLevel();
+        return userViewModel.get().getUserLevel();
     }
 
     @Override
     public String getUserName() {
-        return userViewModel.getUserName();
+        return userViewModel.get().getUserName();
     }
 
 
 
     @Override
     public String getUserCurrentAddress() {
-        return userViewModel.getUserCurrentAddress();
+        return userViewModel.get().getUserCurrentAddress();
     }
 
     @Override
     public String getPhoneNumber() {
-        return userViewModel.getPhoneNumber();
+        return userViewModel.get().getPhoneNumber();
     }
 
     @Override
     public Flowable<ModuleInitInfor> init() {
-        return userViewModel.initUserState(app);
+        return userViewModel.get().initUserState(app);
     }
 }

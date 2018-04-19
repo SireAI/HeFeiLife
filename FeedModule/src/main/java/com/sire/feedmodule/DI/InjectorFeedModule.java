@@ -19,8 +19,8 @@ import dagger.Provides;
 @Module(includes = {CommonModule.class, ControllerModule.class, ViewModelModule.class})
 public class InjectorFeedModule {
 
-    @Singleton
     @Provides
+    @Singleton
     FeedMediator provideFeedMediator(FeedMediatorImpl feedMediator) {
         return feedMediator;
     }

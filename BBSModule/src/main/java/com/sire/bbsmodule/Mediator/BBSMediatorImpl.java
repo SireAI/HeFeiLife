@@ -2,15 +2,12 @@ package com.sire.bbsmodule.Mediator;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.sire.bbsmodule.Controller.PostController;
 import com.sire.bbsmodule.Controller.PostPublishController;
-import com.sire.bbsmodule.Views.EmojiView.EmojiManager;
-import com.sire.bbsmodule.Views.EmojiView.category.IosEmojiProvider;
+import com.sire.corelibrary.View.EmojiView.EmojiManager;
+import com.sire.corelibrary.View.EmojiView.category.IosEmojiProvider;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.DI.Environment.ModuleInit;
@@ -18,7 +15,6 @@ import com.sire.corelibrary.DI.Environment.ModuleInitInfor;
 import com.sire.mediators.BBSModuleInterface.BBSMediator;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 

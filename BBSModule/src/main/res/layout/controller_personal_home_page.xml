@@ -113,7 +113,7 @@
 
                         android:layout_height="match_parent"
                         android:layout_marginLeft="15dp"
-                        android:background="@drawable/shape_line"></View>
+                        android:background="@drawable/shape_line_6"></View>
 
                     <TextView
                         style="@style/caption"

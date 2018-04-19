@@ -1,5 +1,7 @@
 package com.sire.bbsmodule.Pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * Description:
  * ==================================================
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportReason implements Serializable{
     /**
      * 0表示评论，1表示feed，2表示个人

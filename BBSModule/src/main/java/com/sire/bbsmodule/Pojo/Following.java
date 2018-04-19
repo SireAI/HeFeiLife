@@ -14,7 +14,6 @@ import java.io.Serializable;
  * ==================================================
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class Following implements Serializable {
     private String userId;
     private String followingId;

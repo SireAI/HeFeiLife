@@ -3,5 +3,18 @@
     <item type="dimen" name="dialog_min_width_major">65%</item>
     <item type="dimen" name="dialog_min_width_minor">95%</item>
 
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="edit_padding_top">0dp</dimen>
+    <dimen name="emoji_grid_view_column_width">36dp</dimen>
+    <dimen name="emoji_grid_view_spacing">6dp</dimen>
+    <dimen name="post_padding">15dp</dimen>
+
+    <dimen name="detail_backdrop_height">300dp</dimen>
+    <dimen name="card_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="list_item_avatar_size">40dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

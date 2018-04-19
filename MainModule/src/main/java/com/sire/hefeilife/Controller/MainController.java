@@ -1,11 +1,15 @@
 package com.sire.hefeilife.Controller;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 
@@ -14,6 +18,7 @@ import com.sire.corelibrary.Bug.IMMLeaks;
 import com.sire.corelibrary.Controller.MainContainerComponnent;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.Delegate.HomeTabDelegate;
+import com.sire.corelibrary.Networking.downlaod.downloadCore.DownloadWebService;
 import com.sire.corelibrary.RecyclerView.OnScrollDelegate;
 import com.sire.hefeilife.Controller.fragment.DiscoveryController;
 import com.sire.hefeilife.Controller.fragment.MessageController;
@@ -22,18 +27,35 @@ import com.sire.hefeilife.R;
 import com.sire.hefeilife.Views.NavigateTabItem;
 import com.sire.hefeilife.Views.NoScrollViewPager;
 import com.sire.mediators.FeedmoduleInterface.FeedMediator;
+import com.sire.mediators.MessagePushModuleInterface.MessagePushMediator;
 import com.sire.mediators.ShareModuleInterface.ShareMediator;
 import com.sire.mediators.UpgradeModuleInterface.UpgradeMediator;
+import com.sire.mediators.UserModuleInterface.UserMediator;
+import com.sire.mediators.core.AppExit;
 import com.sire.upgrademodule.ViewMoudle.AppUpgradeViewModel;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import me.majiajie.pagerbottomtabstrip.NavigationController;
 import me.majiajie.pagerbottomtabstrip.PageNavigationView;
 import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectedListener;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
+import static com.sire.corelibrary.Networking.downlaod.DownloadCacheUtil.getBasUrl;
 
 public class MainController extends SireController implements MainContainerComponnent, OnScrollDelegate, OnTabItemSelectedListener {
 
@@ -41,12 +63,17 @@ public class MainController extends SireController implements MainContainerCompo
     UpgradeMediator upgradeMediator;
     @Inject
     FeedMediator feedMediator;
+    @Inject
+    MessagePushMediator messagePushMediator;
+    @Inject
+    UserMediator userMediator;
 
     @Inject
     AppUpgradeViewModel appUpgradeViewModel;
     private PageNavigationView tab;
     private NavigationController navigationController;
     private List<Fragment> pages;
+    private MessgeCountReceiver messageReceiver;
 
 
     @Override
@@ -65,10 +92,15 @@ public class MainController extends SireController implements MainContainerCompo
         viewPagerContainer.setNoScroll(true);
         viewPagerContainer.setOffscreenPageLimit(4);
         viewPagerContainer.setAdapter(new PagerAdapter(getSupportFragmentManager(), pages = initPages()));
-
         navigationController.setupWithViewPager(viewPagerContainer);
+        tab.postDelayed(() -> upgradeMediator.checkVersion(MainController.this),500);
+        registerMessageBroadcast();
 
-        upgradeMediator.checkVersion(this);
+    }
+
+    private void registerMessageBroadcast() {
+        IntentFilter intentFilter = new IntentFilter("com.sire.messagecount");
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver = new MessgeCountReceiver(navigationController),intentFilter);
     }
 
 
@@ -76,7 +108,7 @@ public class MainController extends SireController implements MainContainerCompo
         List<Fragment> pages = new ArrayList<>();
         pages.add((Fragment) feedMediator.getInformationFlowController());
         pages.add(new DiscoveryController());
-        pages.add(new MessageController());
+        pages.add((Fragment) messagePushMediator.getMessageController());
         pages.add(new MineController());
         return pages;
     }
@@ -128,7 +160,7 @@ public class MainController extends SireController implements MainContainerCompo
 
     @Override
     public void onScroll(RecyclerView recyclerView, int dx, int dy) {
-        if (navigationController != null) {
+        if (navigationController != null&&navigationController.getSelected()==0) {
             if (dy > 8) {//列表向上滑动
                 navigationController.hideBottomLayout();
             } else if (dy < -8) {//列表向下滑动
@@ -139,7 +171,10 @@ public class MainController extends SireController implements MainContainerCompo
 
     @Override
     public void onSelected(int index, int old) {
-
+        //消息与用户认证关联，查勘前检测是否登陆
+        if(index == 2){
+            userMediator.isLoginState(this,true);
+        }
     }
 
     @Override
@@ -181,6 +216,33 @@ public class MainController extends SireController implements MainContainerCompo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CleanLeakUtils.fixInputMethodManagerLeak(this);
+        if(messageReceiver!=null){
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        }
+
+        AppExit appExit = new AppExit();
+        appExit.setApp(getApplication());
+        EventBus.getDefault().post(appExit);
+
+    }
+
+    /**
+     * 消息广播接收
+     */
+    private static class MessgeCountReceiver extends BroadcastReceiver{
+        private NavigationController navigationController;
+
+        public MessgeCountReceiver(NavigationController navigationController) {
+            this.navigationController = navigationController;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(navigationController!=null){
+                int messageCount = intent.getIntExtra("messageCount", 0);
+                navigationController.setHasMessage(2,messageCount>0);
+                navigationController.setMessageNumber(2,0);
+            }
+        }
     }
 }

@@ -31,7 +31,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -45,5 +45,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    api project(':ModuleEnvironment')
+    implementation 'com.sire:ModuleEnvironment:1.0.0'
+    implementation 'com.sire:Mediators:1.0.0'
 }
+apply from: '../publish.gradle'

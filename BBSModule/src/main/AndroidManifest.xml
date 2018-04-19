@@ -6,7 +6,7 @@
         <activity
             android:name=".Controller.PostController"
             android:theme="@style/ActivityTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Controller.OtherReasonReportController"
             android:theme="@style/ActivityTheme"
@@ -14,7 +14,7 @@
         <activity
             android:name=".Controller.PostPublishController"
             android:theme="@style/ActivityTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

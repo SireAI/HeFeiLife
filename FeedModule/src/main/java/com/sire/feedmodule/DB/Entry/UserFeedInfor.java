@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.Date;
  * ==================================================
  */
 @Entity(primaryKeys = "feedId")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserFeedInfor {
 
     /**

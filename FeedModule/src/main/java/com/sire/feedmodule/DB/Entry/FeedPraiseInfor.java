@@ -2,9 +2,13 @@ package com.sire.feedmodule.DB.Entry;
 
 
 import android.arch.persistence.room.Entity;
+import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.Date;
 
 /**
  * ==================================================
@@ -20,15 +24,30 @@ public class FeedPraiseInfor {
     /**
      * feed标示
      */
+    @NonNull
     private String feedId;
+
+    /**
+     * 帖子作者id
+     */
+    private String postAuthorId;
+    private String postTitle;
+
     /**
      * 点赞此feed的用户标示
      */
+    @NonNull
     private String userId;
     /**
      * 用户头像
      */
     private String userImage;
+
+    /**
+     * 点赞时间
+     */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss SSS")
+    private Date praiseTime;
 
     /**
      * 用户姓名
@@ -64,15 +83,43 @@ public class FeedPraiseInfor {
     }
 
     public void setUserImage(String userImage) {
+
         this.userImage = userImage;
+    }
+
+    public String getPostAuthorId() {
+        return postAuthorId;
+    }
+
+    public void setPostAuthorId(String postAuthorId) {
+        this.postAuthorId = postAuthorId;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    public Date getPraiseTime() {
+        return praiseTime;
+    }
+
+    public void setPraiseTime(Date praiseTime) {
+        this.praiseTime = praiseTime;
     }
 
     @Override
     public String toString() {
         return "FeedPraiseInfor{" +
                 "feedId='" + feedId + '\'' +
+                ", postAuthorId='" + postAuthorId + '\'' +
+                ", postTitle='" + postTitle + '\'' +
                 ", userId='" + userId + '\'' +
                 ", userImage='" + userImage + '\'' +
+                ", praiseTime='" + praiseTime + '\'' +
                 ", userName='" + userName + '\'' +
                 '}';
     }

@@ -156,8 +156,10 @@ public class BBSViewModel extends ViewModel {
         return bbsRepository.praise(praiseInfor);
     }
 
-    public LiveData<DataResource<Comment>> publishComment(String feedId, String comment, String questionCommentId) {
+    public LiveData<DataResource<Comment>> publishComment(String feedId,String postTitle, String comment, Comment questionComment) {
         Comment commentEntity = new Comment();
+        commentEntity.setPostAuthorId(postInfor.getAuthorId());
+        commentEntity.setPostTitle(postTitle);
         commentEntity.setFeedId(feedId);
         commentEntity.setContent(comment);
         commentEntity.setFromAuthorId(userMediator.getUserId());
@@ -166,8 +168,9 @@ public class BBSViewModel extends ViewModel {
         commentEntity.setFromAuthorImg(userMediator.getUserImage());
         commentEntity.setPublishAddress(userMediator.getUserCurrentAddress());
         commentEntity.setTimeLine(new Date());
-        if (!TextUtils.isEmpty(questionCommentId)) {
-            commentEntity.setQuestionId(questionCommentId);
+        commentEntity.setQuestionComment(questionComment);
+        if (questionComment!=null) {
+            commentEntity.setQuestionId(questionComment.getCommentId());
         }
         return bbsRepository.publishComment(commentEntity);
 

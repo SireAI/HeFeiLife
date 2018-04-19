@@ -3,35 +3,24 @@ package com.sire.bbsmodule.Views.RichEditor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.sire.bbsmodule.Pojo.EditData;
 import com.sire.bbsmodule.R;
-import com.sire.bbsmodule.Utils.ScreenUtils;
+import com.sire.corelibrary.Utils.ScreenUtils;
 import com.sire.bbsmodule.Utils.StringUtils;
-import com.sire.bbsmodule.Views.EmojiView.EmojiTextView;
+import com.sire.corelibrary.View.EmojiView.EmojiTextView;
 import com.sire.corelibrary.DI.Environment.GlideConfigure;
 import com.sire.corelibrary.Utils.CommonUtils;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -151,6 +140,14 @@ public class RichTextView extends LinearLayout {
                 }
             }
         }
+    }
+    public void onDestroy() {
+            for (int i = 0; i < getChildCount(); i++) {
+                if(getChildAt(i) instanceof BackListenEditText){
+                    ((BackListenEditText) getChildAt(i)).onDestroy();
+                }
+            }
+
     }
 
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class Comment {
   /**
    * 评论id
@@ -15,6 +14,12 @@ public class Comment {
    * feed id
    */
   private String feedId;
+
+  /**
+   * 帖子作者id
+   */
+  private String postAuthorId;
+  private String postTitle;
 
   /**
    * 评论内容
@@ -101,6 +106,14 @@ public class Comment {
     this.questionComment = questionComment;
   }
 
+  public String getPostAuthorId() {
+    return postAuthorId;
+  }
+
+  public void setPostAuthorId(String postAuthorId) {
+    this.postAuthorId = postAuthorId;
+  }
+
   public int getPraiseCount() {
     return praiseCount;
   }
@@ -150,8 +163,13 @@ public class Comment {
     this.fromAuthorName = fromAuthorName;
   }
 
+  public String getPostTitle() {
+    return postTitle;
+  }
 
-
+  public void setPostTitle(String postTitle) {
+    this.postTitle = postTitle;
+  }
 
   public Date getTimeLine() {
     return timeLine;
@@ -184,6 +202,8 @@ public class Comment {
     return "Comment{" +
             "commentId='" + commentId + '\'' +
             ", feedId='" + feedId + '\'' +
+            ", postAuthorId='" + postAuthorId + '\'' +
+            ", postTitle='" + postTitle + '\'' +
             ", content='" + content + '\'' +
             ", fromAuthorId='" + fromAuthorId + '\'' +
             ", fromAuthorName='" + fromAuthorName + '\'' +

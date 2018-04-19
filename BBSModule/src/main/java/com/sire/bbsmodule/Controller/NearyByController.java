@@ -13,11 +13,9 @@ import android.view.View;
 import com.sire.bbsmodule.R;
 import com.sire.corelibrary.Controller.SireController;
 import com.sire.corelibrary.RecyclerView.AutoViewStateAdapter;
-import com.sire.corelibrary.RecyclerView.OnScrollDelegate;
 import com.sire.corelibrary.RecyclerView.base.ItemViewDelegate;
 import com.sire.corelibrary.RecyclerView.base.ViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.sire.bbsmodule.Constant.Constant.NEARBY;
@@ -81,7 +79,7 @@ public class NearyByController extends SireController implements AutoViewStateAd
             super(dataSource, recyclerView);
             addItemViewDelegate(new ItemViewDelegate<String>() {
                 @Override
-                public int getItemViewLayoutId() {
+                public int getItemViewLayoutId(int viewType) {
                     return R.layout.view_commponent_nearby_item;
                 }
 

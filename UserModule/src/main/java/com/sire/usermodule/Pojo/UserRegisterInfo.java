@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * ==================================================
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class UserRegisterInfo  {
 
     private static final long serialVersionUID = 2981570808964843655L;

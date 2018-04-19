@@ -2,8 +2,11 @@ package com.sire.corelibrary.Utils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +66,25 @@ public class JSONUtils {
             return null;
         }
         try {
-            return mapper.readValue(jsonString, clazz);
+
+            return mapper.readValue(jsonString,clazz);
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static <T> T jsonString2Bean(String jsonString, TypeReference<T> typeReference) {
+        checkInstance();
+        if (jsonString == null) {
+            return null;
+        }
+        try {
+
+            return mapper.readValue(jsonString,typeReference);
         } catch (JsonParseException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {

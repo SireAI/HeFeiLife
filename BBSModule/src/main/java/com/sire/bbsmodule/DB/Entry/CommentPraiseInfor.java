@@ -1,6 +1,7 @@
 package com.sire.bbsmodule.DB.Entry;
 
 import android.arch.persistence.room.Entity;
+import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,9 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity(primaryKeys = {"feedId","commentId"})
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class CommentPraiseInfor {
+    @NonNull
     private String feedId;
+    @NonNull
     private String commentId;
 
 

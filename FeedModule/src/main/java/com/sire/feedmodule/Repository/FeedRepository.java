@@ -256,4 +256,17 @@ public class FeedRepository {
             feedDao.deleteFeed(feedInfor);
         }
     }
+
+    public LiveData<DataResource<JsonResponse<FeedInfor>>> getFeedById(String feedId) {
+        return new DataSourceStrategy.Builder()
+                .appDataFromStrategy(DataSourceStrategy.DataFromStrategy.NET)
+                .build()
+                .apply(new DataSourceStrategy.DataDecision<JsonResponse<FeedInfor>, FeedInfor>() {
+                           @Override
+                           public LiveData<Response<JsonResponse<FeedInfor>>> makeNetCall() {
+                               return webService.getFeedById(feedId);
+                           }
+                       }
+                );
+    }
 }

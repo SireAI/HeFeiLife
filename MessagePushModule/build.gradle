@@ -4,6 +4,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+    dataBinding {
+        enabled = true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -28,7 +31,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -37,12 +40,11 @@ android {
 
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation 'com.getui:sdk:2.11.1.0'
-    implementation project(':ModuleEnvironment')
+    annotationProcessor "android.arch.persistence.room:compiler:$arch_room_version"
+    implementation 'com.getui:sdk:2.12.1.0'
+    implementation 'com.sire:ModuleEnvironment:1.0.0'
+    implementation 'com.sire:Mediators:1.0.0'
 }
+apply from: '../publish.gradle'

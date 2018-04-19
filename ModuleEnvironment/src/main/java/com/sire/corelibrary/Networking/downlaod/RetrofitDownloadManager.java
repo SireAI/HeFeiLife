@@ -100,7 +100,7 @@ public class RetrofitDownloadManager {
                 .client(builder.build())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(getBasUrl(info.getUrl()))
+                .baseUrl(getBasUrl(info.getUrl())+"footprint/")
                 .build();
         DownloadWebService downloadWebService = retrofit.create(DownloadWebService.class);
 
@@ -123,7 +123,7 @@ public class RetrofitDownloadManager {
                 })
                 .flatMap(downloadFileInfor -> {
                     String range = downloadFileInfor.getReadStartPonint() + "-";
-                    return downloadWebService.download("bytes=" + range, downloadFileInfor.getUrl());
+                    return downloadWebService.download("byte=" + range, downloadFileInfor.getUrl());
                 })
                 .map(responseBody -> {
                     try {

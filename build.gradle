@@ -1,81 +1,38 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+//加载项目配置
+apply from: 'moduleConfig.gradle'
 
 buildscript {
     repositories {
-        google()
         jcenter()
         //个推依赖包地址
         maven { url 'https://maven.google.com' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://jitpack.io' }
-
-
+        maven { url  "https://dl.bintray.com/jdfinance/sire-maven" }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-
-//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
     }
 
 }
 
-ext {
 
-    kotlin_version = '1.1.2-4'
-    arch_version = "1.0.0-alpha3"
-    arch_runtime_version = "1.0.0-alpha3"
-    support_version = "26.0.2"
-    dagger_version = "2.11-rc2"
-    junit_version = "4.12"
-    espresso_version = "2.2.2"
-    retrofit_version = "2.3.0"
-    mockwebserver_version = "3.6.0"
-    apache_commons_version = "2.5"
-    mockito_version = "2.7.19"
-    constraint_layout_version = "1.0.2"
-    glide_version = "3.7.0"
-    timber_version = "4.5.1"
-    rxjava_version = "2.1.1"
-    rxandroid_version = "2.0.1"
-    rxlifecycle_version = "2.1.0"
-    adapter_version = "2.3.0"
-    constraintlayout_version = "1.0.2"
-    roomrxjava2_version = "1.0.0-alpha1"
-    crashreport_version = "latest.release"
-    nativecrashreport_version = "latest.release"
-    mpermission_version = "1.0.0"
-    eventbus_version = "3.0.0"
-    glide_version = "4.1.1"
-    circularimageview_version = "1.1"
-    page_bottom_strip_version = "2.2.5"
-    compileSdkVersion = 26
-    buildToolsVersion = "26.0.2"
-    minSdkVersion = 18
-    targetSdkVersion = 21
-    versionCode = 1
-    versionName = "1.0"
-    mainapplicationId = "com.sire.hefeilife"
-
-
-
-}
 
 allprojects {
     repositories {
-        google()
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-
         maven { url 'https://maven.google.com' }
         maven { url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/" }
-
+        maven { url  "https://dl.bintray.com/jdfinance/sire-maven"}
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

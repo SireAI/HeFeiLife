@@ -39,16 +39,14 @@ import com.sire.bbsmodule.Pojo.PraiseInfor;
 import com.sire.bbsmodule.Pojo.PraiseUser;
 import com.sire.bbsmodule.Pojo.ReportReason;
 import com.sire.bbsmodule.R;
-import com.sire.bbsmodule.Utils.ScreenUtils;
+import com.sire.corelibrary.Utils.ScreenUtils;
 import com.sire.bbsmodule.Utils.StringUtils;
 import com.sire.bbsmodule.ViewModel.BBSViewModel;
-import com.sire.bbsmodule.Views.EmojiView.EmojiPopup;
-import com.sire.corelibrary.View.PopOperation;
+import com.sire.corelibrary.View.EmojiView.EmojiPopup;
 import com.sire.bbsmodule.Views.RichEditor.BackListenEditText;
 import com.sire.bbsmodule.databinding.ViewCommponentPostBinding;
 import com.sire.corelibrary.Controller.Segue;
 import com.sire.corelibrary.Controller.SireController;
-import com.sire.corelibrary.Executors.AppExecutors;
 import com.sire.corelibrary.Networking.Response.JsonResponse;
 import com.sire.corelibrary.Networking.dataBound.DataResource;
 import com.sire.corelibrary.RecyclerView.AutoViewStateAdapter;
@@ -60,6 +58,7 @@ import com.sire.corelibrary.Utils.JSONUtils;
 import com.sire.corelibrary.Utils.SPUtils;
 import com.sire.corelibrary.Utils.ToastUtils;
 import com.sire.corelibrary.Utils.UIUtils;
+import com.sire.corelibrary.View.PopOperation;
 import com.sire.corelibrary.View.ProgressHUD;
 import com.sire.corelibrary.View.ToastSuccess;
 import com.sire.mediators.FeedmoduleInterface.FeedMediator;
@@ -193,7 +192,7 @@ public class PostController extends SireController implements OnLoadmoreListener
                         innerAdapter.getDataSource().addAll(newCommentInfors);
                         refreshUI();
                         if (scrollToFirstComment) {
-                            rvPost.smoothScrollToPosition(1);
+                            rvPost.postDelayed(() -> rvPost.smoothScrollToPosition(1),200);
                             scrollToFirstComment = false;
                         }
                     }
@@ -212,9 +211,9 @@ public class PostController extends SireController implements OnLoadmoreListener
     }
 
     private void refreshUI() {
-        if(rvPost.getAdapter() == null){
+        if (rvPost.getAdapter() == null) {
             rvPost.setAdapter(wrapperAdapter);
-        }else {
+        } else {
             wrapperAdapter.notifyDataSetChanged();
         }
     }
@@ -224,6 +223,7 @@ public class PostController extends SireController implements OnLoadmoreListener
             swipeRefreshView.finishLoadmore();
         }
     }
+
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         if (menu != null) {
@@ -239,11 +239,13 @@ public class PostController extends SireController implements OnLoadmoreListener
         }
         return super.onMenuOpened(featureId, menu);
     }
+
     private void initView() {
         setContentView(R.layout.controller_post);
         //RecycleView Comment
         rvPost = findViewById(R.id.rv_post);
         rvPost.setItemAnimator(new DefaultItemAnimator());
+        //焦点适配
         rvPost.requestFocus();
         PostAdapter postAdapter = new PostAdapter(new ArrayList<>(), rvPost, bbsViewModel);
         postAdapter.setEmptyView(UIUtils.inflate(R.layout.view_component_comment_empty_view, this));
@@ -279,7 +281,7 @@ public class PostController extends SireController implements OnLoadmoreListener
 
         etComment.addTextChangedListener(this);
         setUpEmojiPopup();
-
+        refreshUI();
     }
 
     private void setUpEmojiPopup() {
@@ -366,9 +368,9 @@ public class PostController extends SireController implements OnLoadmoreListener
     private void saveOrClearComment() {
         if (bbsViewModel.getPostInfor() != null) {
             String text = etComment.getText().toString();
-            if(TextUtils.isEmpty(text)){
-                SPUtils.removeKeyValue(this,INPUT_TEXT + bbsViewModel.getPostInfor().getFeedId());
-            }else {
+            if (TextUtils.isEmpty(text)) {
+                SPUtils.removeKeyValue(this, INPUT_TEXT + bbsViewModel.getPostInfor().getFeedId());
+            } else {
                 SPUtils.saveKeyValueString(this, INPUT_TEXT + bbsViewModel.getPostInfor().getFeedId(), TextUtils.isEmpty(text) ? "" : text);
             }
         }
@@ -400,8 +402,8 @@ public class PostController extends SireController implements OnLoadmoreListener
             }
             //传递
             final String comment = etComment.getText().toString().trim();
-            String questionCommentId = (String) etComment.getTag();
-            publishComment(comment, questionCommentId);
+            Comment questionComment = (Comment) etComment.getTag();
+            publishComment(comment, questionComment);
             resetInput();
         }
     }
@@ -410,33 +412,30 @@ public class PostController extends SireController implements OnLoadmoreListener
      * 发表评论
      *
      * @param comment
-     * @param questionCommentId
+     * @param questionComment
      */
-    private void publishComment(String comment, String questionCommentId) {
-        bbsViewModel.publishComment(bbsViewModel.getPostInfor().getFeedId(), comment, questionCommentId).observe(this, new Observer<DataResource<Comment>>() {
-            @Override
-            public void onChanged(@Nullable DataResource<Comment> commentDataResource) {
-                switch (commentDataResource.status) {
-                    case SUCCESS:
-                        ProgressHUD.close();
-                        bbsViewModel.getCommentsInfor(new Date(), bbsViewModel.getPostInfor().getFeedId());
-                        //回复评论情况
-                        if (!TextUtils.isEmpty(questionCommentId)) {
-                            etComment.setHint(getResources().getString(R.string.let_me_say));
-                            etComment.setTag(null);
-                            scrollToFirstComment = true;
-                        }
-                        break;
-                    case ERROR:
-                        ProgressHUD.close();
-                        ToastUtils.showToast(PostController.this, getString(R.string.comment_failed));
-                        break;
-                    case LOADING:
-                        ProgressHUD.showDialog(PostController.this);
-                        break;
-                    default:
-                        break;
-                }
+    private void publishComment(String comment, Comment questionComment) {
+        bbsViewModel.publishComment(bbsViewModel.getPostInfor().getFeedId(), getPostInfor().getTitle(), comment, questionComment).observe(this, commentDataResource -> {
+            switch (commentDataResource.status) {
+                case SUCCESS:
+                    ProgressHUD.close();
+                    bbsViewModel.getCommentsInfor(new Date(), bbsViewModel.getPostInfor().getFeedId());
+                    //回复评论情况
+                    if (questionComment != null) {
+                        etComment.setHint(getResources().getString(R.string.let_me_say));
+                        etComment.setTag(null);
+                        scrollToFirstComment = true;
+                    }
+                    break;
+                case ERROR:
+                    ProgressHUD.close();
+                    ToastUtils.showToast(PostController.this, getString(R.string.comment_failed));
+                    break;
+                case LOADING:
+                    ProgressHUD.showDialog(PostController.this);
+                    break;
+                default:
+                    break;
             }
         });
     }
@@ -514,7 +513,7 @@ public class PostController extends SireController implements OnLoadmoreListener
         } catch (Exception e) {
         }
         tvFeedPraiseCount.setText(praised ? String.valueOf(++praiseCount) : String.valueOf(--praiseCount));
-        feedMediator.tickPraise(praised, bbsViewModel.getPostInfor().getFeedId(), data -> {
+        feedMediator.tickPraise(praised, bbsViewModel.getPostInfor().getFeedId(), getPostInfor().getAuthorId(), getPostInfor().getTitle(), data -> {
             //成功
             if (data) {
                 getFeedPraiseUsers();
@@ -552,7 +551,13 @@ public class PostController extends SireController implements OnLoadmoreListener
         super.onDestroy();
         wrapperAdapter.onDestroy();
         EventBus.getDefault().unregister(this);
-        postViewHolder = null;
+        if (postViewHolder != null) {
+            postViewHolder.onDestroy();
+            postViewHolder = null;
+        }
+        if (etComment != null) {
+            etComment.onDestroy();
+        }
     }
 
     @Override
@@ -565,7 +570,6 @@ public class PostController extends SireController implements OnLoadmoreListener
         isPanShow = show;
         setPanInputImage(show);
     }
-
 
 
     @Override
@@ -678,7 +682,6 @@ public class PostController extends SireController implements OnLoadmoreListener
         }
 
 
-
         @Override
         public int getItemCount() {
             return dataSource == null ? 0 : dataSource.size();
@@ -709,7 +712,7 @@ public class PostController extends SireController implements OnLoadmoreListener
         }
 
         @Override
-        public int getItemViewLayoutId() {
+        public int getItemViewLayoutId(int viewType) {
             return R.layout.view_commponent_comment;
         }
 
@@ -769,7 +772,7 @@ public class PostController extends SireController implements OnLoadmoreListener
                         default:
                             break;
                     }
-                }, view.getContext().getString(R.string.reply), view.getContext().getString(R.string.copy), bbsViewModel.isUserComment(comment) ? view.getContext().getString(R.string.delete_comment) : view.getContext().getString(R.string.report));
+                }, view.getContext().getString(R.string.reply), view.getContext().getString(R.string.copy), bbsViewModel.isUserComment(comment) ? view.getContext().getString(R.string.delete_comment) : view.getContext().getString(R.string.report_comment));
             }
         }
 
@@ -809,7 +812,7 @@ public class PostController extends SireController implements OnLoadmoreListener
         private void replyToComment(View view, Comment comment) {
             PostController controller = (PostController) view.getContext();
             controller.etComment.setHint("回复@" + comment.getFromAuthorName());
-            controller.etComment.setTag(comment.getCommentId());
+            controller.etComment.setTag(comment);
             ScreenUtils.showKeyBoard(controller.etComment);
         }
 
@@ -842,27 +845,36 @@ public class PostController extends SireController implements OnLoadmoreListener
             viewCommponentPostBinding.setUserMediator(userMediator);
             viewCommponentPostBinding.tvContent.showEditData(StringUtils.cutStringBy(postInfor.getContent()));
         }
-        public void onPerson(View view,PostInfor postInfor) {
-            segueToPersonalHomePageController(view.getContext(),postInfor);
+
+        public void onDestroy() {
+            userPraiseAdapter = null;
+            praiseUsers = null;
+            if (viewCommponentPostBinding != null && viewCommponentPostBinding.tvContent != null) {
+                viewCommponentPostBinding.tvContent.onDestroy();
+            }
+        }
+
+        public void onPerson(View view, PostInfor postInfor) {
+            segueToPersonalHomePageController(view.getContext(), postInfor);
         }
 
         private void segueToPersonalHomePageController(Context context, PostInfor postInfor) {
-            Intent intent = new Intent(context,PersonalHomePageController.class);
-            intent.putExtra(HEADIMAGE,postInfor.getAuthorIcon());
-            intent.putExtra(AUTHOR_ID,postInfor.getAuthorId());
-            intent.putExtra(AUTHOR_NAME,postInfor.getAuthorName());
-            intent.putExtra(FOLLOW,postInfor.isFollow());
-            ((SireController)context).segue(Segue.SegueType.PUSH,intent);
+            Intent intent = new Intent(context, PersonalHomePageController.class);
+            intent.putExtra(HEADIMAGE, postInfor.getAuthorIcon());
+            intent.putExtra(AUTHOR_ID, postInfor.getAuthorId());
+            intent.putExtra(AUTHOR_NAME, postInfor.getAuthorName());
+            intent.putExtra(FOLLOW, postInfor.isFollow());
+            ((SireController) context).segue(Segue.SegueType.PUSH, intent);
         }
 
 
         /**
-             * 关注
-             *
-             * @param feedMediator
-             * @param followingId
-             * @param postInfor
-             */
+         * 关注
+         *
+         * @param feedMediator
+         * @param followingId
+         * @param postInfor
+         */
         public void onFollow(FeedMediator feedMediator, UserMediator userMediator, String followingId, PostInfor postInfor) {
             if (feedMediator != null && userMediator != null) {
 
@@ -902,7 +914,7 @@ public class PostController extends SireController implements OnLoadmoreListener
                                     break;
                                 case LOADING:
                                     setLoading(true);
-                                     break;
+                                    break;
                                 default:
                                     break;
                             }
@@ -927,4 +939,5 @@ public class PostController extends SireController implements OnLoadmoreListener
             userPraiseAdapter.notifyDataSetChanged();
         }
     }
+
 }

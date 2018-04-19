@@ -1,5 +1,6 @@
 package com.sire.corelibrary.Networking.NetConnection;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +9,10 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
 import com.sire.corelibrary.Event.NetChangeEvent;
+import com.sire.mediators.core.AppExit;
 
 import org.greenrobot.eventbus.EventBus;
-
+import org.greenrobot.eventbus.Subscribe;
 
 
 /**
@@ -22,6 +24,8 @@ import org.greenrobot.eventbus.EventBus;
 public class NetStateReceiver extends BroadcastReceiver {
     public static void registerSelf(Context context) {
         NetStateReceiver netHandler = new NetStateReceiver();
+        EventBus.getDefault().register(netHandler);
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -39,5 +43,11 @@ public class NetStateReceiver extends BroadcastReceiver {
     private void broadcastNetConnected() {
         EventBus.getDefault().post(new NetChangeEvent());
     }
-
+    @Subscribe
+   public void onEvent(AppExit<Application> appExit){
+        EventBus.getDefault().unregister(this);
+        if(appExit.getApplication()!=null){
+            appExit.getApplication().unregisterReceiver(this);
+        }
+    }
 }

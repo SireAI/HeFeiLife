@@ -1,12 +1,12 @@
 package com.sire.feedmodule.Controller.fragment;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -46,7 +46,7 @@ import static com.sire.feedmodule.Constant.Constant.USER_DYNAMICS;
  * Description:
  * ==================================================
  */
-public class UserDynamicController extends LifecycleFragment implements Injectable, OnLoadmoreListener, AutoViewStateAdapter.OnItemClickListener {
+public class UserDynamicController extends Fragment implements Injectable, OnLoadmoreListener, AutoViewStateAdapter.OnItemClickListener {
     private RecyclerView recyclerView;
     private SmartRefreshLayout swipeRefreshView;
     private FeedInformationController.InformationAdapter informationAdapter;
@@ -101,7 +101,7 @@ public class UserDynamicController extends LifecycleFragment implements Injectab
 
     private void refreshFeedUI(List<FeedInfor> listDataResource) {
         if (informationAdapter != null) {
-            List<FeedInfor> newFeedInfors = feedViewModel.collectFeedDataList(informationAdapter.getDataSource(), listDataResource, new FeedViewModel.RefreshNew() {
+            feedViewModel.collectFeedDataList(informationAdapter.getDataSource(), listDataResource, new FeedViewModel.RefreshNew() {
                 @Override
                 public void onNew(int count) {
                     TopToast.showToast(getActivity(), String.format("更新了%d条信息", count));
@@ -113,8 +113,12 @@ public class UserDynamicController extends LifecycleFragment implements Injectab
                         swipeRefreshView.setLoadmoreFinished(true);
                     }
                 }
+
+                @Override
+                public void onCallBack(List<FeedInfor> feedInfors) {
+                    informationAdapter.refreshDataSource(feedInfors);
+                }
             });
-            informationAdapter.refreshDataSource(newFeedInfors);
         }
     }
 
@@ -128,7 +132,7 @@ public class UserDynamicController extends LifecycleFragment implements Injectab
         //Recyclerview
         recyclerView = view.findViewById(R.id.rv_information);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        Drawable drawable = getResources().getDrawable(R.drawable.shape_line);
+        Drawable drawable = getResources().getDrawable(R.drawable.shape_line_6);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(drawable);
         recyclerView.addItemDecoration(dividerItemDecoration);

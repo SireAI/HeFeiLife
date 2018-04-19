@@ -44,4 +44,9 @@ public class ProgressEmit {
         }
 
     }
+    public void setNotifycationClear(){
+        if(progressNotifycation!=null){
+            progressNotifycation.setNotifycationClear();
+        }
+    }
 }

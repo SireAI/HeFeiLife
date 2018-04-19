@@ -1,6 +1,7 @@
 package com.sire.bbsmodule.Pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.List;
  * Description:
  * ==================================================
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PublishInfor implements Serializable{
     private String authorId;
     private String authorName;

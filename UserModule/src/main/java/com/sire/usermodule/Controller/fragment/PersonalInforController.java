@@ -1,11 +1,11 @@
 package com.sire.usermodule.Controller.fragment;
 
-import android.arch.lifecycle.LifecycleFragment;
-import android.arch.lifecycle.Observer;
+
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +36,7 @@ import static com.sire.usermodule.Constant.Constant.PERSONAL_INFOR_CODE;
  * ==================================================
  */
 
-public class PersonalInforController extends LifecycleFragment implements Injectable {
+public class PersonalInforController extends Fragment implements Injectable {
 
     @Inject
     UserViewModel userViewModel;

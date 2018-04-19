@@ -169,7 +169,7 @@ public abstract class AutoViewStateAdapter<T> extends RecyclerView.Adapter<ViewH
                 holder = ViewHolder.createViewHolder(stateView);
             }
         } else {
-            int layoutId = itemViewDelegate.getItemViewLayoutId();
+            int layoutId = itemViewDelegate.getItemViewLayoutId(viewType);
             if (itemViewDelegate instanceof ItemViewDataBindingDelegate) {
                 holder = ViewHolder.createDataBindingViewHolder(parent, layoutId);
             } else {

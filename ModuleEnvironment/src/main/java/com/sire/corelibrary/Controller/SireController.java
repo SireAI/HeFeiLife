@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.sire.corelibrary.Bug.CleanLeakUtils;
 import com.sire.corelibrary.Permission.PermissionHandler;
 
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import dagger.android.support.HasSupportFragmentInjector;
  * ==================================================
  */
 
-public abstract class SireController extends AppCompatActivity implements LifecycleRegistryOwner,HasSupportFragmentInjector {
+public abstract class SireController extends AppCompatActivity implements HasSupportFragmentInjector {
     public static final int SEGUE_TIME_DEFAULT_DELAY_MIN = 250;
     public static final int SEGUE_TIME_DEFAULT_DELAY_MAX = 1000;
     public static final int FOR_CONTROLLER_BACK = -100;
@@ -156,16 +157,13 @@ public abstract class SireController extends AppCompatActivity implements Lifecy
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //修复系统内存泄露，但不能全部解决
+        CleanLeakUtils.fixInputMethodManagerLeak(this);
         mSegue = null;
     }
 
-    //lifecycle
-    private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
 
-    @Override
-    public LifecycleRegistry getLifecycle() {
-        return mRegistry;
-    }
+
 
     //fragmetn inject support
     @Override

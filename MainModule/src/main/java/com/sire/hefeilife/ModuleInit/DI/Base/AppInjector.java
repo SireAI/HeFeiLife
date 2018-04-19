@@ -26,6 +26,9 @@ import android.support.v4.app.FragmentManager;
 
 import com.sire.corelibrary.DI.Injectable;
 import com.sire.hefeilife.Global.SireApp;
+import com.sire.mediators.core.AppExit;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import dagger.android.AndroidInjection;
 import dagger.android.HasActivityInjector;
@@ -45,65 +48,63 @@ public class AppInjector {
     public static void init(SireApp app) {
         DaggerAppComponent.builder().application(app)
                 .build().inject(app);
-        app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-                    @Override
-                    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                        handleActivity(activity);
-                    }
-
-                    @Override
-                    public void onActivityStarted(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivityResumed(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivityPaused(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivityStopped(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-                    }
-
-                    @Override
-                    public void onActivityDestroyed(Activity activity) {
-
-                    }
-                });
+        app.registerActivityLifecycleCallbacks(new ActivityLifeCycle());
     }
 
-    private static void handleActivity(Activity activity) {
-        if (activity instanceof HasSupportFragmentInjector) {
-            AndroidInjection.inject(activity);
-        }
-        if (activity instanceof FragmentActivity) {
-            ((FragmentActivity) activity).getSupportFragmentManager()
-                    .registerFragmentLifecycleCallbacks(
-                            new FragmentManager.FragmentLifecycleCallbacks() {
-                                @Override
-                                public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
-                                    super.onFragmentCreated(fm, f, savedInstanceState);
-                                }
 
-                                @Override
-                                public void onFragmentPreAttached(FragmentManager fm, Fragment f, Context context) {
-                                    if (f instanceof Injectable) {
-                                        AndroidSupportInjection.inject(f);
-                                    }
-                                    super.onFragmentPreAttached(fm, f, context);
-                                }
-                            }, true);
+    static class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            if (activity instanceof HasSupportFragmentInjector) {
+                AndroidInjection.inject(activity);
+                if(activity instanceof FragmentActivity){
+                    ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentLifeCycle(),true);
+                }
+            }
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+
         }
     }
+
+    static class FragmentLifeCycle extends FragmentManager.FragmentLifecycleCallbacks {
+        @Override
+        public void onFragmentPreAttached(FragmentManager fm, Fragment f, Context context) {
+            if (f instanceof Injectable) {
+                AndroidSupportInjection.inject(f);
+            }
+            super.onFragmentPreAttached(fm, f, context);
+        }
+
+    }
+
+
 }

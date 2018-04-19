@@ -1,5 +1,7 @@
 package com.sire.feedmodule.Pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * ==================================================
  * All Right Reserved
@@ -8,7 +10,7 @@ package com.sire.feedmodule.Pojo;
  * Description:
  * ==================================================
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FeedFocusInfors {
     private boolean isFollow;
     private boolean isPraise;

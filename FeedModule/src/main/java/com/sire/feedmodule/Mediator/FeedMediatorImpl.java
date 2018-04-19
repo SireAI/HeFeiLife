@@ -11,7 +11,10 @@ import com.sire.mediators.core.CallBack;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import dagger.Lazy;
 
 /**
  * ==================================================
@@ -22,55 +25,61 @@ import javax.inject.Singleton;
  * ==================================================
  */
 public class FeedMediatorImpl implements FeedMediator {
-    private final FeedViewModel feedViewModel;
-    private final UserDynamicController userDynamicController;
-    private  final InformationFlowController informationFlowController;
+    private final Lazy<FeedViewModel> feedViewModel;
+    private  final Lazy<InformationFlowController> informationFlowController;
+    @Inject
+     Provider<UserDynamicController> userDynamicControllerProvider;
 
     @Inject
-    public FeedMediatorImpl(InformationFlowController informationFlowController, UserDynamicController userDynamicController, FeedViewModel feedViewModel) {
+    public FeedMediatorImpl(Lazy<InformationFlowController> informationFlowController, Lazy<FeedViewModel> feedViewModel) {
         this.informationFlowController = informationFlowController;
-        this.userDynamicController = userDynamicController;
         this.feedViewModel = feedViewModel;
     }
 
     @Override
     public Object getInformationFlowController() {
-        return informationFlowController;
+        return informationFlowController.get();
     }
 
     @Override
     public Object getUserDynamicController() {
-        return userDynamicController;
+        return userDynamicControllerProvider.get();
     }
 
     @Override
     public Object follow(String followingId) {
-        return feedViewModel.follow(followingId);
+        return feedViewModel.get().follow(followingId);
     }
 
     @Override
     public Object cancelFollow(String followingId) {
-        return feedViewModel.cancelFollow(followingId);
+        return feedViewModel.get().cancelFollow(followingId);
     }
 
     @Override
-    public void tickPraise(boolean praised, String feedId, CallBack<Boolean> callBack) {
-         feedViewModel.tickPraise(praised,feedId,callBack);
+    public void tickPraise(boolean praised, String feedId,String postAuthorId,String postTitle, CallBack<Boolean> callBack) {
+         feedViewModel.get().tickPraise(praised,feedId,postAuthorId,postTitle,callBack);
     }
 
     @Override
     public void getFeedFocusInfor(String authorId, String feedId, CallBack<Map<String, Boolean>> callBack) {
-        feedViewModel.getFeedFocusInfor(authorId,feedId,callBack);
+        feedViewModel.get().getFeedFocusInfor(authorId,feedId,callBack);
     }
 
     @Override
     public void getFeedPraiseInfor(String feedId, CallBack<String> callBack) {
-        feedViewModel.getFeedPraiseInfor(feedId,callBack);
+        feedViewModel.get().getFeedPraiseInfor(feedId,callBack);
     }
 
     @Override
     public void deleteFeed(String feedId,CallBack<Boolean> callBack) {
-         feedViewModel.deleteFeed(feedId,callBack);
+        
+         feedViewModel.get().deleteFeed(feedId,callBack);
+    }
+
+    @Override
+    public void getPostInforById(String feedId, CallBack<Map<String, String>> callBack) {
+        feedViewModel.get().getFeedById(feedId,callBack);
     }
 
 }

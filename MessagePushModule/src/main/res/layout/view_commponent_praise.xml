@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="java.util.Date" />
+
+        <import type="com.sire.corelibrary.Utils.TimeConverterUtils" />
+
+
+        <variable
+            name="praiseFeedMessageItem"
+            type="com.sire.messagepushmodule.Pojo.FeedPraiseMessage" />
+
+        <variable
+            name="praiseToPostDelegate"
+            type="com.sire.messagepushmodule.Controller.fragment.MessageController.PraiseToPostMessageDelegate" />
+
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{(v)->praiseToPostDelegate.onClick(v,praiseFeedMessageItem)}"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_user_icon_message"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:cirlce="@{true}"
+            android:layout_marginStart="10dp"
+            android:imageUrl="@{praiseFeedMessageItem.userImage}"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <me.majiajie.pagerbottomtabstrip.internal.RoundMessageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_message"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:hasMessage="@{false}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon_message"
+            />
+        <TextView
+            android:id="@+id/tv_user_message"
+
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:text="@{praiseFeedMessageItem.userName}"
+            app:layout_constraintLeft_toRightOf="@id/tv_message"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="Sire" />
+
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_comment_comment"-->
+            <!--style="@style/body1_2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="4dp"-->
+            <!--app:layout_constraintBaseline_toBaselineOf="@id/tv_user_message"-->
+            <!--android:text="赞了你的帖子："-->
+            <!--app:layout_constraintLeft_toRightOf="@id/tv_user_message"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <TextView
+            android:id="@+id/tv_comment_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="10dp"
+            style="@style/caption"
+            app:layout_constraintLeft_toRightOf="@id/tv_message"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_message"
+            android:text='@{"赞了我的帖子: "+praiseFeedMessageItem.postTitle}'
+            tool:text="真的好么" />
+        <TextView
+            android:id="@+id/tv_address_time_message"
+            style="@style/caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="10dp"
+            android:text='@{TimeConverterUtils.date2SimpleDescription(praiseFeedMessageItem.praiseTime)}'
+            app:layout_constraintRight_toRightOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+</layout>

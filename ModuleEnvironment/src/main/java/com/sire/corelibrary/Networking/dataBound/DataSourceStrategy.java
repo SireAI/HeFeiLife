@@ -84,6 +84,7 @@ public class DataSourceStrategy<ResponseData,Data> {
     }
 
     private void justFromCache() {
+
         LiveData<Data> dataFromDb = dataDecision.loadFromDb();
         result.addSource(dataFromDb, (Data data) -> {
             if (!listenDB) {

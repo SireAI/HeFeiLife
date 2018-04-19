@@ -93,7 +93,7 @@ public class FeedViewModel extends ViewModel {
         feedRequestInfor.setFeedType(feedType);
         if (feedType.equals(USER_FEED)) {
             feedRequestInfor.setUserId(userMediator.getUserId());
-        }else if(feedType.equals(USER_DYNAMICS)){
+        } else if (feedType.equals(USER_DYNAMICS)) {
             feedRequestInfor.setUserId(userDynamicId);
         }
         feedRequestInfor.setPageIndex(newFeedInforStartIndex);
@@ -119,8 +119,9 @@ public class FeedViewModel extends ViewModel {
     public void getHistoryFeedInfor(Date timeLine, String feedType) {
         getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.CACHE_NET, false, feedType, "");
     }
-    public void getHistoryFeedInfor(Date timeLine, String feedType,String userDynamicId) {
-        getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.CACHE_NET, false, feedType,userDynamicId);
+
+    public void getHistoryFeedInfor(Date timeLine, String feedType, String userDynamicId) {
+        getFeedInfor(timeLine, DataSourceStrategy.DataFromStrategy.CACHE_NET, false, feedType, userDynamicId);
     }
 
     public LiveData<DataResource<List<FeedInfor>>> getFeedInfors() {
@@ -136,28 +137,33 @@ public class FeedViewModel extends ViewModel {
      * @return
      */
     @NonNull
-    public List<FeedInfor> collectFeedDataList(List<FeedInfor> oldFeedInfors, List<FeedInfor> comeFeedInfors, RefreshNew refreshNew) {
-        List<FeedInfor> newFeedInfors = new ArrayList<>();
-        if (oldFeedInfors != null) {
-            newFeedInfors.addAll(oldFeedInfors);
-        }
-        if (dataSourceStrategy == DataSourceStrategy.DataFromStrategy.NET) {
-            if (comeFeedInfors != null && comeFeedInfors.size() >= 0) {
-                newFeedInfors.addAll(0, comeFeedInfors);
-                refreshNew.onNew(comeFeedInfors.size());
+    public void collectFeedDataList(List<FeedInfor> oldFeedInfors, List<FeedInfor> comeFeedInfors, RefreshNew refreshNew) {
+        appExecutors.diskIO().execute(() -> {
+            List<FeedInfor> newFeedInfors = new ArrayList<>();
+            if (oldFeedInfors != null) {
+                newFeedInfors.addAll(oldFeedInfors);
             }
+            if (dataSourceStrategy == DataSourceStrategy.DataFromStrategy.NET) {
+                if (comeFeedInfors != null && comeFeedInfors.size() >= 0) {
+                    newFeedInfors.addAll(0, comeFeedInfors);
+                    appExecutors.mainHandler().post(() -> refreshNew.onNew(comeFeedInfors.size()));
+                }
 
-        } else if (dataSourceStrategy == DataSourceStrategy.DataFromStrategy.CACHE_NET) {
-            if (comeFeedInfors!=null&&comeFeedInfors.size() > 0) {
-                newFeedInfors.addAll(comeFeedInfors);
+            } else if (dataSourceStrategy == DataSourceStrategy.DataFromStrategy.CACHE_NET) {
+                if (comeFeedInfors != null && comeFeedInfors.size() > 0) {
+                    newFeedInfors.addAll(comeFeedInfors);
+                } else {
+                    appExecutors.mainHandler().post(() -> refreshNew.onNoMore());
+                }
             } else {
-                refreshNew.onNoMore();
+                throw new RuntimeException("缓存策略未设置");
             }
-        } else {
-            throw new RuntimeException("缓存策略未设置");
-        }
-        Collections.sort(newFeedInfors, (o1, o2) -> (int) (o2.getTimeLine().getTime() - o1.getTimeLine().getTime()));
-        return newFeedInfors;
+            Collections.sort(newFeedInfors, (o1, o2) -> (int) (o2.getTimeLine().getTime() - o1.getTimeLine().getTime()));
+            if (refreshNew != null) {
+                appExecutors.mainHandler().post(() -> refreshNew.onCallBack(newFeedInfors));
+            }
+        });
+
     }
 
     /**
@@ -210,15 +216,18 @@ public class FeedViewModel extends ViewModel {
      *
      * @param praised
      * @param feedId
-     * @param callBack
-     * @return
+     * @param postAuthorId
+     * @param callBack     @return
      */
-    public void tickPraise(boolean praised, String feedId, CallBack<Boolean> callBack) {
+    public void tickPraise(boolean praised, String feedId, String postAuthorId, String postTitle, CallBack<Boolean> callBack) {
         FeedPraiseInfor feedPraise = new FeedPraiseInfor();
+        feedPraise.setPostAuthorId(postAuthorId);
+        feedPraise.setPostTitle(postTitle);
         feedPraise.setFeedId(feedId);
         feedPraise.setUserId(userMediator.getUserId());
         feedPraise.setUserImage(userMediator.getUserImage());
         feedPraise.setUserName(userMediator.getUserName());
+        feedPraise.setPraiseTime(new Date());
         LiveData<DataResource<FeedPraiseInfor>> tickPraise = feedRepository.tickPraise(praised, feedPraise);
         tickPraise.observeForever(new Observer<DataResource<FeedPraiseInfor>>() {
             @Override
@@ -230,7 +239,6 @@ public class FeedViewModel extends ViewModel {
                         break;
                     case ERROR:
                         tickPraise.removeObserver(this);
-
                         callBack.apply(false);
                         break;
                     case LOADING:
@@ -304,6 +312,36 @@ public class FeedViewModel extends ViewModel {
         });
     }
 
+    public void getFeedById(String feedId, CallBack<Map<String,String>> callBack) {
+        LiveData<DataResource<JsonResponse<FeedInfor>>> feedRepositoryLiveData = feedRepository.getFeedById(feedId);
+        feedRepositoryLiveData.observeForever(new Observer<DataResource<JsonResponse<FeedInfor>>>() {
+            @Override
+            public void onChanged(@Nullable DataResource<JsonResponse<FeedInfor>> jsonResponseDataResource) {
+                switch (jsonResponseDataResource.status) {
+                    case ERROR:
+                        feedRepositoryLiveData.removeObserver(this);
+                        Map<String,String> paramsError =  new HashMap<>();
+                        paramsError.put("state","error");
+                        paramsError.put("data",jsonResponseDataResource.message);
+                        callBack.apply(paramsError);
+                        break;
+                    case SUCCESS:
+                        feedRepositoryLiveData.removeObserver(this);
+                        Map<String,String> paramsSuccess =  new HashMap<>();
+                        paramsSuccess.put("state","success");
+                        String feedStr = JSONUtils.bean2JsonString(jsonResponseDataResource.data);
+                        paramsSuccess.put("data",feedStr);
+                        callBack.apply(paramsSuccess);
+                        break;
+                    case LOADING:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
     public void deleteFeed(String feedId, CallBack<Boolean> callBack) {
         LiveData<DataResource<JsonResponse>> dataResourceLiveData = feedRepository.deleteFeed(feedId);
         dataResourceLiveData.observeForever(new Observer<DataResource<JsonResponse>>() {
@@ -334,5 +372,7 @@ public class FeedViewModel extends ViewModel {
         void onNew(int count);
 
         void onNoMore();
+
+        void onCallBack(List<FeedInfor> feedInfors);
     }
 }

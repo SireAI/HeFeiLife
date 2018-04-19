@@ -93,6 +93,5 @@ public class NickNameUpdateController extends SireController implements TextWatc
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CleanLeakUtils.fixInputMethodManagerLeak(this);
     }
 }

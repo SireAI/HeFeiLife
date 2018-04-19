@@ -1,6 +1,7 @@
 package com.sire.feedmodule.Pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * ==================================================
@@ -10,6 +11,7 @@ package com.sire.feedmodule.Pojo;
  * Description:
  * ==================================================
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FeedPraiseUserRequestInfor {
     private String feedId;
     private int pageIndex ;

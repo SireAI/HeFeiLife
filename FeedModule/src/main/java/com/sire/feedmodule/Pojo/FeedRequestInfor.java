@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sire.corelibrary.Networking.dataBound.DataSourceStrategy;
 
 import java.util.Date;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FeedRequestInfor {
     private String userId;
     private int pageSize;

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sire.upgrademodule.Pojo.UpgradeInfor;
 import com.sire.upgrademodule.R;
 import com.sire.upgrademodule.databinding.DialogForceUpgradeBinding;
 
@@ -29,13 +30,14 @@ import java.io.Serializable;
 public class ForceUpgradeDialog extends DialogFragment {
 
     public static final String CALLBACK = "callback";
-    public static final String IS_FORCE = "isForce";
 
-    public static void showDialog(FragmentActivity activity, boolean isForce, Callback callback) {
+    public static final String UPGRADE_INFOR = "upgradeInfor";
+
+    public static void showDialog(FragmentActivity activity, UpgradeInfor upgradeInfor, Callback callback) {
         ForceUpgradeDialog forceUpgradeDialog = new ForceUpgradeDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(CALLBACK, callback);
-        bundle.putSerializable(IS_FORCE, isForce);
+        bundle.putSerializable(UPGRADE_INFOR, upgradeInfor);
         forceUpgradeDialog.setArguments(bundle);
         forceUpgradeDialog.show(activity.getSupportFragmentManager(), "ForceUpgradeDialog");
     }
@@ -46,14 +48,16 @@ public class ForceUpgradeDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_force_upgrade, container);
         DialogForceUpgradeBinding bind = DataBindingUtil.bind(view);
         Bundle arguments = getArguments();
-        boolean isForce = arguments.getBoolean(IS_FORCE);
+        UpgradeInfor upgradeInfor = (UpgradeInfor) arguments.getSerializable(UPGRADE_INFOR);
         Callback callback = (Callback) arguments.getSerializable(CALLBACK);
-        bind.setIsForce(isForce);
+        bind.setUpgradeInfor(upgradeInfor);
         bind.setCallback(callback);
         bind.setDialog(this);
-        if (isForce) {
+        setCancelable(!upgradeInfor.isForceUpgrade());
+        if (upgradeInfor.isForceUpgrade()) {
             getDialog().setOnKeyListener((dialog, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    getActivity().onBackPressed();
                     return true;
                 }
                 return false;
@@ -68,11 +72,10 @@ public class ForceUpgradeDialog extends DialogFragment {
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setStyle(STYLE_NO_TITLE, R.style.dialogTheme);
-
         return super.onCreateDialog(savedInstanceState);
     }
 
     public interface Callback extends Serializable {
-        void onUpgrade(DialogFragment dialog,boolean force);
+        void onUpgrade(DialogFragment dialog, boolean force);
     }
 }

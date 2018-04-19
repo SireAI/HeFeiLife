@@ -7,7 +7,7 @@
 
         <import type="java.lang.Boolean" />
 
-        <import type="com.sire.bbsmodule.Utils.TimeConverterUtils" />
+        <import type="com.sire.corelibrary.Utils.TimeConverterUtils" />
 
         <import type="android.view.View" />
 
