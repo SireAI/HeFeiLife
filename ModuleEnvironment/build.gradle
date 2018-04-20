@@ -3,7 +3,12 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
     dataBinding {
         enabled = true
     }
@@ -40,17 +45,7 @@ android {
         }
     }
 
-    flavorDimensions 'api'
-
-
-    productFlavors {
-        online {
-            dimension 'api'
-        }
-        offline {
-            dimension 'api'
-        }
-    }
+    
 
 }
 configurations.all {
@@ -120,8 +115,7 @@ dependencies {
 
     //glide
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-    onlineImplementation rootProject.ext.modules.Mediators
-    offlineImplementation project(':Mediators')
+    implementation rootProject.ext.Mediators
 }
 apply from: '../publish.gradle'
 

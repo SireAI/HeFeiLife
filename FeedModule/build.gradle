@@ -3,7 +3,12 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 
     dataBinding {
         enabled = true
@@ -35,17 +40,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions 'api'
-
-
-    productFlavors {
-        online {
-            dimension 'api'
-        }
-        offline {
-            dimension 'api'
-        }
-    }
+  
 
 }
 
@@ -54,9 +49,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "android.arch.persistence.room:compiler:$arch_room_version"
-    onlineImplementation rootProject.ext.modules.Mediators
-    onlineImplementation rootProject.ext.modules.ModuleEnvironment
-    offlineImplementation project(':Mediators')
-    offlineImplementation project(':ModuleEnvironment')
+    implementation rootProject.ext.Mediators
+    implementation rootProject.ext.ModuleEnvironment
+
 }
 apply from: '../publish.gradle'

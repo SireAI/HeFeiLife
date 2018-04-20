@@ -1,11 +1,34 @@
-include ':MainModule'
-include ':BBSModule'
-include ':BaiduLocationModule'
-include ':ModuleEnvironment'
-include ':UserModule'
-include ':UpgradeModule'
-include ':MessagePushModule'
-include ':FeedModule'
-include ':ShareModule'
-include ':Mediators'
+Properties dependency = new Properties()
+dependency.load(file('dependency.properties').newDataInputStream())
 
+include ':MainModule'
+
+if(dependency.getProperty("BBSModuleLocal").equals("true")){
+    include ':BBSModule'
+}
+if(dependency.getProperty("BaiduLocationModuleLocal").equals("true")){
+    include ':BaiduLocationModule'
+}
+if(dependency.getProperty("ModuleEnvironmentLocal").equals("true")){
+    include ':ModuleEnvironment'
+}
+if(dependency.getProperty("UserModuleLocal").equals("true")){
+    include ':UserModule'
+}
+if(dependency.getProperty("UpgradeModuleLocal").equals("true")){
+    include ':UpgradeModule'
+}
+if(dependency.getProperty("MessagePushModuleLocal").equals("true")){
+    include ':MessagePushModule'
+}
+if(dependency.getProperty("FeedModuleLocal").equals("true")){
+    include ':FeedModule'
+}
+if(dependency.getProperty("ShareModuleLocal").equals("true")){
+    include ':ShareModule'
+}
+if(dependency.getProperty("MediatorsLocal").equals("true")){
+    include ':Mediators'
+}
+
+println "setting:模块编译配置完成"

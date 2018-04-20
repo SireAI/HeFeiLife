@@ -1,6 +1,9 @@
 def latestRelease = "latest.release"
 
 //类库版本以及sdk统一配置
+Properties dependency = new Properties()
+dependency.load(project.rootProject.file('dependency.properties').newDataInputStream())
+
 ext{
     arch_room_version = '1.1.0-beta2'
     dagger_version = "2.14.1"
@@ -14,14 +17,26 @@ ext{
     versionCode = 1
     versionName = "1.0.0"
     mainapplicationId = "com.sire.hefeilife"
-    //模块依赖统一配置
-    modules = ["Mediators":"com.sire:Mediators:$latestRelease"
-               ,"ModuleEnvironment":"com.sire:ModuleEnvironment:$latestRelease"
-               ,"BaiduLocationModule":'com.sire:BaiduLocationModule:1.0.0'
-               ,"BBSModule":'com.sire:BBSModule:1.0.0'
-               ,"FeedModule":'com.sire:FeedModule:1.0.0'
-               ,"MessagePushModule":'com.sire:MessagePushModule:1.0.0'
-               ,"UpgradeModule":'com.sire:UpgradeModule:1.0.0'
-               ,"UserModule":'com.sire:UserModule:1.0.0'
-               ,"ShareModule":'com.sire:ShareModule:1.0.0']
+
+    //模块依赖配置
+    Mediators = dependency.getProperty("MediatorsLocal").equals("true")?project(':Mediators'):"com.sire:Mediators:$latestRelease"
+    ModuleEnvironment = dependency.getProperty("ModuleEnvironmentLocal").equals("true")?project(':ModuleEnvironment'):"com.sire:ModuleEnvironment:$latestRelease"
+    BaiduLocationModule = dependency.getProperty("BaiduLocationModuleLocal").equals("true")?project(':BaiduLocationModule'):'com.sire:BaiduLocationModule:1.0.0'
+    BBSModule = dependency.getProperty("BBSModuleLocal").equals("true")?project(':BBSModule'):'com.sire:BBSModule:1.0.0'
+    FeedModule = dependency.getProperty("FeedModuleLocal").equals("true")?project(':FeedModule'):'com.sire:FeedModule:1.0.0'
+    MessagePushModule = dependency.getProperty("MessagePushModuleLocal").equals("true")?project(':MessagePushModule'):'com.sire:MessagePushModule:1.0.0'
+    UpgradeModule = dependency.getProperty("UpgradeModuleLocal").equals("true")?project(':UpgradeModule'):'com.sire:UpgradeModule:1.0.0'
+    UserModule = dependency.getProperty("UserModuleLocal").equals("true") ?project(':UserModule'):'com.sire:UserModule:1.0.0'
+    ShareModule = dependency.get("ShareModuleLocal").equals("true")?project(':ShareModule'):'com.sire:ShareModule:1.0.0'
+
 }
+println "========== 模块依赖情况 ============"
+println Mediators
+println ModuleEnvironment
+println BaiduLocationModule
+println BBSModule
+println FeedModule
+println MessagePushModule
+println UpgradeModule
+println UserModule
+println ShareModule

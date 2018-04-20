@@ -95,7 +95,6 @@ android {
 
 }
 
-
 dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -108,26 +107,16 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    //online模块依赖配置
-    onlineImplementation rootProject.ext.modules.Mediators
-    onlineImplementation rootProject.ext.modules.ModuleEnvironment
-    onlineImplementation rootProject.ext.modules.BaiduLocationModule
-    onlineImplementation rootProject.ext.modules.BBSModule
-    onlineImplementation rootProject.ext.modules.FeedModule
-    onlineImplementation rootProject.ext.modules.MessagePushModule
-    onlineImplementation rootProject.ext.modules.UpgradeModule
-    onlineImplementation rootProject.ext.modules.UserModule
-    onlineImplementation rootProject.ext.modules.ShareModule
-    //offline模块依赖配置
-    offlineImplementation project(':Mediators')
-    offlineImplementation project(':ModuleEnvironment')
-    offlineImplementation project(':BaiduLocationModule')
-    offlineImplementation project(':BBSModule')
-    offlineImplementation project(':FeedModule')
-    offlineImplementation project(':MessagePushModule')
-    offlineImplementation project(':UpgradeModule')
-    offlineImplementation project(':UserModule')
-    offlineImplementation project(':ShareModule')
+    implementation rootProject.ext.Mediators
+    implementation rootProject.ext.ModuleEnvironment
+    implementation rootProject.ext.BaiduLocationModule
+    implementation rootProject.ext.BBSModule
+    implementation rootProject.ext.FeedModule
+    implementation rootProject.ext.MessagePushModule
+    implementation rootProject.ext.UpgradeModule
+    implementation rootProject.ext.UserModule
+    implementation rootProject.ext.ShareModule
+   
 }
 
 
