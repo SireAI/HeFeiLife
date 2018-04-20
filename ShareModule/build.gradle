@@ -25,6 +25,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions 'api'
+
+
+    productFlavors {
+        online {
+            dimension 'api'
+        }
+        offline {
+            dimension 'api'
+        }
+    }
 
 }
 
@@ -32,9 +43,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.sire:ModuleEnvironment:1.0.0'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation 'com.sire:Mediators:1.0.0'
+    onlineImplementation rootProject.ext.modules.Mediators
+    onlineImplementation rootProject.ext.modules.ModuleEnvironment
+    offlineImplementation project(':Mediators')
+    offlineImplementation project(':ModuleEnvironment')
 }
 apply from: '../publish.gradle'

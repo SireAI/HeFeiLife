@@ -36,7 +36,17 @@ android {
         }
     }
 
+    flavorDimensions 'api'
 
+
+    productFlavors {
+        online {
+            dimension 'api'
+        }
+        offline {
+            dimension 'api'
+        }
+    }
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -45,7 +55,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation 'com.sire:ModuleEnvironment:1.0.0'
-    implementation 'com.sire:Mediators:1.0.0'
+    onlineImplementation rootProject.ext.modules.Mediators
+    onlineImplementation rootProject.ext.modules.ModuleEnvironment
+    offlineImplementation project(':Mediators')
+    offlineImplementation project(':ModuleEnvironment')
 }
 apply from: '../publish.gradle'

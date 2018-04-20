@@ -40,13 +40,22 @@ android {
         }
     }
 
+    flavorDimensions 'api'
 
+
+    productFlavors {
+        online {
+            dimension 'api'
+        }
+        offline {
+            dimension 'api'
+        }
+    }
 
 }
 configurations.all {
     resolutionStrategy {
-        force "com.android.support:support-v4:$support_version"
-
+        force "com.android.support:support-v4:27.1.0"
     }
 }
 
@@ -111,8 +120,8 @@ dependencies {
 
     //glide
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-
-    implementation 'com.sire:Mediators:1.0.0'
+    onlineImplementation rootProject.ext.modules.Mediators
+    offlineImplementation project(':Mediators')
 }
 apply from: '../publish.gradle'
 
