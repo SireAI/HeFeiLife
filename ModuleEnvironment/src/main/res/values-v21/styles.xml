@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dialogTheme" parent="BaseDialog">
+        <item name="android:windowElevation">16dp</item>
+
+    </style>
+    <style name="progressHUDTheme" parent="BaseDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+    <!---->
+
+    <style name="AppTheme" parent="BaseTheme">
+        <!-- Customize your theme here. -->
+
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+    </style>
+    <style name="ActivityTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/main_bg</item>
+    </style>
+    <style name="Activity_tranparent_status_bar_Theme" parent="AppTheme">
+        <item name="android:windowBackground">@color/main_bg</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+    <style name="ActivityFullScreenTheme" parent="AppTheme">
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/white_bg_1_text</item>
+        <item name="android:textColorPrimaryInverse">@color/white_bg_1_text</item>
+    </style>
+
+    <style name="ActivityFullScreenTheme.StatusOverlay" parent="ActivityTheme">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>

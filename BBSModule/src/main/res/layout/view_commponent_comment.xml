@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="java.lang.Boolean" />
+
+        <import type="android.view.View" />
+
+        <import type="com.sire.corelibrary.Utils.TimeConverterUtils" />
+
+        <variable
+            name="commentItem"
+            type="com.sire.bbsmodule.Pojo.Comment" />
+
+        <variable
+            name="commentBindingDelegate"
+            type="com.sire.bbsmodule.Controller.PostController.CommentBindingDelegate" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:paddingStart="20dp"
+        android:id="@+id/cl"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:onClick="@{(v)->commentBindingDelegate.onClick(v,commentItem)}"
+        >
+
+        <View
+            android:id="@+id/comment_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/shape_line_6"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="parent"
+            ></View>
+
+        <ImageView
+            android:id="@+id/iv_user_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintLeft_toRightOf="parent"
+            android:cirlce="@{true}"
+            android:imageUrl="@{commentItem.fromAuthorImg}"
+            app:layout_constraintTop_toTopOf="@id/comment_line" />
+
+        <TextView
+            android:id="@+id/tv_user"
+
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="17dp"
+            android:text="@{commentItem.fromAuthorName}"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon"
+            app:layout_constraintTop_toTopOf="@id/comment_line"
+            tool:text="Sire"
+            />
+
+        <TextView
+            android:id="@+id/tv_level"
+            style="@style/caption"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_text_bg"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:text='@{"Lv."+commentItem.fromAuthorLevel}'
+            android:textColor="@color/main_bg_1_text"
+            app:layout_constraintLeft_toRightOf="@id/tv_user"
+            app:layout_constraintTop_toTopOf="@id/comment_line"
+            tool:text="Lv.12" />
+
+        <TextView
+            android:id="@+id/tv_address_time"
+            style="@style/caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="2dp"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon"
+            app:layout_constraintTop_toBottomOf="@id/tv_level"
+            android:text='@{commentItem.publishAddress+" | "+TimeConverterUtils.date2SimpleDescription(commentItem.timeLine)}'
+            />
+
+
+
+        <TextView
+            android:id="@+id/tv_comment"
+            style="@style/body1"
+            android:paddingEnd="25dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon"
+            app:layout_constraintTop_toBottomOf="@id/tv_address_time"
+            app:layout_constraintRight_toRightOf="parent"
+            tool:text="程序员创业靠不靠谱"
+            android:text='@{commentItem.questionComment!=null?"回复@"+commentItem.questionComment.fromAuthorName+": "+commentItem.content:commentItem.content}'
+            android:onClick="@{(v)->commentBindingDelegate.onClick(v,commentItem)}"
+            />
+        <TextView
+            android:id="@+id/tv_question_comment"
+            style="@style/body1"
+            android:layout_marginEnd="25dp"
+            android:visibility="@{commentItem.questionComment!=null?View.VISIBLE:View.GONE}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_comment"
+            tool:text="程序员创业靠不靠谱法撒旦飞洒飞洒发程序员创业靠不靠谱法撒旦飞洒飞洒发程序员创业靠不靠谱法撒旦飞洒飞洒发程序员创业靠不靠谱法撒旦飞洒飞洒发程序员创业靠不靠谱法撒旦飞洒飞洒发程序员创业靠不靠谱法撒旦飞洒飞洒发"
+            android:text='@{commentItem.questionComment.fromAuthorName+": "+commentItem.questionComment.content}'
+            android:gravity="left|center_vertical"
+            android:background="@drawable/bubble"
+            android:onClick="@{(v)->commentBindingDelegate.onClick(v,commentItem)}"
+            />
+        <ImageButton
+            android:id="@+id/ib_praise_comment"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerCrop"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@{commentItem.isClientPraise?@drawable/svg_good_select:@drawable/svg_good}"
+            android:layout_marginEnd="20dp"
+            android:onClick="@{(v)->commentBindingDelegate.onClick(v,commentItem)}"/>
+        <TextView
+            android:id="@+id/tv_praise_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintRight_toLeftOf="@id/ib_praise_comment"
+            style="@style/caption"
+            android:layout_marginTop="20dp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="25"
+            android:gravity="center"
+            android:text='@{commentItem.praiseCount+""}'
+            />
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

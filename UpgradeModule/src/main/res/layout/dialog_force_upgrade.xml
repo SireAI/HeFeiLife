@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+        <variable
+            name="callback"
+            type="com.sire.upgrademodule.Views.dialogs.ForceUpgradeDialog.Callback"/>
+
+
+        <variable
+            name="dialog"
+            type="android.support.v4.app.DialogFragment" />
+
+        <variable
+            name="upgradeInfor"
+            type="com.sire.upgrademodule.Pojo.UpgradeInfor" />
+
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout style="@style/dialog_layout">
+
+        <TextView
+            android:id="@+id/tv_upgrade_title"
+            style="@style/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text='@{upgradeInfor.versionName}'/>
+
+        <TextView
+            android:id="@+id/tv_dialog_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="left"
+            android:text="@{upgradeInfor.upgradeMessage}"
+            tool:text="1.fsadfsafasfas\n2.fdasfsafsafsa"
+            app:layout_constraintTop_toBottomOf="@id/tv_upgrade_title" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_dialog_content">
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                style="@style/dialog_button"
+                android:text="@string/btn_next_time"
+                android:textStyle="normal"
+                android:background="?android:attr/selectableItemBackground"
+                android:visibility="@{upgradeInfor.forceUpgrade? View.GONE : View.VISIBLE}"
+                android:onClick="@{()->callback.onUpgrade(dialog,false)}"
+                />
+
+            <TextView
+                android:id="@+id/tv_sure"
+                style="@style/dialog_button"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/btn_upgrade"
+                android:textColor="?attr/colorPrimaryDark"
+                android:onClick="@{()->callback.onUpgrade(dialog,true)}"/>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

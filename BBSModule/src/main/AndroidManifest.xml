@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sire.bbsmodule">
+
+    <application>
+        <activity
+            android:name=".Controller.PostController"
+            android:theme="@style/ActivityTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Controller.OtherReasonReportController"
+            android:theme="@style/ActivityTheme"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".Controller.PostPublishController"
+            android:theme="@style/ActivityTheme"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".Controller.NearyByController"
+            android:theme="@style/ActivityTheme" />
+        <activity
+            android:name=".Controller.PersonalHomePageController"
+            android:theme="@style/Activity_tranparent_status_bar_Theme" />
+
+    </application>
+
+</manifest>

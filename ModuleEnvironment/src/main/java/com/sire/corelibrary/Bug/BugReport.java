@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.sire.corelibrary.BuildConfig;
+import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.BufferedReader;
@@ -26,10 +27,12 @@ public class BugReport {
 // 获取当前进程名
         String processName = getProcessName(android.os.Process.myPid());
 // 设置是否为上报进程
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context.getApplicationContext());
         strategy.setUploadProcess(processName == null || processName.equals(packageName));
 // 初始化Bugly
-        CrashReport.initCrashReport(context, BugRegisterInfor.APP_ID, BuildConfig.DEBUG, strategy);
+
+        CrashReport.initCrashReport(context.getApplicationContext(), BugRegisterInfor.APP_ID, BuildConfig.DEBUG,strategy);
+
     }
 
     /**

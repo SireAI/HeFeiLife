@@ -14,6 +14,7 @@ import com.sire.mediators.core.CallBack;
 public interface ShareMediator {
     void thirdPartyLogin(String platformName,CallBack<Object[]> objects);
     boolean isPlatformExist(String platformName);
-    void smsVerify(CallBack<String> callBack);
+    void sendSMS(String phoneNumber, CallBack<String> callBack);
+    void submitVerifyCode(String phoneNumber, String code);
     void unRegisterSMS();
 }

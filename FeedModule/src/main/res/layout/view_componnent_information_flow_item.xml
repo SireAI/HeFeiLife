@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <data>
+
+
+        <import type="java.lang.Boolean" />
+
+        <import type="android.view.View" />
+        <import type="com.sire.feedmodule.Utils.StringUtils" />
+
+        <variable
+            name="feedItem"
+            type="com.sire.feedmodule.DB.Entry.FeedInfor" />
+
+
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            style="@style/subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{feedItem.title}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:visibility="@{feedItem.splitPictures.length>0?View.VISIBLE:View.GONE}"
+            >
+
+            <ImageView
+                android:id="@+id/tv_first"
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_weight="1"
+                android:cirlce="@{false}"
+                android:visibility="@{feedItem.splitPictures.length>0?View.VISIBLE:View.INVISIBLE}"
+                android:imageUrl='@{feedItem.splitPictures.length>0?feedItem.splitPictures[0]:""}' />
+
+            <ImageView
+                android:id="@+id/tv_second"
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_marginLeft="10dp"
+
+                android:layout_weight="1"
+                android:cirlce="@{false}"
+                android:visibility="@{feedItem.splitPictures.length>1?View.VISIBLE:View.INVISIBLE}"
+                android:imageUrl='@{feedItem.splitPictures.length>1?feedItem.splitPictures[1]:""}'
+
+                />
+
+            <ImageView
+                android:id="@+id/tv_third"
+                android:layout_width="0dp"
+                android:layout_height="90dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:cirlce="@{false}"
+                android:visibility="@{feedItem.splitPictures.length>2?View.VISIBLE:View.INVISIBLE}"
+                android:imageUrl='@{feedItem.splitPictures.length>2?feedItem.splitPictures[2]:""}' />
+        </LinearLayout>
+
+        <TextView
+            style="@style/body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{StringUtils.takeFristText(feedItem.content)}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_user_picture"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:clickable="true"
+                android:imageUrl="@{feedItem.authorIcon}"
+                android:cirlce="@{true}"
+                android:onClick="onPicture"
+                android:scaleType="centerCrop"
+
+                />
+
+            <TextView
+                style="@style/caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:text="@{feedItem.authorName}" />
+
+            <TextView
+                style="@style/caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:text="发布于" />
+
+            <TextView
+                style="@style/caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:text="@{feedItem.categary}" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

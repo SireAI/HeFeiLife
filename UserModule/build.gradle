@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -19,7 +18,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -34,21 +33,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions 'api'
+
+
+    productFlavors {
+        online {
+            dimension 'api'
+        }
+        offline {
+            dimension 'api'
+        }
+    }
 }
 
 dependencies {
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    testImplementation 'junit:junit:4.12'
-
-
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
-
-
-    api project(':ModuleEnvironment')
+    annotationProcessor "android.arch.persistence.room:compiler:$arch_room_version"
+    annotationProcessor "com.zhy:mpermission-compiler:$mpermission_version"
+    onlineImplementation rootProject.ext.modules.Mediators
+    onlineImplementation rootProject.ext.modules.ModuleEnvironment
+    offlineImplementation project(':Mediators')
+    offlineImplementation project(':ModuleEnvironment')
 }
+
+
+apply from: '../publish.gradle'

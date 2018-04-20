@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/cl_birthday">
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:fitsSystemWindows="true"
+        app:navigationIcon="@drawable/svg_back_arrow"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title=" ">
+
+        <TextView
+            style="@style/text_title_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            android:text="@string/complete_personal_infor" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:alpha="0.7"
+            android:text="@string/pass"
+            android:layout_marginRight="17dp"
+            android:layout_gravity="center_vertical|right"
+            android:onClick="onSkip"
+            />
+    </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="44dp"
+        android:layout_marginRight="44dp"
+        android:gravity="center_horizontal"
+        >
+        <ImageView
+            android:layout_marginTop="30dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@mipmap/female"
+            android:id="@+id/iv_sex"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/headline"
+            android:id="@+id/tv_birthday"
+            android:layout_marginTop="27dp"
+            android:text="1990年10月09日"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/body1"
+            android:layout_marginTop="27dp"
+            android:text="@string/select_birthday"/>
+        <DatePicker
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false"
+            android:id="@+id/dp"
+            >
+
+        </DatePicker>
+        <Button
+            android:id="@+id/btn_next"
+            style="@style/normal_button_style"
+            android:layout_marginTop="35dp"
+            android:onClick="onNext"
+            android:text="@string/next_step" />
+    </LinearLayout>
+
+
+
+</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

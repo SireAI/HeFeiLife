@@ -3,6 +3,7 @@ package com.sire.corelibrary.Networking.downlaod;
 
 import android.content.Context;
 
+import com.sire.corelibrary.Networking.WebUrl;
 import com.sire.corelibrary.Networking.downlaod.downloadCore.CacheService;
 import com.sire.corelibrary.Networking.downlaod.downloadCore.CacheServiceImpl;
 import com.sire.corelibrary.Networking.downlaod.downloadCore.DownloadInterceptor;
@@ -25,6 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import timber.log.Timber;
 
@@ -93,11 +95,12 @@ public class RetrofitDownloadManager {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(info.getConnectonTime(), TimeUnit.SECONDS);
         builder.addInterceptor(interceptor);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .client(builder.build())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(getBasUrl(info.getUrl()))
+                .baseUrl(getBasUrl(info.getUrl())+"footprint/")
                 .build();
         DownloadWebService downloadWebService = retrofit.create(DownloadWebService.class);
 
@@ -112,6 +115,7 @@ public class RetrofitDownloadManager {
                     DownloadFileInfor unfinishedDownloading = cacheService.findUnfinishedDownloadingBy(downloadFileInfor.getId());
                     if (unfinishedDownloading != null) {
                         downloadFileInfor.copy(unfinishedDownloading);
+                        downloadFileInfor.setTempBrokenPosition(downloadFileInfor.getReadStartPonint());
                         Timber.i("文件下载断点信息："+info.toString());
                     }
 
@@ -119,7 +123,7 @@ public class RetrofitDownloadManager {
                 })
                 .flatMap(downloadFileInfor -> {
                     String range = downloadFileInfor.getReadStartPonint() + "-";
-                    return downloadWebService.download("bytes=" + range, downloadFileInfor.getUrl());
+                    return downloadWebService.download("byte=" + range, downloadFileInfor.getUrl());
                 })
                 .map(responseBody -> {
                     try {
@@ -134,7 +138,6 @@ public class RetrofitDownloadManager {
                     return info;
                 })
                 .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(downloadObserver);
 

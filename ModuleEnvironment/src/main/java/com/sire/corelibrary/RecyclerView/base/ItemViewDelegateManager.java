@@ -32,7 +32,6 @@ public class ItemViewDelegateManager<T>
         if (delegate != null)
         {
             delegates.put(viewType, delegate);
-            viewType++;
         }
         return this;
     }
@@ -154,7 +153,7 @@ public class ItemViewDelegateManager<T>
      */
     public int getItemViewLayoutId(int viewType)
     {
-        return getItemViewDelegate(viewType).getItemViewLayoutId();
+        return getItemViewDelegate(viewType).getItemViewLayoutId(viewType);
     }
 
     /**

@@ -3,41 +3,93 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+    signingConfigs {
+        config {
+            keyAlias 'hefeilife'
+            keyPassword 'hefeilife'
+            storeFile file('/Users/Sire/sourctree/HeFeiLife/hefeilife.keystore')
+            storePassword 'hefeilife'
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
-        applicationId "com.sire.hefeilife"
+        applicationId rootProject.ext.mainapplicationId
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        multiDexEnabled true
 
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {output->
+                outputFileName = "hefeilife_${variant.productFlavors[0].name}_v${variant.versionName}.apk"
+            }
+        }
+    }
+    packagingOptions {
+
+        //Espresso excludes
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/rxjava.properties'
+
+        //Espresso excludes
 
     }
-
     dataBinding {
         enabled = true
     }
 
     buildTypes {
+        debug{
+            signingConfig signingConfigs.config
+            manifestPlaceholders = [
+                    Environment    : "Ie0zw3b4TwANzTQGwJo7o1"
+            ]
+        }
         release {
             minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            manifestPlaceholders = [
+                    Environment    : "Ie0zw3b4TwANzTQGwJo7o1"
+            ]
+
         }
     }
+    flavorDimensions 'api'
 
-}
 
-
-//强制设置v4版本
-configurations.all {
-    resolutionStrategy {
-        force "com.android.support:support-v4:$support_version"
+    productFlavors {
+        online {
+            dimension 'api'
+        }
+        offline {
+            dimension 'api'
+        }
     }
 
 
@@ -51,12 +103,31 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
-    //    compile 'com.android.support:multidex:1.0.1'
-    implementation project(':UserModule')
-    implementation project(':ShareModule')
-    implementation project(':UpgradeModule')
+    annotationProcessor "android.arch.persistence.room:compiler:$arch_room_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+    implementation 'com.android.support:multidex:1.0.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    //online模块依赖配置
+    onlineImplementation rootProject.ext.modules.Mediators
+    onlineImplementation rootProject.ext.modules.ModuleEnvironment
+    onlineImplementation rootProject.ext.modules.BaiduLocationModule
+    onlineImplementation rootProject.ext.modules.BBSModule
+    onlineImplementation rootProject.ext.modules.FeedModule
+    onlineImplementation rootProject.ext.modules.MessagePushModule
+    onlineImplementation rootProject.ext.modules.UpgradeModule
+    onlineImplementation rootProject.ext.modules.UserModule
+    onlineImplementation rootProject.ext.modules.ShareModule
+    //offline模块依赖配置
+    offlineImplementation project(':Mediators')
+    offlineImplementation project(':ModuleEnvironment')
+    offlineImplementation project(':BaiduLocationModule')
+    offlineImplementation project(':BBSModule')
+    offlineImplementation project(':FeedModule')
+    offlineImplementation project(':MessagePushModule')
+    offlineImplementation project(':UpgradeModule')
+    offlineImplementation project(':UserModule')
+    offlineImplementation project(':ShareModule')
 }
 
 

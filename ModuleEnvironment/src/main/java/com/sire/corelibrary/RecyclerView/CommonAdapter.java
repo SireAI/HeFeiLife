@@ -1,7 +1,6 @@
 package com.sire.corelibrary.RecyclerView;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 
 import com.sire.corelibrary.RecyclerView.base.ItemViewDelegate;
 import com.sire.corelibrary.RecyclerView.base.ViewHolder;
@@ -18,14 +17,12 @@ import java.util.List;
  * ==================================================
  */
 public abstract class CommonAdapter<T> extends AutoViewStateAdapter<T> {
-    protected LayoutInflater mInflater;
 
     public CommonAdapter(RecyclerView recyclerView, final int layoutId, List<T> datas) {
         super(datas, recyclerView);
-        mInflater = LayoutInflater.from(recyclerView.getContext());
         addItemViewDelegate(new ItemViewDelegate<T>() {
             @Override
-            public int getItemViewLayoutId() {
+            public int getItemViewLayoutId(int viewType) {
                 return layoutId;
             }
 

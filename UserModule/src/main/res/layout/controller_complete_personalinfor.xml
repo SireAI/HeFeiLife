@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title=" ">
+
+        <TextView
+            style="@style/text_title_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            android:text="@string/complete_personal_infor" />
+
+    </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="44dp"
+        android:layout_marginRight="44dp"
+        android:gravity="center_horizontal"
+        >
+
+<ImageView
+    android:layout_width="84dp"
+    android:layout_height="84dp"
+    android:src="@mipmap/success"
+    android:layout_marginTop="100dp"
+    />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/headline"
+            android:layout_marginTop="23dp"
+            android:text="欢迎加入合肥生活圈"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/body1_2"
+            android:layout_marginTop="23dp"
+            android:text="合肥生活圈是个本地社交平台，完善个人资料向您推荐喜欢的人或者物"/>
+        <Button
+            android:id="@+id/btn_login"
+            style="@style/normal_button_style"
+            android:layout_marginTop="45dp"
+            android:onClick="onComplete"
+            android:text="@string/complete_personal_infor" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

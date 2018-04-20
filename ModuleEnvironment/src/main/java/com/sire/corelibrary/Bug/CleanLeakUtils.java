@@ -1,0 +1,50 @@
+package com.sire.corelibrary.Bug;
+
+import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
+import java.lang.reflect.Field;
+
+/**
+ * 处理inputMethodManager对象持有view引用间接持有activity引用导致内存泄露
+ * 思想是反射进入该对象类，将view对象置空
+ * 发生的该泄露发生的场景是 15<api<25，使用fragmentadapter、fragment、recyclerview
+ */
+public class CleanLeakUtils {
+
+    public static void fixInputMethodManagerLeak(Context destContext) {
+        if (destContext == null) {
+            return;
+        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) destContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager == null) {
+            return;
+        }
+
+        String [] viewArray = new String[]{"mCurRootView", "mServedView", "mNextServedView","mLastSrvView","mServedInputConnectionWrapper"};
+        Field filed;
+        Object filedObject;
+
+        for (String view:viewArray) {
+            try{
+                filed = inputMethodManager.getClass().getDeclaredField(view);
+                if (!filed.isAccessible()) {
+                    filed.setAccessible(true);
+                }
+                filedObject = filed.get(inputMethodManager);
+                if (filedObject != null && filedObject instanceof View) {
+                    View fileView = (View) filedObject;
+                    if (fileView.getContext() == destContext) { // 被InputMethodManager持有引用的context是想要目标销毁的
+                        filed.set(inputMethodManager, null); // 置空，破坏掉path to gc节点
+                    } else {
+                        break;// 不是想要目标销毁的，即为又进了另一层界面了，不要处理，避免影响原逻辑,也就不用继续for循环了
+                    }
+                }
+            }catch(Throwable t){
+                t.printStackTrace();
+            }
+        }
+    }
+}

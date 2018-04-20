@@ -1,14 +1,6 @@
 package com.sire.hefeilife.ModuleInit.DI;
 
-import com.sire.corelibrary.Lifecycle.DataLife.LiveDataCallAdapterFactory;
-import com.sire.corelibrary.Networking.WebUrl;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
-import dagger.Provides;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * ==================================================
@@ -20,8 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class MainCommonModule {
-
-
 
 
 }

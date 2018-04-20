@@ -19,9 +19,13 @@ package com.sire.hefeilife.ModuleInit.DI.Base;
 
 import android.app.Application;
 
+import com.sire.baidulocation.DI.InjectorBaiduLocationModule;
+import com.sire.bbsmodule.DI.InjectorBBSModule;
 import com.sire.corelibrary.DI.Environment.InjectorEnvironmentMoudle;
+import com.sire.feedmodule.DI.InjectorFeedModule;
 import com.sire.hefeilife.Global.SireApp;
 import com.sire.hefeilife.ModuleInit.DI.InjectorMainModule;
+import com.sire.messagepushmodule.DI.InjectorMessagePushModule;
 import com.sire.sharemodule.ModuleInit.DI.InjectorShareModule;
 import com.sire.upgrademodule.ModuleInit.DI.InjectorUpgradeModule;
 import com.sire.usermodule.DI.InjectorUserModule;
@@ -49,7 +53,11 @@ import dagger.android.support.AndroidSupportInjectionModule;
         InjectorEnvironmentMoudle.class,
         InjectorUserModule.class,
         InjectorUpgradeModule.class,
-        InjectorMainModule.class
+        InjectorMessagePushModule.class,
+        InjectorMainModule.class,
+        InjectorFeedModule.class,
+        InjectorBBSModule.class,
+        InjectorBaiduLocationModule.class,
 })
 public interface AppComponent {
     @Component.Builder

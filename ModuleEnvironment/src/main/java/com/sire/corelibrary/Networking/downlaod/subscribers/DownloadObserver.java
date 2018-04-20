@@ -52,7 +52,7 @@ public class DownloadObserver<T> implements DownloadProgressListener, Observer<T
      */
     @Override
     public void onError(Throwable error) {
-        Timber.i("文件下载出错信息：" + error.getMessage());
+        Timber.e("文件下载出错信息：" + error.getMessage());
         if (error instanceof ResourceException) {
             updatePersistent(() -> cacheService.deleteDownloadFileInfor(downloadFileInfor, true));
         } else {
@@ -85,7 +85,12 @@ public class DownloadObserver<T> implements DownloadProgressListener, Observer<T
                     retrofitDownloadManager.remove(downloadFileInfor);
                     downloadFileInfor.setState(DownState.FINISH);
                 })
-                .doAfterNext(downloadFileInfor -> cacheService.deleteDownloadFileInfor(downloadFileInfor, false))
+                .doAfterNext(downloadFileInfor -> {
+                    if(cacheService !=null){
+                        cacheService.deleteDownloadFileInfor(downloadFileInfor, false);
+                    }
+                }
+                )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(downloadFileInfor -> {
                     if (downloadProgressListener != null) {
@@ -127,6 +132,7 @@ public class DownloadObserver<T> implements DownloadProgressListener, Observer<T
     @Override
     public void update(long read, long count, boolean done) {
         downloadFileInfor.setContentLength(count);
+        read+=downloadFileInfor.getTempBrokenPosition();
         downloadFileInfor.setReadStartPonint(read);
 
         if (downloadProgressListener != null) {

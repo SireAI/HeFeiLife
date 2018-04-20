@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="line_divider">#EEEEEE</color>
+    <color name="color_title_black">#202020</color>
+    <color name="color_title_caption">#717171</color>
+
+</resources>

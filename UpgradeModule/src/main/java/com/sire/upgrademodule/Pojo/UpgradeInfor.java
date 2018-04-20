@@ -1,6 +1,10 @@
 package com.sire.upgrademodule.Pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
+
 /**
  * ==================================================
  * All Right Reserved
@@ -9,7 +13,11 @@ package com.sire.upgrademodule.Pojo;
  * Description:
  * ==================================================
  */
-public class UpgradeInfor {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UpgradeInfor implements Serializable{
+
+    private static final long serialVersionUID = -1466673116166012781L;
+
     private boolean needUpgrade;
     private String  versionName;
     private String upgradeMessage;

@@ -5,14 +5,16 @@ import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.sire.corelibrary.Event.MessageEvent;
+import com.sire.corelibrary.Bug.CleanLeakUtils;
 import com.sire.corelibrary.Permission.PermissionHandler;
 
 import javax.inject.Inject;
@@ -32,7 +34,7 @@ import dagger.android.support.HasSupportFragmentInjector;
  * ==================================================
  */
 
-public abstract class SireController extends AppCompatActivity implements LifecycleRegistryOwner,HasSupportFragmentInjector {
+public abstract class SireController extends AppCompatActivity implements HasSupportFragmentInjector {
     public static final int SEGUE_TIME_DEFAULT_DELAY_MIN = 250;
     public static final int SEGUE_TIME_DEFAULT_DELAY_MAX = 1000;
     public static final int FOR_CONTROLLER_BACK = -100;
@@ -45,19 +47,24 @@ public abstract class SireController extends AppCompatActivity implements Lifecy
 
     private PermissionHandler permissionHandler;
 
-
+    @CallSuper
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    protected void setActionBarEnabled(@NonNull Toolbar toolbar){
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
 
     /**
      * @param permissions permission in mainfest to request
      */
     protected void requestNeedPermissions(String[] permissions) {
         permissionHandler = new PermissionHandler(permissions);
-        permissionHandler.requestPermissions(this,true);
+        permissionHandler.requestPermissions(this,false);
     }
 
 
@@ -83,9 +90,6 @@ public abstract class SireController extends AppCompatActivity implements Lifecy
      * when you want to get the back result
      */
     protected void finishForResult(Intent data) {
-        if (data == null) {
-            throw new RuntimeException("data can't be null !");
-        }
         setResult(FOR_CONTROLLER_BACK, data);
         onBackPressed();
     }
@@ -97,8 +101,22 @@ public abstract class SireController extends AppCompatActivity implements Lifecy
      * @param intent    same as the old intent
      */
     public void segue(Segue.SegueType segueType, Intent intent) {
-        if (intent == null) return;
-        mSegue.segueForward(segueType, intent, this);
+        if (intent == null) {
+            return;
+        }
+        mSegue.segueForward(segueType, intent, this,false,null);
+    }
+    public void segueForResult(Segue.SegueType segueType, Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        mSegue.segueForward(segueType, intent, this,true,null);
+    }
+    public void segueWithScaleForResult(Segue.SegueType segueType, Intent intent, Segue.PagePositionData pagePositionData) {
+        if (intent == null) {
+            return;
+        }
+        mSegue.segueForward(segueType, intent, this,true,pagePositionData);
     }
 
     /**
@@ -139,16 +157,13 @@ public abstract class SireController extends AppCompatActivity implements Lifecy
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //修复系统内存泄露，但不能全部解决
+        CleanLeakUtils.fixInputMethodManagerLeak(this);
         mSegue = null;
     }
 
-    //lifecycle
-    private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
 
-    @Override
-    public LifecycleRegistry getLifecycle() {
-        return mRegistry;
-    }
+
 
     //fragmetn inject support
     @Override

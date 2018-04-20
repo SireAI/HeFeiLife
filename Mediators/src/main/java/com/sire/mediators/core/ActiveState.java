@@ -10,7 +10,8 @@ package com.sire.mediators.core;
  */
 
 public enum ActiveState {
-    SUCCESS("成功"),FAILED("失败");
+
+    INTERRUPT("中断动作"), NO_ACTION("继续");
 
     private String message ;
 

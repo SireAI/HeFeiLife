@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<TextView
+    android:drawableStart="@drawable/svg_unwrite"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:text="暂且没有评论，来第一评论吧~"
+    android:gravity="center_vertical"
+    style="@style/caption"
+    android:textSize="15sp"
+    android:paddingStart="50dp"
+    android:drawablePadding="10dp"
+    ></TextView>
+</android.support.constraint.ConstraintLayout>

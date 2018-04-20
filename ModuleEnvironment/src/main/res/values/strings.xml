@@ -2,6 +2,7 @@
     <string name="app_name">Library</string>
     <string name="please_connect">请链接的网络</string>
     <string name="no_net">网络好像不给力</string>
-    <string name="retry">点击重试</string>
+    <string name="retry">下拉重试</string>
+    <string name="permission_attention">该设备需要授予应用权限,请在应用信息权限管理中授予所需权限</string>
 
 </resources>

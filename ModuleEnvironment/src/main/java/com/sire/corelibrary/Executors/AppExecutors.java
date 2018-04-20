@@ -72,4 +72,8 @@ public class AppExecutors {
             mainThreadHandler.post(command);
         }
     }
+
+    public Handler mainHandler(){
+      return   new Handler(Looper.getMainLooper());
+    }
 }

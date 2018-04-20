@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/contentLay"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:fitsSystemWindows="true"
+        app:navigationIcon="@drawable/svg_back_arrow"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ToolbarTheme"
+        app:title="正文"
+        app:titleTextColor="@android:color/white"
+        >
+    </android.support.v7.widget.Toolbar>
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:id="@+id/srl"
+    >
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:descendantFocusability="afterDescendants"
+        >
+    </android.support.v7.widget.RecyclerView>
+
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emojicons_container"
+        >
+       <View
+           android:id="@+id/line"
+           android:layout_width="0dp"
+           android:layout_height="1dp"
+           android:background="@drawable/shape_line_6"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintLeft_toLeftOf="parent"
+           app:layout_constraintRight_toRightOf="parent"
+           ></View>
+
+        <com.sire.bbsmodule.Views.RichEditor.BackListenEditText
+            android:id="@+id/et_comment"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:drawableLeft="@mipmap/write"
+            android:drawablePadding="4dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/body1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/ib_praise"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:hint="@string/let_me_say"
+            android:imeOptions="actionSend|flagNoExtractUi"
+            android:inputType="textCapSentences|textMultiLine"
+            />
+        <ImageButton
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="3dp"
+            android:id="@+id/ib_praise"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/svg_good"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_feed_praise_count"
+            android:layout_marginBottom="7dp"
+            />
+
+
+        <TextView
+
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="13dp"
+            android:id="@+id/tv_feed_praise_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_send"
+            style="@style/caption"
+            tool:text="2"/>
+        <TextView
+            android:layout_marginEnd="10dp"
+            android:id="@+id/tv_send"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/white_bg_3_text"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="发送"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginBottom="8dp"/>
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

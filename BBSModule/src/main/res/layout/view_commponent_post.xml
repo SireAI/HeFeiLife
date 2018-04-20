@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="java.lang.Boolean" />
+
+        <import type="com.sire.corelibrary.Utils.TimeConverterUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="postInfor"
+            type="com.sire.bbsmodule.Pojo.PostInfor" />
+
+        <variable
+            name="postHolder"
+            type="com.sire.bbsmodule.Controller.PostController.PostViewHolder" />
+
+        <variable
+            name="feedMediator"
+            type="com.sire.mediators.FeedmoduleInterface.FeedMediator" />
+
+        <variable
+            name="userMediator"
+            type="com.sire.mediators.UserModuleInterface.UserMediator" />
+
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+
+        >
+
+
+        <ImageView
+            android:id="@+id/iv_user_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="30dp"
+            android:cirlce="@{true}"
+            android:imageUrl="@{postInfor.authorIcon}"
+            android:onClick="@{(v)->postHolder.onPerson(v,postInfor)}"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_user"
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:text="@{postInfor.authorName}"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="Sire" />
+
+        <TextView
+            android:id="@+id/tv_level"
+            style="@style/caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:background="@drawable/shape_text_bg"
+            android:gravity="center"
+            android:paddingEnd="2dp"
+            android:paddingStart="2dp"
+            android:text='@{"Lv."+postInfor.authorLevel}'
+            android:textColor="@color/main_bg_1_text"
+            app:layout_constraintLeft_toRightOf="@id/tv_user"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="Lv.12" />
+
+
+        <TextView
+            android:id="@+id/tv_follow"
+            style="@style/caption_cycan"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_border"
+            android:gravity="center"
+            android:visibility="@{postInfor.authorId.equals(userMediator.getUserId())?View.GONE:View.VISIBLE}"
+            android:onClick="@{()->postHolder.onFollow(feedMediator,userMediator,postInfor.authorId,postInfor)}"
+            android:padding="5dp"
+            android:text="@{postInfor.isFollow ? @string/in_follow:@string/follow}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v4.widget.ContentLoadingProgressBar
+            android:id="@+id/iv_loading"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="5dp"
+
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+
+            android:id="@+id/tv_address_time"
+            style="@style/caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="2dp"
+            android:text='@{postInfor.publishAddress+" | "+TimeConverterUtils.date2SimpleDescription(postInfor.timeLine)}'
+            app:layout_constraintLeft_toRightOf="@id/iv_user_icon"
+            app:layout_constraintTop_toBottomOf="@id/tv_level" />
+
+
+
+        <com.sire.bbsmodule.Views.RichEditor.RichTextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/post_padding"
+            android:layout_marginStart="@dimen/post_padding"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_user_icon"            tool:text="天天向上"
+            />
+
+        <TextView
+            android:id="@+id/tv_praise"
+            style="@style/body1"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="35dp"
+            android:text="赞："
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_content" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_praise_users"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintLeft_toRightOf="@+id/tv_praise"
+            app:layout_constraintTop_toBottomOf="@id/tv_content"></android.support.v7.widget.RecyclerView>
+
+        <View
+            android:id="@+id/post_tine"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_head_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_praise_users"></View>
+
+        <TextView
+
+            style="@style/body1"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/shape_seperate"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="@string/all_comments"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/post_tine" />
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

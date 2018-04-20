@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--dialog-->
+    <style name="BaseDialog">
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <!--边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--内容背景色-->
+        <item name="android:windowBackground">@drawable/shape_dialog_corners</item>
+        <!--是否浮在Activity上-->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否开启背景灰度 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!--居中-->
+        <item name="android:gravity">center</item>
+        <!--灰度值-->
+        <item name="android:backgroundDimAmount">0.2</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:colorBackgroundCacheHint">@null</item><!-- 背景缓存颜色 -->
+
+
+        <item name="windowMinWidthMajor">@dimen/dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/dialog_min_width_minor</item>
+
+    </style>
+
+    <style name="dialogTheme" parent="BaseDialog"></style>
+
+    <style name="progressHUDTheme" parent="BaseDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+
+    </style>
+
+    <style name="toastTheme" parent="BaseDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+
+    </style>
+
+    <!--dialog text style-->
+    <style name="dialog_title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#cc000000</item>
+        <item name="android:gravity">left|center_vertical</item>
+    </style>
+
+    <style name="dialog_content">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#99000000</item>
+    </style>
+    <!--
+    android:fontFamily="sans-serif" // roboto regular
+android:fontFamily="sans-serif-light" // roboto light
+android:fontFamily="sans-serif-condensed" // roboto condensed
+android:fontFamily="sans-serif-thin" // roboto thin (android 4.2)
+//in combination with
+android:textStyle="normal|bold|italic"
+    -->
+    <style name="dialog_button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#cc000000</item>
+        <item name="android:layout_width">124dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="dialog_layout">
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:height">124dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <!---->
+    <!-- Base application theme. -->
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colortextColorPrimary</item>
+        <item name="android:textColorSecondary">@color/colortextColorPrimary</item>
+        <item name="android:windowBackground">?attr/colorPrimary</item>
+        <item name="android:textViewStyle">@style/body1</item>
+        <item name="android:buttonStyle">@style/normal_button_style</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseTheme">
+        <item name="android:datePickerStyle">@android:style/Widget.DatePicker</item>
+    </style>
+
+    <style name="ActivityTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/main_bg</item>
+    </style>
+
+    <style name="Activity_tranparent_status_bar_Theme" parent="AppTheme">
+        <item name="android:windowBackground">@color/main_bg</item>
+    </style>
+
+    <style name="ActivityFullScreenTheme.StatusOverlay" parent="ActivityTheme">
+
+    </style>
+
+    <style name="ActivityFullScreenTheme" parent="AppTheme">
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/white_bg_1_text</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="text_title_white">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <!--控件样式-->
+    </style>
+
+    <style name="body1">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white_bg_1_text</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">12dp</item>
+
+    </style>
+
+    <style name="button_text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="normal_button_style" parent="@style/Widget.AppCompat.Button">
+        <item name="android:background">@drawable/selector_theme</item>
+        <item name="android:layout_height">37dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="caption_cycan">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#717171</item>
+    </style>
+
+    <style name="button_text_black">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#212121</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="subhead">
+        <item name="android:textColor">#212121</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">26dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="headline">
+        <item name="android:textColor">#212121</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:lineSpacingExtra">32dp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="body1_2">
+        <item name="android:textColor">#202020</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingExtra">12dp</item>
+    </style>
+
+    <style name="title">
+        <item name="android:textColor">#202020</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:lineSpacingExtra">13dp</item>
+    </style>
+
+    <style name="ActionSheet">
+        <item name="actionSheetBackground">@android:color/transparent</item>
+        <item name="cancelButtonBackground">@drawable/selector_white_grey</item>
+        <item name="otherButtonTopBackground">@drawable/selector_white_grey</item>
+        <item name="otherButtonMiddleBackground">@drawable/selector_white_grey</item>
+        <item name="otherButtonBottomBackground">@drawable/selector_white_grey</item>
+        <item name="otherButtonSingleBackground">@drawable/selector_white_grey</item>
+        <item name="cancelButtonTextColor">@color/white_bg_1_text</item>
+        <item name="otherButtonTextColor">@color/white_bg_1_text</item>
+        <item name="actionSheetPadding">0dp</item>
+        <item name="otherButtonSpacing">0dp</item>
+        <item name="cancelButtonMarginTop">3dp</item>
+        <item name="actionSheetTextSize">14sp</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textSize">18sp</item> <!--  搞掂字体大小-->
+        <item name="overlapAnchor">false</item>
+        <item name="colorControlNormal">@color/main_bg</item>
+        <item name="android:actionMenuTextColor">@color/main_bg</item>
+
+        <item name="android:dropDownVerticalOffset">6dp</item>
+        <item name="android:layout_marginRight">6dp</item>
+    </style>
+
+    <style name="base_tab_bottom_style">
+        <item name="android:textSize">@dimen/notification_subtext_size</item>
+        <item name="android:gravity">center</item>
+
+        <item name="android:background">@android:color/white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">0dp</item>
+        <item name="android:layout_weight">1.0</item>
+
+    </style>
+
+    <style name="dialog_marterial" parent="@style/Base.V7.Theme.AppCompat.Light.Dialog">
+        <item name="windowMinWidthMajor">@dimen/dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/dialog_min_width_minor</item>
+    </style>
+
+    <style name="picture.default.style" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <!--标题栏背景色-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--状态栏背景色-->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--是否改变图片列表界面状态栏字体颜色为黑色-->
+        <item name="picture.statusFontColor">false</item>
+        <!--返回键图标-->
+        <item name="picture.leftBack.icon">@drawable/picture_back</item>
+        <!--标题下拉箭头-->
+        <item name="picture.arrow_down.icon">@drawable/arrow_down</item>
+        <!--标题上拉箭头-->
+        <item name="picture.arrow_up.icon">@drawable/arrow_up</item>
+        <!--标题文字颜色-->
+        <item name="picture.title.textColor">@color/white</item>
+        <!--标题栏右边文字-->
+        <item name="picture.right.textColor">@color/white</item>
+        <!--图片列表勾选样式-->
+        <item name="picture.checked.style">@drawable/picture_checkbox_selector</item>
+        <!--开启图片列表勾选数字模式-->
+        <item name="picture.style.checkNumMode">false</item>
+        <!--选择图片样式0/9-->
+        <item name="picture.style.numComplete">false</item>
+        <!--图片列表底部背景色-->
+        <item name="picture.bottom.bg">@color/color_fa</item>
+        <!--图片列表预览文字颜色-->
+        <item name="picture.preview.textColor">@color/colorPrimary</item>
+        <!--图片列表已完成文字颜色-->
+        <item name="picture.complete.textColor">@color/colorPrimary</item>
+        <!--图片已选数量圆点背景色-->
+        <item name="picture.num.style">@drawable/num_oval</item>
+        <!--预览界面标题文字颜色-->
+        <item name="picture.ac_preview.title.textColor">@color/white</item>
+        <!--预览界面已完成文字颜色-->
+        <item name="picture.ac_preview.complete.textColor">@color/colorPrimary</item>
+        <!--预览界面标题栏背景色-->
+        <item name="picture.ac_preview.title.bg">@color/colorPrimary</item>
+        <!--预览界面底部背景色-->
+        <item name="picture.ac_preview.bottom.bg">@color/colorPrimary</item>
+        <!--预览界面状态栏颜色-->
+        <item name="picture.status.color">@color/colorPrimaryDark</item>
+        <!--预览界面返回箭头-->
+        <item name="picture.preview.leftBack.icon">@drawable/picture_back</item>
+        <!--是否改变预览界面状态栏字体颜色为黑色-->
+        <item name="picture.preview.statusFontColor">false</item>
+        <!--裁剪页面标题背景色-->
+        <item name="picture.crop.toolbar.bg">@color/colorPrimary</item>
+        <!--裁剪页面状态栏颜色-->
+        <item name="picture.crop.status.color">@color/colorPrimaryDark</item>
+        <!--裁剪页面标题文字颜色-->
+        <item name="picture.crop.title.color">@color/white</item>
+        <!--相册文件夹列表选中图标-->
+        <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
+    </style>
+</resources>

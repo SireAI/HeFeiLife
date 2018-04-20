@@ -13,5 +13,9 @@ import com.sire.mediators.core.CallBack;
  */
 
 public interface UpgradeMediator {
-    void checkVersion(CallBack<ActiveState> callBack);
+    /**
+     * check version
+     * @param context  fragmentActivity
+     */
+    void checkVersion(Object context);
 }
