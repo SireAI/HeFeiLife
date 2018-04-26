@@ -1,3 +1,4 @@
+
 def latestRelease = "latest.release"
 
 //类库版本以及sdk统一配置
@@ -18,16 +19,26 @@ ext{
     versionName = "1.0.0"
     mainapplicationId = "com.sire.hefeilife"
 
+    //模块版本配置
+    mediators_version = "1.0.1"
+    moduleEnvironment_version = "1.0.1"
+    baiduLocationModule_version = "1.0.1"
+    BBSModule_version = "1.0.1"
+    feedModule_version = "1.0.1"
+    messagePushModule_version = "1.0.1"
+    upgradeModule_version = "1.0.1"
+    userModule_version = "1.0.1"
+    shareModule_version = "1.0.1"
     //模块依赖配置
-    Mediators = dependency.getProperty("MediatorsLocal").equals("true")?project(':Mediators'):"com.sire:Mediators:$latestRelease"
-    ModuleEnvironment = dependency.getProperty("ModuleEnvironmentLocal").equals("true")?project(':ModuleEnvironment'):"com.sire:ModuleEnvironment:$latestRelease"
-    BaiduLocationModule = dependency.getProperty("BaiduLocationModuleLocal").equals("true")?project(':BaiduLocationModule'):'com.sire:BaiduLocationModule:1.0.0'
-    BBSModule = dependency.getProperty("BBSModuleLocal").equals("true")?project(':BBSModule'):'com.sire:BBSModule:1.0.0'
-    FeedModule = dependency.getProperty("FeedModuleLocal").equals("true")?project(':FeedModule'):'com.sire:FeedModule:1.0.0'
-    MessagePushModule = dependency.getProperty("MessagePushModuleLocal").equals("true")?project(':MessagePushModule'):'com.sire:MessagePushModule:1.0.0'
-    UpgradeModule = dependency.getProperty("UpgradeModuleLocal").equals("true")?project(':UpgradeModule'):'com.sire:UpgradeModule:1.0.0'
-    UserModule = dependency.getProperty("UserModuleLocal").equals("true") ?project(':UserModule'):'com.sire:UserModule:1.0.0'
-    ShareModule = dependency.get("ShareModuleLocal").equals("true")?project(':ShareModule'):'com.sire:ShareModule:1.0.0'
+    Mediators = dependency.getProperty("MediatorsLocal").equals("true")?project(':Mediators'):"com.sire:Mediators:$mediators_version"
+    ModuleEnvironment = dependency.getProperty("ModuleEnvironmentLocal").equals("true")?project(':ModuleEnvironment'):"com.sire:ModuleEnvironment:$moduleEnvironment_version"
+    BaiduLocationModule = dependency.getProperty("BaiduLocationModuleLocal").equals("true")?project(':BaiduLocationModule'):"com.sire:BaiduLocationModule:$baiduLocationModule_version"
+    BBSModule = dependency.getProperty("BBSModuleLocal").equals("true")?project(':BBSModule'):"com.sire:BBSModule:$BBSModule_version"
+    FeedModule = dependency.getProperty("FeedModuleLocal").equals("true")?project(':FeedModule'):"com.sire:FeedModule:$feedModule_version"
+    MessagePushModule = dependency.getProperty("MessagePushModuleLocal").equals("true")?project(':MessagePushModule'):"com.sire:MessagePushModule:$messagePushModule_version"
+    UpgradeModule = dependency.getProperty("UpgradeModuleLocal").equals("true")?project(':UpgradeModule'):"com.sire:UpgradeModule:$upgradeModule_version"
+    UserModule = dependency.getProperty("UserModuleLocal").equals("true") ?project(':UserModule'):"com.sire:UserModule:$userModule_version"
+    ShareModule = dependency.get("ShareModuleLocal").equals("true")?project(':ShareModule'):"com.sire:ShareModule:$shareModule_version"
 
 }
 println "========== 模块依赖情况 ============"
