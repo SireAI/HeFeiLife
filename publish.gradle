@@ -4,7 +4,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 //加载项目发布参数配置文件
 Properties mainProjectProperty = new Properties()
-mainProjectProperty.load(project.rootProject.file('local.properties').newDataInputStream())
+mainProjectProperty.load(project.rootProject.file('publishConfig.properties').newDataInputStream())
 
 //加载库包参数配置文件
 Properties subProjectProperty = new Properties()
